@@ -1,0 +1,9 @@
+.news_vote {
+  margin: 20px 0;
+}
+
+.news_vote .VotePostPage {
+  border-top: 1px solid #aaa;
+  width: 80%;
+}
+

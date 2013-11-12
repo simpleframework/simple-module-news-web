@@ -1,0 +1,68 @@
+.news_flag,
+.news_status_publish,
+.news_status_edit,
+.news_status_lock,
+.news_status_delete {
+	width: 16px;
+	height: 16px;
+	margin-right: 3px;
+  vertical-align: middle;
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+}
+
+.news_status_publish {
+	background-image: url("images/status_publish.png");
+}
+
+.news_status_edit {	
+	background-image: url("images/status_edit.png");
+}
+
+.news_status_lock {	
+	background-image: url("images/status_lock.png");
+}
+
+.news_status_delete {
+	background-image: url("images/status_delete.png");
+}
+
+.news_flag_image {
+	background-image: url("images/image.png");
+}
+
+.NewsFormBasePage {
+	width: 75%;
+}
+
+@media screen and (max-width: 1024px) {
+  .NewsFormBasePage {
+    width: 1010px;
+  }
+}
+
+.NewsFormBasePage .FormTableRowTemplatePage {
+	padding: 0;
+}
+
+#idNewsForm_opts {
+  background-color: #fafafa;
+  border: 1px solid #999;
+  margin-top: 8px;
+  padding: 10px;
+}
+
+.NewsFormAttachPage,
+.NewsFormVotePage {
+  width: 80%;
+  -webkit-box-shadow: 5px 5px 5px #aaa;
+	-moz-box-shadow: 5px 5px 5px #aaa;
+	box-shadow: 5px 5px 5px #aaa;
+}
+
+.NewsFormVotePage .OneTableTemplatePage {
+  padding: 0;
+}
