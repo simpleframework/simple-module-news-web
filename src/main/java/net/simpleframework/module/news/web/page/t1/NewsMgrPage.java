@@ -13,8 +13,10 @@ import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.trans.Transaction;
 import net.simpleframework.module.common.content.EContentStatus;
+import net.simpleframework.module.common.web.content.page.AbstractRecommendationPage;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
+import net.simpleframework.module.news.INewsService;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
@@ -45,6 +47,7 @@ import net.simpleframework.mvc.component.ui.menu.MenuItems;
 import net.simpleframework.mvc.component.ui.pager.AbstractTablePagerSchema;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumns;
+import net.simpleframework.mvc.component.ui.window.WindowBean;
 import net.simpleframework.mvc.template.AbstractTemplatePage;
 import net.simpleframework.mvc.template.struct.NavigationButtons;
 import net.simpleframework.mvc.template.t1.ext.CategoryTableLCTemplatePage;
@@ -98,6 +101,12 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		addAjaxRequest(pp, "NewsMgrPage_statusPage", StatusLogAddPage.class);
 		addWindowBean(pp, "NewsMgrPage_statusWindow").setContentRef("NewsMgrPage_statusPage")
 				.setWidth(420).setHeight(240);
+
+		// 推荐
+		addAjaxRequest(pp, "NewsMgrPage_recommendationPage", RecommendationPage.class);
+		addComponentBean(pp, "NewsMgrPage_recommendation", WindowBean.class)
+				.setContentRef("NewsMgrPage_recommendationPage").setHeight(240).setWidth(450)
+				.setTitle($m("AbstractContentBean.2"));
 
 		// log window
 		final IModuleRef ref = ((INewsWebContext) context).getLogRef();
@@ -333,13 +342,14 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 					final StringBuilder sb = new StringBuilder();
 					final EContentStatus s = news.getStatus();
 					if (s == EContentStatus.edit) {
-						sb.append(";5");
+						// 菜单索引
+						sb.append(";6");
 					}
 					if (s == EContentStatus.publish) {
-						sb.append(";2");
+						sb.append(";3");
 					}
 					if (s == EContentStatus.lock) {
-						sb.append(";3");
+						sb.append(";4");
 					}
 					if (sb.length() > 0) {
 						kv.put(MENU_DISABLED, sb.substring(1));
@@ -350,9 +360,8 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		}
 
 		private MenuItem createMenuItem(final EContentStatus status) {
-			return MenuItem.of(status.toString()).setOnclick(
-					"$Actions['NewsMgrPage_status']('op=" + status.name()
-							+ "&newsId=' + $pager_action(item).rowId());");
+			return MenuItem.of(status.toString()).setOnclick_act("NewsMgrPage_status", "newsId",
+					"op=" + status.name());
 		}
 
 		@Override
@@ -362,17 +371,17 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 				final MenuItems items = MenuItems.of();
 				final EContentStatus status = cp.getEnumParameter(EContentStatus.class, "status");
 				if (status != EContentStatus.delete) {
-					items.append(
-							MenuItem
-									.itemEdit()
-									.setOnclick(
-											"$Actions['NewsMgrPage_edit']('newsId=' + $pager_action(item).rowId());"))
+					items.append(MenuItem.itemEdit().setOnclick_act("NewsMgrPage_edit", "newsId"))
 							.append(MenuItem.sep())
 							.append(
 									MenuItem.of($m("Button.Preview"), null, "$Actions.loc('"
 											+ url(ViewControlPage.class)
 											+ "?newsId=' + $pager_action(item).rowId(), true);"))
-							.append(MenuItem.sep()).append(createMenuItem(EContentStatus.publish))
+							.append(MenuItem.sep())
+							.append(
+									MenuItem.of($m("AbstractContentBean.2")).setOnclick_act(
+											"NewsMgrPage_recommendation", "newsId")).append(MenuItem.sep())
+							.append(createMenuItem(EContentStatus.publish))
 							.append(createMenuItem(EContentStatus.lock)).append(MenuItem.sep());
 				}
 				items.append(createMenuItem(EContentStatus.delete).setIconClass(MenuItem.ICON_DELETE))
@@ -380,10 +389,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 						.append(createMenuItem(EContentStatus.edit).setTitle($m("NewsMgrPage.7")))
 						.append(MenuItem.sep())
 						.append(
-								MenuItem
-										.itemLog()
-										.setOnclick(
-												"$Actions['NewsMgrPage_status_logWindow']('newsId=' + $pager_action(item).rowId());"));
+								MenuItem.itemLog().setOnclick_act("NewsMgrPage_status_logWindow", "newsId"));
 				return items;
 			}
 			return null;
@@ -405,8 +411,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 						@Override
 						protected String getText(final NewsCategory t) {
-							return t + "<span style='margin-left: 4px; font-size: 9px; color: #666;'>("
-									+ t.getName() + ")</span>";
+							return t.toString() + SpanElement.shortText("(" + t.getName() + ")");
 						}
 					});
 		}
@@ -424,6 +429,19 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 			final News news = NewsViewTPage.getNews(pp);
 			return news == null ? PAGE404.getUrl() : ((INewsWebContext) context).getUrlsFactory()
 					.getNewsUrl(news, true);
+		}
+	}
+
+	public static class RecommendationPage extends AbstractRecommendationPage<News> {
+
+		@Override
+		protected INewsService getBeanService() {
+			return context.getNewsService();
+		}
+
+		@Override
+		protected News getBean(final PageParameter pp) {
+			return NewsViewTPage.getNews(pp);
 		}
 	}
 }
