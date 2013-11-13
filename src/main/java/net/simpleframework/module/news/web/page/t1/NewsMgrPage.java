@@ -322,8 +322,8 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 								.setOnclick(
 										"$Actions['NewsMgrPage_status']('op=publish&newsId=" + id + "');"));
 					} else {
-						sb.append(new ButtonElement($m("Button.Cancel"))
-								.setOnclick("$Actions['NewsMgrPage_status']('op=edit&newsId=" + id + "');"));
+						sb.append(new ButtonElement($m("Button.Preview")).setOnclick("$Actions.loc('"
+								+ url(ViewControlPage.class, "newsId=" + id) + "', true);"));
 					}
 					sb.append(SpanElement.SPACE);
 					sb.append(ButtonElement.logBtn().setOnclick(
