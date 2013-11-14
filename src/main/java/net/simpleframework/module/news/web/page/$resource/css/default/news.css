@@ -34,6 +34,10 @@
 	background-image: url("images/image.png");
 }
 
+.news_recommendation {
+  color: #b00;
+}
+
 .NewsFormBasePage {
 	width: 75%;
 }

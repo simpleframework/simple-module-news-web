@@ -256,7 +256,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 			if (status != null) {
 				cp.addFormParameter("status", status.name());
 			}
-			return context.getNewsService().query(category, status);
+			return context.getNewsService().queryBeans(category, status);
 		}
 
 		@Override
@@ -290,9 +290,14 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 						if (news.isImageMark()) {
 							className += " news_flag_image";
 						}
-						sb.append(new SpanElement().setClassName(className)).append(
-								new LinkElement(news.getTopic())
-										.setOnclick("$Actions['NewsMgrPage_edit']('newsId=" + id + "');"));
+
+						sb.append(new SpanElement().setClassName(className));
+						final LinkElement le = new LinkElement(news.getTopic())
+								.setOnclick("$Actions['NewsMgrPage_edit']('newsId=" + id + "');");
+						if (news.getRecommendation() > 0) {
+							le.addClassName("news_recommendation");
+						}
+						sb.append(le);
 						kv.put("topic", sb.toString());
 					} else {
 						kv.put("topic", news.getTopic());
@@ -343,7 +348,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 					final EContentStatus s = news.getStatus();
 					if (s == EContentStatus.edit) {
 						// 菜单索引
-						sb.append(";6");
+						sb.append(";5");
 					}
 					if (s == EContentStatus.publish) {
 						sb.append(";3");
@@ -384,9 +389,9 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 							.append(createMenuItem(EContentStatus.publish))
 							.append(createMenuItem(EContentStatus.lock)).append(MenuItem.sep());
 				}
-				items.append(createMenuItem(EContentStatus.delete).setIconClass(MenuItem.ICON_DELETE))
+				items.append(createMenuItem(EContentStatus.edit).setTitle($m("NewsMgrPage.7")))
 						.append(MenuItem.sep())
-						.append(createMenuItem(EContentStatus.edit).setTitle($m("NewsMgrPage.7")))
+						.append(createMenuItem(EContentStatus.delete).setIconClass(MenuItem.ICON_DELETE))
 						.append(MenuItem.sep())
 						.append(
 								MenuItem.itemLog().setOnclick_act("NewsMgrPage_status_logWindow", "newsId"));

@@ -70,7 +70,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			tn.setJsClickCallback("$Actions['" + CategoryTableLCTemplatePage.COMPONENT_TABLE
 					+ "']('categoryId=&status=" + EContentStatus.delete.name() + "');");
 			tn.setImage(imgBase + "recycle_bin.png");
-			setCount(tn, context.getNewsService().query(null, EContentStatus.delete).getCount());
+			setCount(tn, context.getNewsService().queryBeans(null, EContentStatus.delete).getCount());
 			tn.setContextMenu("none");
 			nodes.add(tn);
 			return nodes;

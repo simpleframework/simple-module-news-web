@@ -171,7 +171,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 
 		final ETimePeriod tp = Convert.toEnum(ETimePeriod.class, cp.getParameter("time"));
 
-		final IDataQuery<?> dq = service.queryNews(null, new TimePeriod(tp), new ColumnData("views",
+		final IDataQuery<?> dq = service.queryBeans(null, new TimePeriod(tp), new ColumnData("views",
 				EOrder.desc));
 
 		return new TextForward(cp.wrapHTMLContextPath(creator.create(dq).toString()));
@@ -201,9 +201,9 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 				})));
 
 		// 按浏览，全部信息
-		final IDataQuery<?> dq = service.queryNews(null, new TimePeriod(ETimePeriod.week),
+		final IDataQuery<?> dq = service.queryBeans(null, new TimePeriod(ETimePeriod.week),
 				new ColumnData("views", EOrder.desc));
-		lets.add(new Pagelet(new CategoryItem($m("NewsListTPage.3")), creator.create(dq))
+		lets.add(new Pagelet(new CategoryItem($m("NewsViewTPage.6")), creator.create(dq))
 				.setTabs(creator.createTimePeriodTabs()));
 
 		// 历史记录

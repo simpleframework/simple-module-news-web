@@ -128,7 +128,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 
 		final ETimePeriod tp = Convert.toEnum(ETimePeriod.class, cp.getParameter("time"));
 
-		final IDataQuery<?> dq = service.queryNews(getNewsCategory(cp), new TimePeriod(tp),
+		final IDataQuery<?> dq = service.queryBeans(getNewsCategory(cp), new TimePeriod(tp),
 				new ColumnData(cp.getParameter("let"), EOrder.desc));
 
 		return new TextForward(cp.wrapHTMLContextPath(creator.create(dq).toString()));
@@ -143,12 +143,12 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 
 		final Pagelets lets = Pagelets.of();
 		// 按评论
-		IDataQuery<?> dq = service.queryNews(category, new TimePeriod(ETimePeriod.week),
+		IDataQuery<?> dq = service.queryBeans(category, new TimePeriod(ETimePeriod.week),
 				new ColumnData("comments", EOrder.desc));
 		lets.add(new Pagelet(new CategoryItem($m("NewsListTPage.2")), creator.create(dq))
 				.setTabs(creator.createTimePeriodTabs("let=comments&categoryId=" + categoryId)));
 		// 按浏览
-		dq = service.queryNews(category, new TimePeriod(ETimePeriod.week), new ColumnData("views",
+		dq = service.queryBeans(category, new TimePeriod(ETimePeriod.week), new ColumnData("views",
 				EOrder.desc));
 		lets.add(new Pagelet(new CategoryItem($m("NewsListTPage.3")), creator.create(dq))
 				.setTabs(creator.createTimePeriodTabs("let=views&categoryId=" + categoryId)));
