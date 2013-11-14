@@ -5,13 +5,12 @@ import static net.simpleframework.common.I18n.$m;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import net.simpleframework.ado.ColumnData;
-import net.simpleframework.ado.EOrder;
 import net.simpleframework.ado.bean.IIdBeanAware;
 import net.simpleframework.ado.lucene.ILuceneManager;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.BeanUtils;
 import net.simpleframework.common.Convert;
+import net.simpleframework.common.ID;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.ctx.IModuleRef;
@@ -171,9 +170,9 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 
 		final ETimePeriod tp = Convert.toEnum(ETimePeriod.class, cp.getParameter("time"));
 
-		final IDataQuery<?> dq = service.queryBeans(null, new TimePeriod(tp), new ColumnData("views",
-				EOrder.desc));
-
+		final INewsCategoryService cService = context.getNewsCategoryService();
+		final IDataQuery<?> dq = service.queryRecommendationBeans(
+				cService.getBean(cp.getParameter("categoryId")), new TimePeriod(tp));
 		return new TextForward(cp.wrapHTMLContextPath(creator.create(dq).toString()));
 	}
 
@@ -200,11 +199,13 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 					}
 				})));
 
-		// 按浏览，全部信息
-		final IDataQuery<?> dq = service.queryBeans(null, new TimePeriod(ETimePeriod.week),
-				new ColumnData("views", EOrder.desc));
+		// 按推荐
+		final INewsCategoryService cService = context.getNewsCategoryService();
+		final ID categoryId = news.getCategoryId();
+		final IDataQuery<?> dq = service.queryRecommendationBeans(cService.getBean(categoryId),
+				TimePeriod.week);
 		lets.add(new Pagelet(new CategoryItem($m("NewsViewTPage.6")), creator.create(dq))
-				.setTabs(creator.createTimePeriodTabs()));
+				.setTabs(creator.createTimePeriodTabs("categoryId=" + categoryId)));
 
 		// 历史记录
 		lets.add(creator.getHistoryPagelet(pp));

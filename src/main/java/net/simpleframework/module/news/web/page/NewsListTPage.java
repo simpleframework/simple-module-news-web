@@ -143,13 +143,12 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 
 		final Pagelets lets = Pagelets.of();
 		// 按评论
-		IDataQuery<?> dq = service.queryBeans(category, new TimePeriod(ETimePeriod.week),
-				new ColumnData("comments", EOrder.desc));
+		IDataQuery<?> dq = service.queryBeans(category, TimePeriod.week, new ColumnData("comments",
+				EOrder.desc));
 		lets.add(new Pagelet(new CategoryItem($m("NewsListTPage.2")), creator.create(dq))
 				.setTabs(creator.createTimePeriodTabs("let=comments&categoryId=" + categoryId)));
 		// 按浏览
-		dq = service.queryBeans(category, new TimePeriod(ETimePeriod.week), new ColumnData("views",
-				EOrder.desc));
+		dq = service.queryBeans(category, TimePeriod.week, new ColumnData("views", EOrder.desc));
 		lets.add(new Pagelet(new CategoryItem($m("NewsListTPage.3")), creator.create(dq))
 				.setTabs(creator.createTimePeriodTabs("let=views&categoryId=" + categoryId)));
 		// 历史记录
