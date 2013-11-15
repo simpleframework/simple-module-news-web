@@ -185,10 +185,17 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		if (pp.getBoolParameter(OPT_REMOVE_STYLE)) {
 			setVisitor_removeStyle(news, al);
 		}
+		if (pp.getBoolParameter(OPT_REMOVE_TAG_FONT)) {
+			setVisitor_removeTagFont(news, al);
+		}
 		if (pp.getBoolParameter(OPT_TARGET_BLANK)) {
 			setVisitor_targetBlank(news, al);
 		}
 		return HtmlUtils.doDocument(doc, al.toArray(new IElementVisitor[al.size()])).html();
+	}
+
+	protected void setVisitor_targetBlank(final News news, final List<IElementVisitor> al) {
+		al.add(HtmlUtils.TARGET_BLANK_VISITOR);
 	}
 
 	protected void setVisitor_removeClass(final News news, final List<IElementVisitor> al) {
@@ -199,8 +206,8 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		al.add(HtmlUtils.REMOVE_ATTRI_VISITOR("style"));
 	}
 
-	protected void setVisitor_targetBlank(final News news, final List<IElementVisitor> al) {
-		al.add(HtmlUtils.TARGET_BLANK_VISITOR);
+	protected void setVisitor_removeTagFont(final News news, final List<IElementVisitor> al) {
+		al.add(HtmlUtils.REMOVE_TAG_VISITOR("font", true));
 	}
 
 	@Override
@@ -279,6 +286,8 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 
 	public static final String OPT_REMOVE_STYLE = "opt_removeStyle";
 
+	public static final String OPT_REMOVE_TAG_FONT = "opt_removeTagFont";
+
 	@Override
 	public ElementList getLeftElements(final PageParameter pp) {
 		final Checkbox opt_allowComments = new Checkbox(OPT_ALLOWCOMMENTS, $m("NewsForm.8"));
@@ -292,6 +301,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		final Checkbox opt_removeClass = new Checkbox(OPT_REMOVE_CLASS, $m("NewsForm.17"))
 				.setChecked(true);
 		final Checkbox opt_removeStyle = new Checkbox(OPT_REMOVE_STYLE, $m("NewsForm.18"));
+		final Checkbox opt_removeTagFont = new Checkbox(OPT_REMOVE_TAG_FONT, $m("NewsForm.19"));
 
 		final News news = NewsViewTPage.getNews(pp);
 		String attachClick = "$Actions['NewsForm_upload']('" + OPT_VIEWER + "=' + $F('" + OPT_VIEWER
@@ -322,7 +332,8 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 				.append(
 						new BlockElement("idNewsForm_opts").setStyle("display: none;").addElements(
 								opt_viewer, SpanElement.SPACE, opt_targetBlank, SpanElement.SPACE,
-								opt_removeClass, SpanElement.SPACE, opt_removeStyle));
+								opt_removeClass, SpanElement.SPACE, opt_removeStyle, SpanElement.SPACE,
+								opt_removeTagFont));
 		return el;
 	}
 
