@@ -225,8 +225,11 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 				params.add(new FilterItem("categoryId", category.getId()));
 				cp.addFormParameter("categoryId", category.getId());
 			}
-			params.append(new FilterItem("topic", EFilterRelation.like, cp.getParameter("as_topic")))
-					.append(new FilterItem("author", EFilterRelation.like, cp.getParameter("as_author")))
+			params.append(
+					new FilterItem("topic", EFilterRelation.like, cp.getLocaleParameter("as_topic")))
+					.append(
+							new FilterItem("author", EFilterRelation.like, cp
+									.getLocaleParameter("as_author")))
 					.append(new FilterItem("createDate", new TimePeriod(cp.getParameter("as_time"))));
 			return nService.queryByParams(params);
 		}

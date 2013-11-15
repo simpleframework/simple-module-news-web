@@ -85,7 +85,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		// 更新views
 		ContentUtils.updateViews(pp, news, context.getNewsService());
 		// 记录到cookies
-		ContentUtils.addViewsCookie(pp, "news_lastviews", news.getId());
+		ContentUtils.addViewsCookie(pp, "news_views", news.getId());
 	}
 
 	protected AjaxRequestBean addAjaxRequest_Download(final PageParameter pp) {

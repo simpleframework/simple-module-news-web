@@ -1,18 +1,12 @@
 package net.simpleframework.module.news.web;
 
 import static net.simpleframework.common.I18n.$m;
-
-import java.util.Arrays;
-
-import net.simpleframework.common.StringUtils;
 import net.simpleframework.ctx.service.ado.IADOBeanService;
 import net.simpleframework.module.common.web.content.ListRowHandler;
 import net.simpleframework.module.common.web.content.PageletCreator;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
 import net.simpleframework.mvc.PageParameter;
-import net.simpleframework.mvc.template.struct.CategoryItem;
-import net.simpleframework.mvc.template.struct.EImageDot;
 import net.simpleframework.mvc.template.struct.Pagelet;
 
 /**
@@ -25,9 +19,7 @@ import net.simpleframework.mvc.template.struct.Pagelet;
 public class NewsPageletCreator extends PageletCreator<News> implements INewsContextAware {
 
 	public Pagelet getHistoryPagelet(final PageParameter pp) {
-		final String[] arr = StringUtils.split(pp.getCookie("news_lastviews"), "|");
-		return new Pagelet(new CategoryItem($m("NewsPageletCreator.0")), create(
-				arr == null ? null : Arrays.asList(arr), DEFAULT_HANDLER).setDotIcon(EImageDot.dot2));
+		return getHistoryPagelet(pp, "news_views");
 	}
 
 	@Override
@@ -47,7 +39,7 @@ public class NewsPageletCreator extends PageletCreator<News> implements INewsCon
 		protected String[] getShortDesc(final News news) {
 			final int c = news.getComments();
 			final long v = news.getViews();
-			return new String[] { c + "/" + v, $m("NewsPageletCreator.1", c, v) };
+			return new String[] { c + "/" + v, $m("NewsPageletCreator.0", c, v) };
 		}
 
 		@Override
