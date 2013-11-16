@@ -5,16 +5,18 @@ import static net.simpleframework.common.I18n.$m;
 import java.util.ArrayList;
 
 import net.simpleframework.ado.ColumnData;
+import net.simpleframework.ado.EFilterOpe;
 import net.simpleframework.ado.EFilterRelation;
 import net.simpleframework.ado.EOrder;
 import net.simpleframework.ado.FilterItem;
 import net.simpleframework.ado.FilterItems;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.Convert;
+import net.simpleframework.common.ETimePeriod;
+import net.simpleframework.common.ID;
 import net.simpleframework.common.StringUtils;
+import net.simpleframework.common.TimePeriod;
 import net.simpleframework.common.web.HttpUtils;
-import net.simpleframework.ctx.common.bean.ETimePeriod;
-import net.simpleframework.ctx.common.bean.TimePeriod;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.news.INewsCategoryService;
@@ -219,6 +221,10 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 			}
 			final FilterItems params = FilterItems
 					.of(new FilterItem("status", EContentStatus.publish));
+			ID loginId;
+			if ((loginId = cp.getLoginId()) != null) {
+				params.add(new FilterItem("userId", loginId).setOpe(EFilterOpe.or));
+			}
 			final NewsCategory category = getNewsCategory(cp);
 			if (category != null) {
 				params.add(new FilterItem("categoryId", category.getId()));
@@ -245,6 +251,17 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 				return toHTML_desc(cp, dataObject, " - ", 80);
 			}
 			return super.toHTML_desc(cp, dataObject);
+		}
+
+		@Override
+		protected String toHTML_shortDesc(final ComponentParameter cp, final Object dataObject) {
+			final StringBuilder sb = new StringBuilder();
+			final News news = (News) dataObject;
+			if (news.getUserId().equals(cp.getLoginId()) && news.getStatus() == EContentStatus.edit) {
+				sb.append("Edit").append(SpanElement.SEP);
+			}
+			sb.append(super.toHTML_shortDesc(cp, dataObject));
+			return sb.toString();
 		}
 
 		@Override
