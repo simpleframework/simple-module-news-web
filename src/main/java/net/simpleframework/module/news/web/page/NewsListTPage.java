@@ -5,7 +5,6 @@ import static net.simpleframework.common.I18n.$m;
 import java.util.ArrayList;
 
 import net.simpleframework.ado.ColumnData;
-import net.simpleframework.ado.EFilterOpe;
 import net.simpleframework.ado.EFilterRelation;
 import net.simpleframework.ado.EOrder;
 import net.simpleframework.ado.FilterItem;
@@ -219,12 +218,12 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 			if (StringUtils.hasText(t)) {
 				return nService.getLuceneService().query(t, News.class);
 			}
-			final FilterItems params = FilterItems
-					.of(new FilterItem("status", EContentStatus.publish));
+			final FilterItem status = new FilterItem("status", EContentStatus.publish);
 			ID loginId;
 			if ((loginId = cp.getLoginId()) != null) {
-				params.add(new FilterItem("userId", loginId).setOpe(EFilterOpe.or));
+				status.setOrItem(new FilterItem("userId", loginId));
 			}
+			final FilterItems params = FilterItems.of(status);
 			final NewsCategory category = getNewsCategory(cp);
 			if (category != null) {
 				params.add(new FilterItem("categoryId", category.getId()));
