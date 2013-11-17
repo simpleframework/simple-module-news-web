@@ -241,7 +241,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 				ID loginId;
 				if ((loginId = cp.getLoginId()) != null) {
 					params.add(new FilterItem("userId", loginId));
-					params.add(new FilterItem("status", EContentStatus.edit));
+					params.add(new FilterItem("status", EFilterRelation.lt_equal, EContentStatus.publish));
 				} else {
 					params.add(FilterItem.FALSE);
 				}
