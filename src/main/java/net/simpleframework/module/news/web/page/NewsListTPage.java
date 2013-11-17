@@ -27,6 +27,7 @@ import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsPageletCreator;
 import net.simpleframework.module.news.web.NewsUrlsFactory;
 import net.simpleframework.mvc.IForward;
+import net.simpleframework.mvc.IMVCConst;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.TextForward;
 import net.simpleframework.mvc.common.element.AbstractElement;
@@ -253,14 +254,27 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		}
 
 		@Override
-		protected String toHTML_shortDesc(final ComponentParameter cp, final Object dataObject) {
-			final StringBuilder sb = new StringBuilder();
+		protected String toHTML_topic(final ComponentParameter cp, final Object dataObject) {
 			final News news = (News) dataObject;
 			if (news.getUserId().equals(cp.getLoginId()) && news.getStatus() == EContentStatus.edit) {
-				sb.append("Edit").append(SpanElement.SEP);
+				final StringBuilder sb = new StringBuilder();
+				sb.append(new SpanElement(getDataProperty(cp, dataObject, OP_TOPIC))
+						.setClassName("f3 nt").setColor("#b00").setItalic(true));
+				sb.append(SpanElement.SPACE).append("[ ")
+						.append(new LinkElement($m("Edit")).setHref(getTopicEditUrl(cp, news)))
+						.append(" ]");
+				return sb.toString();
 			}
-			sb.append(super.toHTML_shortDesc(cp, dataObject));
-			return sb.toString();
+			return super.toHTML_topic(cp, dataObject);
+		}
+
+		protected String getTopicEditUrl(final ComponentParameter cp, final News news) {
+			String url = ((INewsWebContext) context).getUrlsFactory().getNewsFormUrl(news);
+			final String referer = cp.getParameter(IMVCConst.PARAM_REFERER);
+			if (StringUtils.hasText(referer)) {
+				url = HttpUtils.addParameters(url, "url=" + referer);
+			}
+			return url;
 		}
 
 		@Override
