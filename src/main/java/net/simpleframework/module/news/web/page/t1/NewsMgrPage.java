@@ -142,7 +142,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		final EContentStatus status = news.getStatus();
 		if (status == EContentStatus.edit) {
 			js.append("$Actions.loc('")
-					.append(((INewsWebContext) context).getUrlsFactory().getNewsFormUrl(news))
+					.append(((INewsWebContext) context).getUrlsFactory().getNewsFormUrl(cp, news))
 					.append("');");
 		} else {
 			js.append("if (confirm('").append($m("NewsMgrPage.8", status))
@@ -211,13 +211,13 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		}
 
 		final NewsUrlsFactory uFactory = ((INewsWebContext) context).getUrlsFactory();
-		String url = uFactory.getNewsFormUrl(null);
+		String url = uFactory.getNewsFormUrl(pp, null);
 		final NewsCategory category = getNewsCategory(pp);
 		if (category != null) {
 			url += "?categoryId=" + category.getId();
 			btns.append(SpanElement.SPACE).append(
 					new LinkButton($m("Button.Preview")).setOnclick("$Actions.loc('"
-							+ uFactory.getNewsListUrl(category) + "', true);"));
+							+ uFactory.getNewsListUrl(pp, category) + "', true);"));
 		}
 		add.setOnclick("$Actions.loc('" + url + "');");
 		return btns;
@@ -432,7 +432,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		protected String getRedirectUrl(final PageParameter pp) {
 			final News news = NewsViewTPage.getNews(pp);
 			return news == null ? PAGE404.getUrl() : ((INewsWebContext) context).getUrlsFactory()
-					.getNewsUrl(news, true);
+					.getNewsUrl(pp, news, true);
 		}
 	}
 

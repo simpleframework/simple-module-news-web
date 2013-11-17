@@ -30,8 +30,8 @@ public class NewsPageletCreator extends PageletCreator<News> implements INewsCon
 
 	public static class NewsListRowHandler extends ListRowHandler<News> {
 		@Override
-		protected String getHref(final News news) {
-			return ((INewsWebContext) context).getUrlsFactory().getNewsUrl(news);
+		protected String getHref(final PageParameter pp, final News news) {
+			return ((INewsWebContext) context).getUrlsFactory().getNewsUrl(pp, news);
 		}
 
 		@Override

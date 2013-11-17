@@ -67,7 +67,7 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 		if (StringUtils.hasText(url)) {
 			backBtn.setHref(url);
 		} else {
-			backBtn.setOnclick("$Actions.loc('" + uFactory.getNewsManagerUrl(null)
+			backBtn.setOnclick("$Actions.loc('" + uFactory.getNewsManagerUrl(pp, null)
 					+ "?categoryId=' + $F('ne_categoryId'));");
 		}
 		final ElementList el = ElementList.of(backBtn);
@@ -83,14 +83,14 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 		final NewsUrlsFactory uFactory = ((INewsWebContext) context).getUrlsFactory();
 		final News news = context.getNewsService().getBean(pp.getParameter("newsId"));
 		final TabButtons tabs = TabButtons.of(new TabButton($m("NewsFormBasePage.0"), uFactory
-				.getNewsFormUrl(news)));
+				.getNewsFormUrl(pp, news)));
 		if (news != null) {
 			String t1 = $m("NewsFormBasePage.1");
 			final int attachs = context.getAttachmentService().queryByContent(news).getCount();
 			if (attachs > 0) {
 				t1 += SupElement.num(attachs);
 			}
-			tabs.append(new TabButton(t1, uFactory.getNewsForm_AttachUrl(news)));
+			tabs.append(new TabButton(t1, uFactory.getNewsForm_AttachUrl(pp, news)));
 			final IModuleRef ref = ((INewsWebContext) context).getVoteRef();
 			if (ref != null) {
 				String t2 = $m("NewsFormBasePage.2");
@@ -98,7 +98,7 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 				if (votes > 0) {
 					t2 += SupElement.num(votes);
 				}
-				tabs.append(new TabButton(t2, uFactory.getNewsForm_VoteUrl(news)));
+				tabs.append(new TabButton(t2, uFactory.getNewsForm_VoteUrl(pp, news)));
 			}
 		}
 		return tabs;

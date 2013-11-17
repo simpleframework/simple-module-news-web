@@ -172,7 +172,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		final INewsCategoryService cService = context.getNewsCategoryService();
 		final IDataQuery<?> dq = service.queryRecommendationBeans(
 				cService.getBean(cp.getParameter("categoryId")), new TimePeriod(tp));
-		return new TextForward(cp.wrapHTMLContextPath(creator.create(dq).toString()));
+		return new TextForward(cp.wrapHTMLContextPath(creator.create(cp, dq).toString()));
 	}
 
 	@Override
@@ -189,7 +189,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		if (arr == null || arr.length < 3) {
 			arr = ArrayUtils.add(arr, lService.getQueryTokens(news.getTopic()));
 		}
-		lets.add(new Pagelet(new CategoryItem($m("NewsViewTPage.3")), creator.create(
+		lets.add(new Pagelet(new CategoryItem($m("NewsViewTPage.3")), creator.create(pp,
 				lService.query(StringUtils.join(arr, " "), News.class), new NewsListRowHandler() {
 					@Override
 					protected News toBean(final Object o) {
@@ -203,7 +203,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		final ID categoryId = news.getCategoryId();
 		final IDataQuery<?> dq = service.queryRecommendationBeans(cService.getBean(categoryId),
 				TimePeriod.week);
-		lets.add(new Pagelet(new CategoryItem($m("NewsViewTPage.6")), creator.create(dq))
+		lets.add(new Pagelet(new CategoryItem($m("NewsViewTPage.6")), creator.create(pp, dq))
 				.setTabs(creator.createTimePeriodTabs("categoryId=" + categoryId)));
 
 		// 历史记录
@@ -225,7 +225,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		for (int i = al.size() - 1; i >= 0; i--) {
 			category = al.get(i);
 			btns.add(new LinkElement(category.getText()).setHref(((INewsWebContext) context)
-					.getUrlsFactory().getNewsListUrl(category)));
+					.getUrlsFactory().getNewsListUrl(pp, category)));
 		}
 		return btns;
 	}

@@ -15,6 +15,7 @@ import net.simpleframework.common.ETimePeriod;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.TimePeriod;
+import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.common.web.HttpUtils;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.module.common.content.EContentStatus;
@@ -31,6 +32,7 @@ import net.simpleframework.mvc.IMVCConst;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.TextForward;
 import net.simpleframework.mvc.common.element.AbstractElement;
+import net.simpleframework.mvc.common.element.Checkbox;
 import net.simpleframework.mvc.common.element.ETabMatch;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.InputElement;
@@ -82,7 +84,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 	protected TabButtons getCategoryTabs(final PageParameter pp) {
 		final NewsUrlsFactory uFactory = ((INewsWebContext) context).getUrlsFactory();
 		final TabButtons btns = TabButtons.of();
-		btns.add(new TabButton($m("NewsListTPage.4"), uFactory.getNewsListUrl(null)));
+		btns.add(new TabButton($m("NewsListTPage.4"), uFactory.getNewsListUrl(pp, null)));
 
 		final INewsCategoryService service = context.getNewsCategoryService();
 		NewsCategory category = getNewsCategory(pp);
@@ -93,7 +95,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 			if (i++ > 3) {
 				break;
 			}
-			btns.add(new TabButton(category.getText(), uFactory.getNewsListUrl(category))
+			btns.add(new TabButton(category.getText(), uFactory.getNewsListUrl(pp, category))
 					.setTabMatch(ETabMatch.params));
 		}
 		addSearchTab(pp, btns);
@@ -111,16 +113,15 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 	public ElementList getRightElements(final PageParameter pp) {
 		final NewsUrlsFactory uFactory = ((INewsWebContext) context).getUrlsFactory();
 		final NewsCategory category = getNewsCategory(pp);
-		return ElementList
-				.of(new SearchInput("NewsListTPage_search")
-						.setOnSearchClick(
-								"$Actions.loc('"
-										+ HttpUtils.addParameters(uFactory.getNewsListUrl(null), "t=")
-										+ "' + encodeURIComponent($F('NewsListTPage_search')))")
-						.setOnAdvClick(
-								"$Actions['NewsListTPage_SearchWindow']('"
-										+ AdvSearchPage.encodeRefererUrl(uFactory.getNewsListUrl(category))
-										+ "');").setText(StringUtils.blank(pp.getLocaleParameter("t"))));
+		return ElementList.of(new SearchInput("NewsListTPage_search")
+				.setOnSearchClick(
+						"$Actions.loc('"
+								+ HttpUtils.addParameters(uFactory.getNewsListUrl(pp, null), "t=")
+								+ "' + encodeURIComponent($F('NewsListTPage_search')))")
+				.setOnAdvClick(
+						"$Actions['NewsListTPage_SearchWindow']('"
+								+ AdvSearchPage.encodeRefererUrl(uFactory.getNewsListUrl(pp, category))
+								+ "');").setText(StringUtils.blank(pp.getLocaleParameter("t"))));
 	}
 
 	public IForward doPageletTab(final ComponentParameter cp) {
@@ -132,7 +133,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		final IDataQuery<?> dq = service.queryBeans(getNewsCategory(cp), new TimePeriod(tp),
 				new ColumnData(cp.getParameter("let"), EOrder.desc));
 
-		return new TextForward(cp.wrapHTMLContextPath(creator.create(dq).toString()));
+		return new TextForward(cp.wrapHTMLContextPath(creator.create(cp, dq).toString()));
 	}
 
 	@Override
@@ -146,11 +147,11 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		// 按评论
 		IDataQuery<?> dq = service.queryBeans(category, TimePeriod.week, new ColumnData("comments",
 				EOrder.desc));
-		lets.add(new Pagelet(new CategoryItem($m("NewsListTPage.2")), creator.create(dq))
+		lets.add(new Pagelet(new CategoryItem($m("NewsListTPage.2")), creator.create(pp, dq))
 				.setTabs(creator.createTimePeriodTabs("let=comments&categoryId=" + categoryId)));
 		// 按浏览
 		dq = service.queryBeans(category, TimePeriod.week, new ColumnData("views", EOrder.desc));
-		lets.add(new Pagelet(new CategoryItem($m("NewsListTPage.3")), creator.create(dq))
+		lets.add(new Pagelet(new CategoryItem($m("NewsListTPage.3")), creator.create(pp, dq))
 				.setTabs(creator.createTimePeriodTabs("let=views&categoryId=" + categoryId)));
 		// 历史记录
 		lets.add(creator.getHistoryPagelet(pp));
@@ -176,7 +177,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 				AbstractElement<?> link;
 				if (i > 0) {
 					link = new LinkElement(txt).setHref(((INewsWebContext) context).getUrlsFactory()
-							.getNewsListUrl(category));
+							.getNewsListUrl(pp, category));
 				} else {
 					link = new LabelElement(txt);
 				}
@@ -188,7 +189,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 
 	@Override
 	public FilterButtons getFilterButtons(final PageParameter pp) {
-		final String url = ((INewsWebContext) context).getUrlsFactory().getNewsListUrl(
+		final String url = ((INewsWebContext) context).getUrlsFactory().getNewsListUrl(pp,
 				getNewsCategory(pp));
 		final FilterButtons btns = FilterButtons.of();
 		final NewsAdvSearchPage sPage = singleton(NewsAdvSearchPage.class);
@@ -211,6 +212,21 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		return getCacheBean(pp, context.getNewsCategoryService(), "categoryId");
 	}
 
+	protected Checkbox createMyFilterCheckbox(final PageParameter pp) {
+		final Checkbox cb = new Checkbox("NewsListTPage_myFilter", $m("NewsListTPage.6"))
+				.setChecked("my".equals(pp.getParameter("f")));
+		String referer = pp.getParameter(IMVCConst.PARAM_REFERER);
+		if (StringUtils.hasText(referer)) {
+			if (cb.isChecked()) {
+				referer = HttpUtils.addParameters(referer, new KVMap().add("f", null));
+			} else {
+				referer = HttpUtils.addParameters(referer, "f=my");
+			}
+			cb.setOnclick("$Actions.loc('" + referer + "')");
+		}
+		return cb;
+	}
+
 	public static class NewsList extends ListTemplatePagerHandler {
 		@Override
 		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
@@ -219,17 +235,33 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 			if (StringUtils.hasText(t)) {
 				return nService.getLuceneService().query(t, News.class);
 			}
-			final FilterItem status = new FilterItem("status", EContentStatus.publish);
-			ID loginId;
-			if ((loginId = cp.getLoginId()) != null) {
-				status.setOrItem(new FilterItem("userId", loginId));
+
+			final FilterItems params = FilterItems.of();
+			if ("my".equals(cp.getParameter("f"))) {
+				ID loginId;
+				if ((loginId = cp.getLoginId()) != null) {
+					params.add(new FilterItem("userId", loginId));
+					params.add(new FilterItem("status", EContentStatus.edit));
+				} else {
+					params.add(FilterItem.FALSE);
+				}
+			} else {
+				final FilterItem status = new FilterItem("status", EContentStatus.publish);
+				ID loginId;
+				if ((loginId = cp.getLoginId()) != null) {
+					status.setOrItem(new FilterItem("userId", loginId));
+				}
+				params.add(status);
 			}
-			final FilterItems params = FilterItems.of(status);
+
+			// category
 			final NewsCategory category = getNewsCategory(cp);
 			if (category != null) {
 				params.add(new FilterItem("categoryId", category.getId()));
 				cp.addFormParameter("categoryId", category.getId());
 			}
+
+			// 条件过滤
 			params.append(
 					new FilterItem("topic", EFilterRelation.like, cp.getLocaleParameter("as_topic")))
 					.append(
@@ -269,10 +301,10 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		}
 
 		protected String getTopicEditUrl(final ComponentParameter cp, final News news) {
-			String url = ((INewsWebContext) context).getUrlsFactory().getNewsFormUrl(news);
+			String url = ((INewsWebContext) context).getUrlsFactory().getNewsFormUrl(cp, news);
 			final String referer = cp.getParameter(IMVCConst.PARAM_REFERER);
 			if (StringUtils.hasText(referer)) {
-				url = HttpUtils.addParameters(url, "url=" + referer);
+				url = HttpUtils.addParameters(url, "url=" + HttpUtils.encodeUrl(referer));
 			}
 			return url;
 		}
@@ -290,7 +322,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		protected Object getDataProperty(final ComponentParameter cp, final Object dataObject,
 				final String key) {
 			if (OP_TOPIC_URL.equals(key)) {
-				return ((INewsWebContext) context).getUrlsFactory().getNewsUrl((News) dataObject);
+				return ((INewsWebContext) context).getUrlsFactory().getNewsUrl(cp, (News) dataObject);
 			} else if (OP_DATE.equals(key)) {
 				return ((News) dataObject).getCreateDate();
 			}

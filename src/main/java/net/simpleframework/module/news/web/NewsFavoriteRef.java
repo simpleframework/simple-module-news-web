@@ -43,7 +43,7 @@ public class NewsFavoriteRef extends FavoriteRef implements INewsContextAware {
 		}
 
 		@Override
-		public IFavoriteContent getContent(final Object contentId) {
+		public IFavoriteContent getContent(final PageParameter pp, final Object contentId) {
 			final News news = context.getNewsService().getBean(contentId);
 			return new AbstractFavoriteContent(news) {
 				@Override
@@ -53,7 +53,7 @@ public class NewsFavoriteRef extends FavoriteRef implements INewsContextAware {
 
 				@Override
 				public String getUrl() {
-					return ((INewsWebContext) context).getUrlsFactory().getNewsUrl(news);
+					return ((INewsWebContext) context).getUrlsFactory().getNewsUrl(pp, news);
 				}
 			};
 		}
