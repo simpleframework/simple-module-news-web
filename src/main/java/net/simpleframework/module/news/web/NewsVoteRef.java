@@ -1,14 +1,11 @@
 package net.simpleframework.module.news.web;
 
 import static net.simpleframework.common.I18n.$m;
-import net.simpleframework.ado.db.common.SQLValue;
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.ctx.IModuleContext;
 import net.simpleframework.module.common.plugin.ModulePluginFactory;
 import net.simpleframework.module.news.News;
-import net.simpleframework.module.vote.Vote;
-import net.simpleframework.module.vote.VoteR;
 import net.simpleframework.module.vote.VoteRef;
 import net.simpleframework.module.vote.web.VoteListHandler;
 import net.simpleframework.module.vote.web.page.VotePostPage;
@@ -38,13 +35,7 @@ public class NewsVoteRef extends VoteRef {
 		if (news == null) {
 			return DataQueryUtils.nullQuery();
 		}
-		return getModuleContext()
-				.getVoteService()
-				.getEntityManager()
-				.queryBeans(
-						new SQLValue("select a.* from " + Vote.TBL.getName() + " a right join "
-								+ VoteR.TBL.getName() + " b on a.id = b.voteid where b.contentid=?", news
-								.getId()));
+		return getModuleContext().getVoteService().queryVotes(news.getId());
 	}
 
 	public TablePagerBean addVotesTbl(final PageParameter pp) {
