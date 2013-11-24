@@ -47,6 +47,7 @@ import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
 import net.simpleframework.mvc.template.lets.AdvSearchPage;
 import net.simpleframework.mvc.template.lets.List_PageletsPage;
 import net.simpleframework.mvc.template.struct.CategoryItem;
+import net.simpleframework.mvc.template.struct.EImageDot;
 import net.simpleframework.mvc.template.struct.FilterButton;
 import net.simpleframework.mvc.template.struct.FilterButtons;
 import net.simpleframework.mvc.template.struct.NavigationButtons;
@@ -133,7 +134,8 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		final IDataQuery<?> dq = service.queryBeans(getNewsCategory(cp), new TimePeriod(tp),
 				new ColumnData(cp.getParameter("let"), EOrder.desc));
 
-		return new TextForward(cp.wrapHTMLContextPath(creator.create(cp, dq).toString()));
+		return new TextForward(cp.wrapHTMLContextPath(creator.create(cp, dq)
+				.setDotIcon(EImageDot.numDot).toString()));
 	}
 
 	@Override
@@ -147,12 +149,14 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		// 按评论
 		IDataQuery<?> dq = service.queryBeans(category, TimePeriod.week, new ColumnData("comments",
 				EOrder.desc));
-		lets.add(new Pagelet(new CategoryItem($m("NewsListTPage.2")), creator.create(pp, dq))
-				.setTabs(creator.createTimePeriodTabs("let=comments&categoryId=" + categoryId)));
+		lets.add(new Pagelet(new CategoryItem($m("NewsListTPage.2")), creator.create(pp, dq)
+				.setDotIcon(EImageDot.numDot)).setTabs(creator
+				.createTimePeriodTabs("let=comments&categoryId=" + categoryId)));
 		// 按浏览
 		dq = service.queryBeans(category, TimePeriod.week, new ColumnData("views", EOrder.desc));
-		lets.add(new Pagelet(new CategoryItem($m("NewsListTPage.3")), creator.create(pp, dq))
-				.setTabs(creator.createTimePeriodTabs("let=views&categoryId=" + categoryId)));
+		lets.add(new Pagelet(new CategoryItem($m("NewsListTPage.3")), creator.create(pp, dq)
+				.setDotIcon(EImageDot.numDot)).setTabs(creator
+				.createTimePeriodTabs("let=views&categoryId=" + categoryId)));
 		// 历史记录
 		lets.add(creator.getHistoryPagelet(pp));
 		return lets;

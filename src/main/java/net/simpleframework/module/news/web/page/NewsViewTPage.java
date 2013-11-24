@@ -51,6 +51,7 @@ import net.simpleframework.mvc.component.ui.tooltip.TipBean.Hook;
 import net.simpleframework.mvc.component.ui.tooltip.TooltipBean;
 import net.simpleframework.mvc.template.lets.View_PageletsPage;
 import net.simpleframework.mvc.template.struct.CategoryItem;
+import net.simpleframework.mvc.template.struct.EImageDot;
 import net.simpleframework.mvc.template.struct.NavigationButtons;
 import net.simpleframework.mvc.template.struct.Pagelet;
 import net.simpleframework.mvc.template.struct.Pagelets;
@@ -172,7 +173,8 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		final INewsCategoryService cService = context.getNewsCategoryService();
 		final IDataQuery<?> dq = service.queryRecommendationBeans(
 				cService.getBean(cp.getParameter("categoryId")), new TimePeriod(tp));
-		return new TextForward(cp.wrapHTMLContextPath(creator.create(cp, dq).toString()));
+		return new TextForward(cp.wrapHTMLContextPath(creator.create(cp, dq)
+				.setDotIcon(EImageDot.numDot).toString()));
 	}
 
 	@Override
@@ -196,15 +198,16 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 						final News news2 = super.toBean(o);
 						return news2 != null && !news2.getId().equals(news.getId()) ? news2 : null;
 					}
-				})));
+				}).setDotIcon(EImageDot.imgDot1)));
 
 		// 按推荐
 		final INewsCategoryService cService = context.getNewsCategoryService();
 		final ID categoryId = news.getCategoryId();
 		final IDataQuery<?> dq = service.queryRecommendationBeans(cService.getBean(categoryId),
 				TimePeriod.week);
-		lets.add(new Pagelet(new CategoryItem($m("NewsViewTPage.6")), creator.create(pp, dq))
-				.setTabs(creator.createTimePeriodTabs("categoryId=" + categoryId)));
+		lets.add(new Pagelet(new CategoryItem($m("NewsViewTPage.6")), creator.create(pp, dq)
+				.setDotIcon(EImageDot.numDot)).setTabs(creator.createTimePeriodTabs("categoryId="
+				+ categoryId)));
 
 		// 历史记录
 		lets.add(creator.getHistoryPagelet(pp));
