@@ -447,5 +447,12 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		protected News getBean(final PageParameter pp) {
 			return NewsViewTPage.getNews(pp);
 		}
+
+		@Override
+		public JavascriptForward onSave(final ComponentParameter cp) {
+			final JavascriptForward js = super.onSave(cp);
+			js.append("$Actions['").append(COMPONENT_TABLE).append("']();");
+			return js;
+		}
 	}
 }
