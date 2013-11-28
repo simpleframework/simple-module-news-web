@@ -79,7 +79,8 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 			cService.delete(ids);
 			final News news = NewsViewTPage.getNews(cp);
 			news.setComments(cService.queryByContent(news).getCount());
-			context.getNewsService().update(new String[] { "comments" }, news);
+			news.setLastCommentDate(new Date());
+			context.getNewsService().update(new String[] { "comments", "lastCommentDate" }, news);
 		}
 		return new JavascriptForward("$Actions['NewsCommentPage_tbl']();");
 	}

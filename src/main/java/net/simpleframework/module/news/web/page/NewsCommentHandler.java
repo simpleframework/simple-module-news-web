@@ -85,7 +85,8 @@ public class NewsCommentHandler extends CommentCtxHandler<NewsComment> implement
 		final News news = getNews(cp);
 		if (news != null) {
 			news.setComments(getBeanService().queryByContent(news).getCount());
-			context.getNewsService().update(new String[] { "comments" }, news);
+			news.setLastCommentDate(new Date());
+			context.getNewsService().update(new String[] { "comments", "lastCommentDate" }, news);
 		}
 	}
 
