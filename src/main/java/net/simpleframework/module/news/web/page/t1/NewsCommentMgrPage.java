@@ -1,15 +1,21 @@
 package net.simpleframework.module.news.web.page.t1;
 
+import static net.simpleframework.common.I18n.$m;
+
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.web.page.NewsForm;
+import net.simpleframework.module.news.web.page.t1.NewsCommentPage.NewsCommentTbl;
 import net.simpleframework.mvc.PageMapping;
 import net.simpleframework.mvc.PageParameter;
+import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.TabButtons;
 import net.simpleframework.mvc.component.ui.pager.EPagerBarLayout;
-import net.simpleframework.mvc.component.ui.pager.db.AbstractDbTablePagerHandler;
+import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
+import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
 import net.simpleframework.mvc.template.t1.T1ResizedTemplatePage;
 
 /**
@@ -27,9 +33,19 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 
 		pp.addImportCSS(NewsForm.class, "/news.css");
 
-		addTablePagerBean(pp, "NewsCommentMgrPage_tbl").setPageItems(30)
-				.setPagerBarLayout(EPagerBarLayout.bottom).setContainerId("tbl_" + hashId)
-				.setHandleClass(CommentTbl.class);
+		final TablePagerBean tablePager = (TablePagerBean) addTablePagerBean(pp,
+				"NewsCommentMgrPage_tbl").setPageItems(30).setPagerBarLayout(EPagerBarLayout.bottom)
+				.setContainerId("tbl_" + hashId).setHandleClass(NewsCommentMgrTbl.class);
+		tablePager
+				.addColumn(
+						new TablePagerColumn("content", $m("NewsCommentPage.0")).setNowrap(false)
+								.setTextAlign(ETextAlign.left).setSort(false))
+				.addColumn(
+						new TablePagerColumn("userId", $m("NewsCommentPage.1"), 100).setFilter(false))
+				.addColumn(
+						new TablePagerColumn("createDate", $m("NewsCommentPage.2"), 120)
+								.setPropertyClass(Date.class))
+				.addColumn(TablePagerColumn.OPE().setWidth(80));
 	}
 
 	@Override
@@ -52,6 +68,6 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 		return sb.toString();
 	}
 
-	public static class CommentTbl extends AbstractDbTablePagerHandler {
+	public static class NewsCommentMgrTbl extends NewsCommentTbl {
 	}
 }

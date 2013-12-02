@@ -1,4 +1,4 @@
-package net.simpleframework.module.news.web.page;
+package net.simpleframework.module.news.web.page.t1;
 
 import static net.simpleframework.common.I18n.$m;
 
@@ -15,6 +15,7 @@ import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsComment;
+import net.simpleframework.module.news.web.page.NewsViewTPage;
 import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
@@ -44,7 +45,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 		super.onForward(pp);
 
 		final TablePagerBean tablePager = addTablePagerBean(pp, "NewsCommentPage_tbl",
-				CommentList.class);
+				NewsCommentTbl.class);
 		tablePager
 				.addColumn(
 						new TablePagerColumn("content", $m("NewsCommentPage.0")).setNowrap(false)
@@ -105,7 +106,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 										+ "&val=' + this.checked);"));
 	}
 
-	public static class CommentList extends AbstractDbTablePagerHandler {
+	public static class NewsCommentTbl extends AbstractDbTablePagerHandler {
 		@Override
 		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
 			final News news = NewsViewTPage.getNews(cp);

@@ -22,7 +22,6 @@ import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef;
 import net.simpleframework.module.news.web.NewsUrlsFactory;
-import net.simpleframework.module.news.web.page.NewsCommentPage;
 import net.simpleframework.module.news.web.page.NewsForm;
 import net.simpleframework.module.news.web.page.NewsViewTPage;
 import net.simpleframework.mvc.IForward;
