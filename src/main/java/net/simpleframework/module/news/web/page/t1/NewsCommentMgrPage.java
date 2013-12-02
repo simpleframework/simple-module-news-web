@@ -6,13 +6,18 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 
+import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.module.news.INewsContextAware;
+import net.simpleframework.module.news.NewsComment;
 import net.simpleframework.module.news.web.page.NewsForm;
 import net.simpleframework.module.news.web.page.t1.NewsCommentPage.NewsCommentTbl;
+import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.PageMapping;
 import net.simpleframework.mvc.PageParameter;
+import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.TabButtons;
+import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ui.pager.EPagerBarLayout;
 import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
@@ -46,6 +51,13 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 						new TablePagerColumn("createDate", $m("NewsCommentPage.2"), 120)
 								.setPropertyClass(Date.class))
 				.addColumn(TablePagerColumn.OPE().setWidth(80));
+
+		// delete
+		addDeleteAjaxRequest(pp, "NewsCommentMgrPage_delete");
+	}
+
+	public IForward doDelete(final ComponentParameter cp) {
+		return null;
 	}
 
 	@Override
@@ -69,5 +81,16 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 	}
 
 	public static class NewsCommentMgrTbl extends NewsCommentTbl {
+
+		@Override
+		protected ButtonElement createDelBtn(final NewsComment comment) {
+			return ButtonElement.deleteBtn().setOnclick(
+					"$Actions['NewsCommentMgrPage_delete']('id=" + comment.getId() + "');");
+		}
+
+		@Override
+		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
+			return context.getCommentService().queryAll();
+		}
 	}
 }

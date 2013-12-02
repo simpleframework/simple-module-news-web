@@ -8,7 +8,6 @@ import java.util.Map;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.KVMap;
-import net.simpleframework.common.web.html.HtmlUtils;
 import net.simpleframework.ctx.trans.Transaction;
 import net.simpleframework.module.news.INewsCommentService;
 import net.simpleframework.module.news.INewsContext;
@@ -26,7 +25,6 @@ import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.component.ComponentParameter;
-import net.simpleframework.mvc.component.ext.comments.CommentUtils;
 import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
 import net.simpleframework.mvc.component.ui.pager.db.AbstractDbTablePagerHandler;
@@ -114,19 +112,20 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 			return context.getCommentService().queryByContent(news);
 		}
 
+		protected ButtonElement createDelBtn(final NewsComment comment) {
+			return ButtonElement.deleteBtn().setOnclick(
+					"$Actions['NewsCommentPage_delete']('newsId=" + comment.getContentId() + "&id="
+							+ comment.getId() + "');");
+		}
+
 		@Override
 		protected Map<String, Object> getRowData(final ComponentParameter cp, final Object dataObject) {
 			final NewsComment comment = (NewsComment) dataObject;
 			final KVMap kv = new KVMap();
-			kv.add("content",
-					HtmlUtils.truncateHtml(CommentUtils.replace(comment.getContent(), false), 100));
+			kv.add("content", StringUtils.substring(comment.doc().text(), 80));
 			kv.add("userId", cp.getUser(comment.getUserId()));
 			kv.add("createDate", comment.getCreateDate());
-			kv.add(
-					TablePagerColumn.OPE,
-					ButtonElement.deleteBtn().setOnclick(
-							"$Actions['NewsCommentPage_delete']('newsId=" + comment.getContentId()
-									+ "&id=" + comment.getId() + "');"));
+			kv.add(TablePagerColumn.OPE, createDelBtn(comment));
 			return kv;
 		}
 	}
