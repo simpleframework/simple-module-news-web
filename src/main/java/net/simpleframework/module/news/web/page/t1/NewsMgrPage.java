@@ -69,6 +69,8 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 	protected void onForward(final PageParameter pp) {
 		super.onForward(pp);
 
+		pp.addImportCSS(NewsForm.class, "/news.css");
+
 		addCategoryBean(pp, NewsCategoryHandle.class);
 
 		addTablePagerBean(pp, NewsTableHandler.class)
@@ -122,13 +124,6 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		addAjaxRequest(pp, "NewsMgrPage_advPage", NewsAdvPage.class);
 		addWindowBean(pp, "NewsMgrPage_advWindow").setContentRef("NewsMgrPage_advPage")
 				.setTitle($m("NewsMgrPage.13")).setHeight(280).setWidth(420);
-	}
-
-	@Override
-	protected void addImportCSS(final PageParameter pp) {
-		super.addImportCSS(pp);
-
-		pp.addImportCSS(NewsForm.class, "/news.css");
 	}
 
 	@Override
@@ -230,12 +225,9 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 	@Override
 	protected TabButtons getTabButtons(final PageParameter pp) {
-		return _getTabButtons(pp);
-	}
-
-	static TabButtons _getTabButtons(final PageParameter pp) {
 		final TabButtons tabs = TabButtons.of(new TabButton($m("NewsMgrPage.0"),
-				url(NewsMgrPage.class)));
+				url(NewsMgrPage.class)), new TabButton($m("NewsCommentMgrPage.0"),
+				url(NewsCommentMgrPage.class)));
 		return tabs;
 	}
 
