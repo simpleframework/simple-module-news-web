@@ -9,7 +9,6 @@ import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.trans.Transaction;
-import net.simpleframework.module.news.INewsCommentService;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
@@ -74,12 +73,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 	public IForward doDelete(final ComponentParameter cp) {
 		final Object[] ids = StringUtils.split(cp.getParameter("id"));
 		if (ids != null) {
-			final INewsCommentService cService = context.getCommentService();
-			cService.delete(ids);
-			final News news = NewsViewTPage.getNews(cp);
-			news.setComments(cService.queryByContent(news).getCount());
-			news.setLastCommentDate(new Date());
-			context.getNewsService().update(new String[] { "comments", "lastCommentDate" }, news);
+			context.getCommentService().delete(ids);
 		}
 		return new JavascriptForward("$Actions['NewsCommentPage_tbl']();");
 	}
@@ -104,6 +98,11 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 										+ "&val=' + this.checked);"));
 	}
 
+	@Override
+	public String getRole(final PageParameter pp) {
+		return context.getManagerRole();
+	}
+
 	public static class NewsCommentTbl extends AbstractDbTablePagerHandler {
 		@Override
 		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
@@ -118,11 +117,15 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 							+ comment.getId() + "');");
 		}
 
+		protected String getContent(final PageParameter pp, final NewsComment comment) {
+			return StringUtils.substring(comment.doc().text(), 80);
+		}
+
 		@Override
 		protected Map<String, Object> getRowData(final ComponentParameter cp, final Object dataObject) {
 			final NewsComment comment = (NewsComment) dataObject;
 			final KVMap kv = new KVMap();
-			kv.add("content", StringUtils.substring(comment.doc().text(), 80));
+			kv.add("content", getContent(cp, comment));
 			kv.add("userId", cp.getUser(comment.getUserId()));
 			kv.add("createDate", comment.getCreateDate());
 			kv.add(TablePagerColumn.OPE, createDelBtn(comment));

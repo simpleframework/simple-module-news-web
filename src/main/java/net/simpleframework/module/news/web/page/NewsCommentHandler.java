@@ -7,8 +7,10 @@ import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.coll.KVMap;
+import net.simpleframework.ctx.trans.Transaction;
 import net.simpleframework.module.common.content.AbstractComment;
 import net.simpleframework.module.news.INewsCommentService;
+import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsComment;
@@ -54,13 +56,13 @@ public class NewsCommentHandler extends CommentCtxHandler<NewsComment> implement
 		return getBeanService().queryByContent(newsId);
 	}
 
+	@Transaction(context = INewsContext.class)
 	@Override
 	public JavascriptForward deleteComment(final ComponentParameter cp, final Object id) {
-		final JavascriptForward js = super.deleteComment(cp, id);
-		updateComments(cp);
-		return js;
+		return super.deleteComment(cp, id);
 	}
 
+	@Transaction(context = INewsContext.class)
 	@Override
 	public JavascriptForward addComment(final ComponentParameter cp) {
 		final INewsCommentService service = getBeanService();
@@ -77,17 +79,7 @@ public class NewsCommentHandler extends CommentCtxHandler<NewsComment> implement
 			comment.setParentId(parent.getId());
 		}
 		service.insert(comment);
-		updateComments(cp);
 		return super.addComment(cp);
-	}
-
-	protected void updateComments(final ComponentParameter cp) {
-		final News news = getNews(cp);
-		if (news != null) {
-			news.setComments(getBeanService().queryByContent(news).getCount());
-			news.setLastCommentDate(new Date());
-			context.getNewsService().update(new String[] { "comments", "lastCommentDate" }, news);
-		}
 	}
 
 	protected News getNews(final ComponentParameter cp) {

@@ -7,15 +7,24 @@ import java.util.Date;
 import java.util.Map;
 
 import net.simpleframework.ado.query.IDataQuery;
+import net.simpleframework.common.StringUtils;
+import net.simpleframework.ctx.trans.Transaction;
+import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
+import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsComment;
+import net.simpleframework.module.news.web.NewsWebContext;
 import net.simpleframework.module.news.web.page.NewsForm;
 import net.simpleframework.module.news.web.page.t1.NewsCommentPage.NewsCommentTbl;
 import net.simpleframework.mvc.IForward;
+import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageMapping;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.ETextAlign;
+import net.simpleframework.mvc.common.element.ElementList;
+import net.simpleframework.mvc.common.element.LinkButton;
+import net.simpleframework.mvc.common.element.LinkElement;
 import net.simpleframework.mvc.common.element.TabButtons;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ui.pager.EPagerBarLayout;
@@ -56,13 +65,24 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 		addDeleteAjaxRequest(pp, "NewsCommentMgrPage_delete");
 	}
 
+	@Transaction(context = INewsContext.class)
 	public IForward doDelete(final ComponentParameter cp) {
-		return null;
+		final Object[] ids = StringUtils.split(cp.getParameter("id"));
+		if (ids != null) {
+			context.getCommentService().delete(ids);
+		}
+		return new JavascriptForward("$Actions['NewsCommentMgrPage_tbl']();");
 	}
 
 	@Override
 	public String getRole(final PageParameter pp) {
 		return context.getManagerRole();
+	}
+
+	@Override
+	public ElementList getLeftElements(final PageParameter pp) {
+		return ElementList.of(LinkButton.deleteBtn().setOnclick(
+				"$Actions['NewsCommentMgrPage_tbl'].doAct('NewsCommentMgrPage_delete');"));
 	}
 
 	@Override
@@ -81,16 +101,25 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 	}
 
 	public static class NewsCommentMgrTbl extends NewsCommentTbl {
+		@Override
+		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
+			return context.getCommentService().queryAll();
+		}
 
 		@Override
 		protected ButtonElement createDelBtn(final NewsComment comment) {
 			return ButtonElement.deleteBtn().setOnclick(
-					"$Actions['NewsCommentMgrPage_delete']('id=" + comment.getId() + "');");
+					"$Actions['NewsCommentMgrPage_delete']('newsId=" + comment.getContentId() + "&id="
+							+ comment.getId() + "');");
 		}
 
 		@Override
-		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
-			return context.getCommentService().queryAll();
+		protected String getContent(final PageParameter pp, final NewsComment comment) {
+			final News news = context.getNewsService().getBean(comment.getContentId());
+			final String txt = super.getContent(pp, comment);
+			return news != null ? LinkElement.BLANK(txt)
+					.setHref(((NewsWebContext) context).getUrlsFactory().getNewsUrl(pp, news))
+					.toString() : txt;
 		}
 	}
 }
