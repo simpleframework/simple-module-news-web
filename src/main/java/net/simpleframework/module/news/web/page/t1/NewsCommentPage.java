@@ -118,7 +118,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 		}
 
 		protected String getContent(final PageParameter pp, final NewsComment comment) {
-			return StringUtils.substring(comment.doc().text(), 80);
+			return StringUtils.substring(comment.doc().text(), 50);
 		}
 
 		@Override
