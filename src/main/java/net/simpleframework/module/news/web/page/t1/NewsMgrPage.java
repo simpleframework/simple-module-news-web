@@ -5,10 +5,13 @@ import static net.simpleframework.common.I18n.$m;
 import java.util.ArrayList;
 import java.util.Map;
 
+import net.simpleframework.ado.FilterItem;
+import net.simpleframework.ado.FilterItems;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.StringUtils;
+import net.simpleframework.common.TimePeriod;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.trans.Transaction;
@@ -224,9 +227,15 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 	@Override
 	protected TabButtons getTabButtons(final PageParameter pp) {
+		final TabButton cTab = new TabButton($m("NewsCommentMgrPage.0"),
+				url(NewsCommentMgrPage.class));
+		final int c = context.getCommentService()
+				.queryByParams(FilterItems.of(new FilterItem("createdate", TimePeriod.day))).getCount();
+		if (c > 0) {
+			cTab.setStat(c);
+		}
 		final TabButtons tabs = TabButtons.of(new TabButton($m("NewsMgrPage.0"),
-				url(NewsMgrPage.class)), new TabButton($m("NewsCommentMgrPage.0"),
-				url(NewsCommentMgrPage.class)));
+				url(NewsMgrPage.class)), cTab);
 		return tabs;
 	}
 
