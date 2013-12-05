@@ -2,12 +2,9 @@
   <div class="cc1">
     <p>#(NewsAdvPage.1)</p>
     <div>
-      <a class="simple_btn simple_btn_all" onclick="$Actions['NewsAdvPage_reIndex']();">#(NewsAdvPage.0)</a>
-    </div>
+      ${LinkButton.of("#(NewsAdvPage.0)").setOnclick("$Actions['NewsAdvPage_reIndex']();")}</div>
   </div>
-  <div class="bc">
-    <a class="simple_btn simple_btn_all" onclick="$win(this).close();">#(Button.Close)</a>
-  </div>
+  <div class="bc">${LinkButton.closeBtn()}</div>
 </div>
 
 <style type="text/css">

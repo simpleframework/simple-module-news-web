@@ -1,10 +1,15 @@
 package net.simpleframework.module.news.web.page.t1;
 
 import static net.simpleframework.common.I18n.$m;
+
+import java.util.Map;
+
+import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
+import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.template.AbstractTemplatePage;
 
@@ -22,6 +27,11 @@ public class NewsAdvPage extends AbstractTemplatePage implements INewsContextAwa
 
 		addAjaxRequest(pp, "NewsAdvPage_reIndex").setConfirmMessage($m("NewsAdvPage.2"))
 				.setHandleMethod("doIndex");
+	}
+
+	@Override
+	public Map<String, Object> createVariables(final PageParameter pp) {
+		return ((KVMap) super.createVariables(pp)).add("LinkButton", LinkButton.class);
 	}
 
 	public IForward doIndex(final ComponentParameter cp) {
