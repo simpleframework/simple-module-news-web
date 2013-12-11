@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import net.simpleframework.ado.ColumnData;
 import net.simpleframework.ado.EFilterRelation;
-import net.simpleframework.ado.EOrder;
 import net.simpleframework.ado.FilterItem;
 import net.simpleframework.ado.FilterItems;
 import net.simpleframework.ado.query.IDataQuery;
@@ -132,7 +131,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		final ETimePeriod tp = Convert.toEnum(ETimePeriod.class, cp.getParameter("time"));
 
 		final IDataQuery<?> dq = service.queryBeans(getNewsCategory(cp), new TimePeriod(tp),
-				new ColumnData(cp.getParameter("let"), EOrder.desc));
+				ColumnData.DESC(cp.getParameter("let")));
 
 		return new TextForward(cp.wrapHTMLContextPath(creator.create(cp, dq)
 				.setDotIcon(EImageDot.numDot).toString()));
@@ -147,13 +146,12 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 
 		final Pagelets lets = Pagelets.of();
 		// 按评论
-		IDataQuery<?> dq = service.queryBeans(category, TimePeriod.week, new ColumnData("comments",
-				EOrder.desc));
+		IDataQuery<?> dq = service.queryBeans(category, TimePeriod.week, ColumnData.DESC("comments"));
 		lets.add(new Pagelet(new CategoryItem($m("NewsListTPage.2")), creator.create(pp, dq)
 				.setDotIcon(EImageDot.numDot)).setTabs(creator
 				.createTimePeriodTabs("let=comments&categoryId=" + categoryId)));
 		// 按浏览
-		dq = service.queryBeans(category, TimePeriod.week, new ColumnData("views", EOrder.desc));
+		dq = service.queryBeans(category, TimePeriod.week, ColumnData.DESC("views"));
 		lets.add(new Pagelet(new CategoryItem($m("NewsListTPage.3")), creator.create(pp, dq)
 				.setDotIcon(EImageDot.numDot)).setTabs(creator
 				.createTimePeriodTabs("let=views&categoryId=" + categoryId)));
