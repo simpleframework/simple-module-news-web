@@ -278,13 +278,15 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 			return ((News) dataObject).doc();
 		}
 
+		protected static final String LINE_SEP = "&nbsp;&nbsp;";
+
 		@Override
 		protected String toHTML_desc(final ComponentParameter cp, final Object dataObject) {
 			final String t = cp.getParameter("t");
 			if (StringUtils.hasText(t)) {
-				return toHTML_desc(cp, dataObject, " - ", 80);
+				return toHTML_desc(cp, dataObject, LINE_SEP, 80);
 			}
-			return super.toHTML_desc(cp, dataObject);
+			return toHTML_desc(cp, dataObject, LINE_SEP, 240);
 		}
 
 		@Override
