@@ -44,8 +44,8 @@ public class NewsPageletCreator extends PageletCreator<News> implements INewsCon
 			final int c = news.getComments();
 			final long v = news.getViews();
 			final StringBuilder sb = new StringBuilder();
-			final Date lastCommentDate = news.getLastCommentDate();
-			if (lastCommentDate != null) {
+			Date lastCommentDate;
+			if (c > 0 && (lastCommentDate = news.getLastCommentDate()) != null) {
 				final Calendar cal = Calendar.getInstance();
 				cal.setTime(new Date());
 				cal.add(Calendar.HOUR_OF_DAY, -12);
