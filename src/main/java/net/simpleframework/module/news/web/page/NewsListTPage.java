@@ -286,7 +286,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 			if (StringUtils.hasText(t)) {
 				return toHTML_desc(cp, dataObject, LINE_SEP, 80);
 			}
-			return toHTML_desc(cp, dataObject, LINE_SEP, 240);
+			return super.toHTML_desc(cp, dataObject);
 		}
 
 		@Override
