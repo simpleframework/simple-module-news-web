@@ -59,15 +59,15 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			final TreeNodes nodes = TreeNodes.of();
 			TreeNode tn = createRoot(treeBean, $m("NewsCategoryHandle.0"));
 			tn.setAcceptdrop(true);
-			tn.setJsClickCallback("$Actions['" + CategoryTableLCTemplatePage.COMPONENT_TABLE
-					+ "']('categoryId=&status=');");
+			tn.setJsClickCallback(CategoryTableLCTemplatePage
+					.createTableRefresh("categoryId=&status=").toString());
 			final String imgBase = getImgBase(cp, NewsForm.class);
 			tn.setImage(imgBase + "news.png");
 			nodes.add(tn);
 
 			tn = new TreeNode(treeBean, parent, $m("NewsCategoryHandle.2"));
-			tn.setJsClickCallback("$Actions['" + CategoryTableLCTemplatePage.COMPONENT_TABLE
-					+ "']('categoryId=&status=" + EContentStatus.delete.name() + "');");
+			tn.setJsClickCallback(CategoryTableLCTemplatePage.createTableRefresh(
+					"categoryId=&status=" + EContentStatus.delete.name()).toString());
 			tn.setImage(imgBase + "recycle_bin.png");
 			setCount(tn, context.getNewsService().queryBeans(null, EContentStatus.delete).getCount());
 			tn.setContextMenu("none");
@@ -81,8 +81,8 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			final Object o = parent.getDataObject();
 			if (o instanceof NewsCategory) {
 				final NewsCategory category = (NewsCategory) o;
-				parent.setJsClickCallback("$Actions['" + CategoryTableLCTemplatePage.COMPONENT_TABLE
-						+ "']('status=&categoryId=" + category.getId() + "');");
+				parent.setJsClickCallback(CategoryTableLCTemplatePage.createTableRefresh(
+						"status=&categoryId=" + category.getId()).toString());
 				final String imgBase = getImgBase(cp, NewsForm.class);
 				setCount(parent, context.getNewsService().count(category));
 				parent.setImage(imgBase + "folder.png");

@@ -155,7 +155,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		if (ids != null) {
 			context.getNewsService().delete(ids);
 		}
-		return new JavascriptForward("$Actions['").append(COMPONENT_TABLE).append("']();");
+		return createTableRefresh();
 	}
 
 	public IForward doStatus(final ComponentParameter cp) {
@@ -451,7 +451,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		@Override
 		public JavascriptForward onSave(final ComponentParameter cp) {
 			final JavascriptForward js = super.onSave(cp);
-			js.append("$Actions['").append(COMPONENT_TABLE).append("']();");
+			js.append(createTableRefresh().toString());
 			return js;
 		}
 	}

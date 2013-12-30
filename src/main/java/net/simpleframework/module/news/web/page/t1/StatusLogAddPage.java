@@ -56,8 +56,7 @@ public class StatusLogAddPage extends FormTableRowTemplatePage implements INewsC
 				service.update(new String[] { "status" }, news);
 			}
 		}
-		return super.onSave(cp).append("$Actions['")
-				.append(CategoryTableLCTemplatePage.COMPONENT_TABLE).append("']();");
+		return super.onSave(cp).append(CategoryTableLCTemplatePage.createTableRefresh().toString());
 	}
 
 	@Override
