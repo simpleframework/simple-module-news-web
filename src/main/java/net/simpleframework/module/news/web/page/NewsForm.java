@@ -121,12 +121,11 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		} else {
 			if (!ObjectUtils.objectEquals(news.getCname(), ne_cname)
 					&& service.getBeanByName(ne_cname) != null) {
-				throw ContentException.of("已存在相同的名称: " + ne_cname);
+				throw ContentException.of($m("NewsForm.20") + ne_cname);
 			}
 		}
 
 		news.setCategoryId(category.getId());
-		news.setDomain(context.getDomain());
 		news.setCname(ne_cname);
 		news.setTopic(cp.getParameter("ne_topic"));
 		news.setKeyWords(cp.getParameter("ne_keyWords"));
