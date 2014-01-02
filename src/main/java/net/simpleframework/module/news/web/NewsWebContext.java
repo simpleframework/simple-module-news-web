@@ -4,6 +4,7 @@ import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.Module;
+import net.simpleframework.ctx.ModuleFunctions;
 import net.simpleframework.module.news.impl.NewsContext;
 import net.simpleframework.module.news.web.page.t1.NewsMgrPage;
 import net.simpleframework.mvc.ctx.WebModuleFunction;
@@ -58,8 +59,14 @@ public class NewsWebContext extends NewsContext implements INewsWebContext {
 
 	@Override
 	protected Module createModule() {
-		return super.createModule().setDefaultFunction(
-				new WebModuleFunction(NewsMgrPage.class).setName(MODULE_NAME + "-NewsMgrPage").setText(
-						$m("NewsContext.0")));
+		return super.createModule().setDefaultFunction(FUNC_NEWS_MGR);
 	}
+
+	@Override
+	protected ModuleFunctions getFunctions() {
+		return ModuleFunctions.of(FUNC_NEWS_MGR);
+	}
+
+	public WebModuleFunction FUNC_NEWS_MGR = (WebModuleFunction) new WebModuleFunction(
+			NewsMgrPage.class).setName(MODULE_NAME + "-NewsMgrPage").setText($m("NewsContext.0"));
 }
