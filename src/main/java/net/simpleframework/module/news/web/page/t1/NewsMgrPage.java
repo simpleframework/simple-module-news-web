@@ -449,7 +449,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		}
 
 		@Override
-		public JavascriptForward onSave(final ComponentParameter cp) {
+		public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
 			final JavascriptForward js = super.onSave(cp);
 			js.append(createTableRefresh().toString());
 			return js;

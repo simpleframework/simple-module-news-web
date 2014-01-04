@@ -43,7 +43,7 @@ public class StatusLogAddPage extends FormTableRowTemplatePage implements INewsC
 
 	@Override
 	@Transaction(context = INewsContext.class)
-	public JavascriptForward onSave(final ComponentParameter cp) {
+	public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
 		final EContentStatus op = cp.getEnumParameter(EContentStatus.class, "op");
 		final INewsService service = context.getNewsService();
 		final String[] arr = StringUtils.split(cp.getParameter("newsId"), ";");

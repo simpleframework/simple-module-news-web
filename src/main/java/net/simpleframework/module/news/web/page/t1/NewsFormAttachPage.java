@@ -145,7 +145,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 
 		@Transaction(context = INewsContext.class)
 		@Override
-		public JavascriptForward onSave(final ComponentParameter cp) {
+		public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
 			final IAttachmentService<Attachment> aService = context.getAttachmentService();
 			final Attachment attachment = getCacheBean(cp, aService, "beanId");
 			if (attachment != null) {

@@ -2,6 +2,7 @@ package net.simpleframework.module.news.web.page;
 
 import static net.simpleframework.common.I18n.$m;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -103,7 +104,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 
 	@Override
 	@Transaction(context = INewsContext.class)
-	public JavascriptForward onSave(final ComponentParameter cp) {
+	public JavascriptForward onSave(final ComponentParameter cp) throws IOException {
 		final NewsCategory category = context.getNewsCategoryService().getBean(
 				cp.getParameter("ne_categoryId"));
 		if (category == null) {
