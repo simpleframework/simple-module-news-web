@@ -34,8 +34,8 @@ import net.simpleframework.mvc.template.t1.T1FormTemplatePage;
 public class NewsFormBasePage extends T1FormTemplatePage implements INewsContextAware {
 
 	@Override
-	protected void addImportCSS(final PageParameter pp) {
-		super.addImportCSS(pp);
+	protected void onForward(final PageParameter pp) {
+		super.onForward(pp);
 
 		pp.addImportCSS(NewsForm.class, "/news.css");
 	}

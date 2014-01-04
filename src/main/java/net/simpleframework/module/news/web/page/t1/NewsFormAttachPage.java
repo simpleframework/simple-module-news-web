@@ -48,7 +48,9 @@ import net.simpleframework.mvc.template.lets.FormTableRowTemplatePage;
 public class NewsFormAttachPage extends NewsFormBasePage {
 
 	@Override
-	protected void addComponents(final PageParameter pp) {
+	protected void onForward(final PageParameter pp) {
+		super.onForward(pp);
+
 		final TablePagerBean tablePager = (TablePagerBean) addComponentBean(pp,
 				"NewsTabAttachPage_tbl", TablePagerBean.class)
 				.setPagerBarLayout(EPagerBarLayout.bottom).setContainerId("tbl_" + hashId)

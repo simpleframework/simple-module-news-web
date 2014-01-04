@@ -73,8 +73,8 @@ import net.simpleframework.mvc.template.lets.FormTableRowTemplatePage;
 public class NewsForm extends FormTableRowTemplatePage implements INewsContextAware {
 
 	@Override
-	protected void addComponents(final PageParameter pp) {
-		super.addComponents(pp);
+	protected void onForward(final PageParameter pp) {
+		super.onForward(pp);
 
 		addFormValidationBean(pp).addValidators(
 				new Validator(EValidatorMethod.required, "#ne_topic, #ne_categoryText, #ne_content"));

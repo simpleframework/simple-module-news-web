@@ -62,8 +62,8 @@ import net.simpleframework.mvc.template.struct.Pagelets;
 public class NewsListTPage extends List_PageletsPage implements INewsContextAware {
 
 	@Override
-	protected void addComponents(final PageParameter pp) {
-		super.addComponents(pp);
+	protected void onForward(final PageParameter pp) {
+		super.onForward(pp);
 
 		addTablePagerBean(pp);
 
