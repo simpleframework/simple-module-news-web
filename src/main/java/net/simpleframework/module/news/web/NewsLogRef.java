@@ -1,40 +1,28 @@
 package net.simpleframework.module.news.web;
 
-import static net.simpleframework.common.I18n.$m;
-
 import java.io.File;
-import java.util.Date;
 
 import net.simpleframework.ado.bean.IIdBeanAware;
 import net.simpleframework.common.Convert;
-import net.simpleframework.common.StringUtils;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
-import net.simpleframework.ctx.trans.Transaction;
-import net.simpleframework.module.common.DescriptionLocalUtils;
 import net.simpleframework.module.common.content.Attachment;
-import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.module.log.LogRef;
 import net.simpleframework.module.log.web.hdl.AbstractAttachmentLogHandler;
-import net.simpleframework.module.log.web.page.AbstractDescLogPage;
 import net.simpleframework.module.log.web.page.DownloadLogPage;
 import net.simpleframework.module.log.web.page.EntityUpdateLogPage;
-import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.INewsService;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.web.page.NewsForm;
 import net.simpleframework.mvc.AbstractMVCPage;
-import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.AbstractElement;
 import net.simpleframework.mvc.common.element.ImageElement;
-import net.simpleframework.mvc.common.element.InputElement;
 import net.simpleframework.mvc.common.element.LinkElement;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.base.ajaxrequest.AjaxRequestBean;
 import net.simpleframework.mvc.component.ui.window.WindowBean;
-import net.simpleframework.mvc.template.t1.ext.CategoryTableLCTemplatePage;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -113,44 +101,6 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 			}
 			return new LinkElement(attachmentFile.getTopic())
 					.setOnclick("$Actions['NewsViewTPage_download']('id=" + id + "');");
-		}
-	}
-
-	public static class StatusDescLogPage extends AbstractDescLogPage implements INewsContextAware {
-
-		@Override
-		@Transaction(context = INewsContext.class)
-		public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
-			final EContentStatus op = cp.getEnumParameter(EContentStatus.class, "op");
-			final INewsService service = context.getNewsService();
-			final String[] arr = StringUtils.split(cp.getParameter("newsId"), ";");
-			final String desc = cp.getParameter("sl_description");
-			if (arr != null) {
-				for (final String id : arr) {
-					final News news = service.getBean(id);
-					DescriptionLocalUtils.set(news, desc);
-					news.setStatus(op);
-					service.update(new String[] { "status" }, news);
-				}
-			}
-			return super.onSave(cp)
-					.append(CategoryTableLCTemplatePage.createTableRefresh().toString());
-		}
-
-		@Override
-		public String getTitle(final PageParameter pp) {
-			final EContentStatus op = pp.getEnumParameter(EContentStatus.class, "op");
-			return $m("StatusDescLogPage.0",
-					op == EContentStatus.edit ? $m("NewsMgrPage.7") : op.toString());
-		}
-
-		@Override
-		protected InputElement createTextarea(final PageParameter pp) {
-			final EContentStatus op = pp.getEnumParameter(EContentStatus.class, "op");
-			return super.createTextarea(pp).setText(
-					$m("StatusDescLogPage.1",
-							op == EContentStatus.edit ? $m("NewsMgrPage.7") : op.toString(),
-							Convert.toDateString(new Date()), pp.getLogin()));
 		}
 	}
 }

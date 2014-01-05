@@ -3,6 +3,7 @@ package net.simpleframework.module.news.web.page.t1;
 import static net.simpleframework.common.I18n.$m;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import net.simpleframework.ado.FilterItem;
@@ -15,8 +16,10 @@ import net.simpleframework.common.TimePeriod;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.trans.Transaction;
+import net.simpleframework.module.common.DescriptionLocalUtils;
 import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.common.web.content.page.AbstractRecommendationPage;
+import net.simpleframework.module.common.web.page.AbstractDescPage;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.INewsService;
@@ -24,7 +27,6 @@ import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef;
-import net.simpleframework.module.news.web.NewsLogRef.StatusDescLogPage;
 import net.simpleframework.module.news.web.NewsUrlsFactory;
 import net.simpleframework.module.news.web.page.NewsForm;
 import net.simpleframework.module.news.web.page.NewsViewTPage;
@@ -36,6 +38,7 @@ import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.Icon;
+import net.simpleframework.mvc.common.element.InputElement;
 import net.simpleframework.mvc.common.element.LabelElement;
 import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.common.element.LinkElement;
@@ -102,7 +105,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 				.setHandleMethod("doDelete");
 
 		// status
-		addAjaxRequest(pp, "NewsMgrPage_statusPage", StatusDescLogPage.class);
+		addAjaxRequest(pp, "NewsMgrPage_statusPage", StatusDescPage.class);
 		addWindowBean(pp, "NewsMgrPage_statusWindow").setContentRef("NewsMgrPage_statusPage")
 				.setWidth(420).setHeight(240);
 
@@ -454,6 +457,44 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 			final JavascriptForward js = super.onSave(cp);
 			js.append(createTableRefresh().toString());
 			return js;
+		}
+	}
+
+	public static class StatusDescPage extends AbstractDescPage implements INewsContextAware {
+
+		@Override
+		@Transaction(context = INewsContext.class)
+		public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
+			final EContentStatus op = cp.getEnumParameter(EContentStatus.class, "op");
+			final INewsService service = context.getNewsService();
+			final String[] arr = StringUtils.split(cp.getParameter("newsId"), ";");
+			final String desc = cp.getParameter("sl_description");
+			if (arr != null) {
+				for (final String id : arr) {
+					final News news = service.getBean(id);
+					DescriptionLocalUtils.set(news, desc);
+					news.setStatus(op);
+					service.update(new String[] { "status" }, news);
+				}
+			}
+			return super.onSave(cp)
+					.append(CategoryTableLCTemplatePage.createTableRefresh().toString());
+		}
+
+		@Override
+		public String getTitle(final PageParameter pp) {
+			final EContentStatus op = pp.getEnumParameter(EContentStatus.class, "op");
+			return $m("StatusDescLogPage.0",
+					op == EContentStatus.edit ? $m("NewsMgrPage.7") : op.toString());
+		}
+
+		@Override
+		protected InputElement createTextarea(final PageParameter pp) {
+			final EContentStatus op = pp.getEnumParameter(EContentStatus.class, "op");
+			return super.createTextarea(pp).setText(
+					$m("StatusDescLogPage.1",
+							op == EContentStatus.edit ? $m("NewsMgrPage.7") : op.toString(),
+							Convert.toDateString(new Date()), pp.getLogin()));
 		}
 	}
 }

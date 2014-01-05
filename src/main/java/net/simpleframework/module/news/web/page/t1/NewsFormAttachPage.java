@@ -15,6 +15,7 @@ import net.simpleframework.module.common.content.Attachment;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.News;
+import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsDownloadLogPage;
 import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.JavascriptForward;
@@ -67,12 +68,14 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 				.addColumn(new TablePagerColumn("createDate", $m("NewsFormAttachPage.4"), 120))
 				.addColumn(TablePagerColumn.OPE().setWidth(120));
 
-		// 下载日志
-		addComponentBean(pp, "NewsTabAttachPage_logPage", AjaxRequestBean.class).setUrlForward(
-				url(NewsDownloadLogPage.class));
-		addComponentBean(pp, "NewsTabAttachPage_logWin", WindowBean.class)
-				.setContentRef("NewsTabAttachPage_logPage").setHeight(480).setWidth(800)
-				.setTitle($m("NewsFormAttachPage.5"));
+		if (((INewsWebContext) context).getLogRef() != null) {
+			// 下载日志
+			addComponentBean(pp, "NewsTabAttachPage_logPage", AjaxRequestBean.class).setUrlForward(
+					url(NewsDownloadLogPage.class));
+			addComponentBean(pp, "NewsTabAttachPage_logWin", WindowBean.class)
+					.setContentRef("NewsTabAttachPage_logPage").setHeight(480).setWidth(800)
+					.setTitle($m("NewsFormAttachPage.5"));
+		}
 
 		// 删除
 		addDeleteAjaxRequest(pp, "NewsFormAttachPage_delete");
@@ -128,8 +131,12 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 				kv.put("topic", attachment.getTopic());
 			}
 			kv.put("attachsize", FileUtils.toFileSize(attachment.getAttachsize()));
-			kv.put("downloads", new ButtonElement(attachment.getDownloads())
-					.setOnclick("$Actions['NewsTabAttachPage_logWin']('beanId=" + id + "');"));
+			if (((INewsWebContext) context).getLogRef() != null) {
+				kv.put("downloads", new ButtonElement(attachment.getDownloads())
+						.setOnclick("$Actions['NewsTabAttachPage_logWin']('beanId=" + id + "');"));
+			} else {
+				kv.put("downloads", attachment.getDownloads());
+			}
 			kv.put("userId", cp.getUser(attachment.getUserId()));
 			kv.put("createDate", attachment.getCreateDate());
 			final StringBuilder ope = new StringBuilder();

@@ -32,11 +32,13 @@ public class NewsAttachmentTooltipPage extends AbstractAttachmentTooltipPage imp
 	protected void onForward(final PageParameter pp) {
 		super.onForward(pp);
 
-		addComponentBean(pp, "AttachmentTooltipPage_logPage", AjaxRequestBean.class).setUrlForward(
-				url(NewsDownloadLogPage.class));
-		addComponentBean(pp, "AttachmentTooltipPage_logWin", WindowBean.class)
-				.setContentRef("AttachmentTooltipPage_logPage").setHeight(480).setWidth(800)
-				.setTitle($m("NewsFormAttachPage.5"));
+		if (((INewsWebContext) context).getLogRef() != null) {
+			addComponentBean(pp, "AttachmentTooltipPage_logPage", AjaxRequestBean.class)
+					.setUrlForward(url(NewsDownloadLogPage.class));
+			addComponentBean(pp, "AttachmentTooltipPage_logWin", WindowBean.class)
+					.setContentRef("AttachmentTooltipPage_logPage").setHeight(480).setWidth(800)
+					.setTitle($m("NewsFormAttachPage.5"));
+		}
 	}
 
 	@Override
@@ -74,7 +76,11 @@ public class NewsAttachmentTooltipPage extends AbstractAttachmentTooltipPage imp
 		if (downloads <= 0) {
 			return 0;
 		}
-		return LinkButton.corner(downloads).setOnclick(
-				"$Actions['AttachmentTooltipPage_logWin']('beanId=" + attachment.getId() + "');");
+		if (((INewsWebContext) context).getLogRef() != null) {
+			return LinkButton.corner(downloads).setOnclick(
+					"$Actions['AttachmentTooltipPage_logWin']('beanId=" + attachment.getId() + "');");
+		} else {
+			return downloads;
+		}
 	}
 }
