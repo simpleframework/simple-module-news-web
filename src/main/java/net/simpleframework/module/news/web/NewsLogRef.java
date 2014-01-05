@@ -15,14 +15,11 @@ import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.INewsService;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.web.page.NewsForm;
-import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.AbstractElement;
 import net.simpleframework.mvc.common.element.ImageElement;
 import net.simpleframework.mvc.common.element.LinkElement;
 import net.simpleframework.mvc.component.ComponentParameter;
-import net.simpleframework.mvc.component.base.ajaxrequest.AjaxRequestBean;
-import net.simpleframework.mvc.component.ui.window.WindowBean;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -31,13 +28,6 @@ import net.simpleframework.mvc.component.ui.window.WindowBean;
  *         http://www.simpleframework.net
  */
 public class NewsLogRef extends LogRef implements INewsContextAware {
-
-	public void addLogComponent(final PageParameter pp) {
-		pp.addComponentBean("NewsMgrPage_status_logPage", AjaxRequestBean.class).setUrlForward(
-				AbstractMVCPage.url(StatusLogViewPage.class));
-		pp.addComponentBean("NewsMgrPage_status_logWindow", WindowBean.class)
-				.setContentRef("NewsMgrPage_status_logPage").setHeight(540).setWidth(864);
-	}
 
 	@Override
 	public void logDownload(final Object beanId, final String topic, final File oFile) {
@@ -52,7 +42,7 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 		}
 	}
 
-	public static class StatusLogViewPage extends EntityUpdateLogPage {
+	public static class NewsUpdateLogPage extends EntityUpdateLogPage {
 
 		@Override
 		protected News getBean(final PageParameter pp) {

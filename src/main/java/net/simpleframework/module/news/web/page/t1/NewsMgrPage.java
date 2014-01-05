@@ -26,10 +26,11 @@ import net.simpleframework.module.news.INewsService;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
-import net.simpleframework.module.news.web.NewsLogRef;
+import net.simpleframework.module.news.web.NewsLogRef.NewsUpdateLogPage;
 import net.simpleframework.module.news.web.NewsUrlsFactory;
 import net.simpleframework.module.news.web.page.NewsForm;
 import net.simpleframework.module.news.web.page.NewsViewTPage;
+import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageMapping;
@@ -47,6 +48,7 @@ import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.common.element.TabButton;
 import net.simpleframework.mvc.common.element.TabButtons;
 import net.simpleframework.mvc.component.ComponentParameter;
+import net.simpleframework.mvc.component.base.ajaxrequest.AjaxRequestBean;
 import net.simpleframework.mvc.component.ui.menu.MenuBean;
 import net.simpleframework.mvc.component.ui.menu.MenuItem;
 import net.simpleframework.mvc.component.ui.menu.MenuItems;
@@ -118,7 +120,10 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		// log window
 		final IModuleRef ref = ((INewsWebContext) context).getLogRef();
 		if (ref != null) {
-			((NewsLogRef) ref).addLogComponent(pp);
+			pp.addComponentBean("NewsMgrPage_update_logPage", AjaxRequestBean.class).setUrlForward(
+					AbstractMVCPage.url(NewsUpdateLogPage.class));
+			pp.addComponentBean("NewsMgrPage_update_log", WindowBean.class)
+					.setContentRef("NewsMgrPage_update_logPage").setHeight(540).setWidth(864);
 		}
 
 		// comment window
@@ -334,8 +339,9 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 								+ url(ViewControlPage.class, "newsId=" + id) + "', true);"));
 					}
 					sb.append(SpanElement.SPACE);
-					sb.append(ButtonElement.logBtn().setOnclick(
-							"$Actions['NewsMgrPage_status_logWindow']('newsId=" + id + "');"));
+					sb.append(ButtonElement.logBtn()
+							.setDisabled(((INewsWebContext) context).getLogRef() == null)
+							.setOnclick("$Actions['NewsMgrPage_update_log']('newsId=" + id + "');"));
 					sb.append(SpanElement.SPACE).append(AbstractTablePagerSchema.IMG_DOWNMENU);
 					kv.put(TablePagerColumn.OPE, sb.toString());
 
@@ -358,6 +364,9 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 					}
 					if (s == EContentStatus.lock) {
 						sb.append(";4");
+					}
+					if (((INewsWebContext) context).getLogRef() == null) {
+						sb.append(";7");
 					}
 					if (sb.length() > 0) {
 						kv.put(MENU_DISABLED, sb.substring(1));
@@ -396,8 +405,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 						.append(MenuItem.sep())
 						.append(createMenuItem(EContentStatus.delete).setIconClass(MenuItem.ICON_DELETE))
 						.append(MenuItem.sep())
-						.append(
-								MenuItem.itemLog().setOnclick_act("NewsMgrPage_status_logWindow", "newsId"));
+						.append(MenuItem.itemLog().setOnclick_act("NewsMgrPage_update_log", "newsId"));
 				return items;
 			}
 			return null;
