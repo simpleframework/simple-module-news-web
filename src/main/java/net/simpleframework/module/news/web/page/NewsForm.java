@@ -142,7 +142,8 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 				cp.getComponentBeanByName("NewsForm_upload_page"));
 		AttachmentUtils.doSave(nCP, new IAttachmentSaveCallback() {
 			@Override
-			public void save(final Map<String, AttachmentFile> addQueue, final Set<String> deleteQueue) {
+			public void save(final Map<String, AttachmentFile> addQueue, final Set<String> deleteQueue)
+					throws IOException {
 				final IAttachmentService<Attachment> aService = context.getAttachmentService();
 				if (insert) {
 					service.insert(news2);
