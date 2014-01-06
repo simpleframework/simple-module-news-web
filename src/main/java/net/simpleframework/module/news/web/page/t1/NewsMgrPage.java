@@ -16,7 +16,6 @@ import net.simpleframework.common.TimePeriod;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.trans.Transaction;
-import net.simpleframework.module.common.DescriptionLocalUtils;
 import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.common.web.content.page.AbstractRecommendationPage;
 import net.simpleframework.module.common.web.page.AbstractDescPage;
@@ -476,11 +475,10 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 			final EContentStatus op = cp.getEnumParameter(EContentStatus.class, "op");
 			final INewsService service = context.getNewsService();
 			final String[] arr = StringUtils.split(cp.getParameter("newsId"), ";");
-			final String desc = cp.getParameter("sl_description");
 			if (arr != null) {
 				for (final String id : arr) {
 					final News news = service.getBean(id);
-					DescriptionLocalUtils.set(news, desc);
+					setLogDescription(cp, news);
 					news.setStatus(op);
 					service.update(new String[] { "status" }, news);
 				}
