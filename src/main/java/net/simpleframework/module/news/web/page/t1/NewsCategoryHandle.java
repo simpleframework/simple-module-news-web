@@ -124,7 +124,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 
 	@Override
 	public Map<String, Object> categoryEdit_attri(final ComponentParameter cp) {
-		return ((KVMap) super.categoryEdit_attri(cp)).add(window_height, 320);
+		return ((KVMap) super.categoryEdit_attri(cp)).add(window_height, 330);
 	}
 
 	@Override
