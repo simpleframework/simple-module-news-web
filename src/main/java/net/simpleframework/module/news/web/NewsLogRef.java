@@ -2,9 +2,9 @@ package net.simpleframework.module.news.web;
 
 import java.io.File;
 
-import net.simpleframework.ado.bean.IIdBeanAware;
 import net.simpleframework.common.Convert;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
+import net.simpleframework.ctx.service.ado.db.IDbBeanService;
 import net.simpleframework.module.common.content.Attachment;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.module.log.LogRef;
@@ -45,12 +45,12 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 	public static class NewsUpdateLogPage extends EntityUpdateLogPage {
 
 		@Override
-		protected News getBean(final PageParameter pp) {
-			return getCacheBean(pp, context.getNewsService(), getBeanIdParameter());
+		protected IDbBeanService<?> getBeanService() {
+			return context.getNewsService();
 		}
 
 		@Override
-		public String getBeanIdParameter() {
+		public String getBeanIdParameter(final PageParameter pp) {
 			return "newsId";
 		}
 	}
@@ -58,8 +58,8 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 	public static class NewsDownloadLogPage extends DownloadLogPage implements INewsContextAware {
 
 		@Override
-		protected IIdBeanAware getBean(final PageParameter pp) {
-			return context.getAttachmentService().getBean(pp.getParameter(getBeanIdParameter()));
+		protected IDbBeanService<?> getBeanService() {
+			return context.getAttachmentService();
 		}
 	}
 
