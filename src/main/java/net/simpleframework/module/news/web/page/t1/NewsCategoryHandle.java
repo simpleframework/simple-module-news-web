@@ -17,7 +17,6 @@ import net.simpleframework.mvc.IPageHandler.PageSelector;
 import net.simpleframework.mvc.component.AbstractComponentBean;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.category.ctx.CategoryBeanAwareHandler;
-import net.simpleframework.mvc.component.ui.propeditor.EInputCompType;
 import net.simpleframework.mvc.component.ui.propeditor.InputComp;
 import net.simpleframework.mvc.component.ui.propeditor.PropEditorBean;
 import net.simpleframework.mvc.component.ui.propeditor.PropField;
@@ -131,11 +130,10 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 	protected AbstractComponentBean categoryEdit_createPropEditor(final ComponentParameter cp) {
 		final PropEditorBean propEditor = (PropEditorBean) super.categoryEdit_createPropEditor(cp);
 
-		final PropField f = new PropField($m("NewsCategoryHandle.1")).addComponents(new InputComp(
-				"category_mark").setType(EInputCompType.select).setDefaultValue(ECategoryMark.normal,
-				ECategoryMark.builtIn));
-		propEditor.getFormFields().add(1, f);
-
+		propEditor.getFormFields().add(
+				1,
+				new PropField($m("NewsCategoryHandle.1")).addComponents(InputComp.select(
+						"category_mark").setDefaultValue(ECategoryMark.normal, ECategoryMark.builtIn)));
 		return propEditor;
 	}
 }
