@@ -65,7 +65,8 @@ public class NewsAttachmentTooltipPage extends AbstractAttachmentTooltipPage imp
 	}
 
 	@Override
-	protected Object getTopic(final PageParameter pp, final AttachmentFile attachment) {
+	protected Object getTopic(final PageParameter pp, final AttachmentFile attachment)
+			throws IOException {
 		return new LinkElement(attachment.getTopic())
 				.setOnclick("$Actions['NewsViewTPage_download']('id=" + attachment.getId() + "');");
 	}
