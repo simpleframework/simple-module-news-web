@@ -234,7 +234,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 	}
 
 	@Override
-	protected TabButtons getTabButtons(final PageParameter pp) {
+	public TabButtons getTabButtons(final PageParameter pp) {
 		final TabButton cTab = new TabButton($m("NewsCommentMgrPage.0"),
 				url(NewsCommentMgrPage.class));
 		final int c = context.getCommentService()

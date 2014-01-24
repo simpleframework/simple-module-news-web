@@ -79,7 +79,7 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 	}
 
 	@Override
-	protected TabButtons getTabButtons(final PageParameter pp) {
+	public TabButtons getTabButtons(final PageParameter pp) {
 		final NewsUrlsFactory uFactory = ((INewsWebContext) context).getUrlsFactory();
 		final News news = context.getNewsService().getBean(pp.getParameter("newsId"));
 		final TabButtons tabs = TabButtons.of(new TabButton($m("NewsFormBasePage.0"), uFactory

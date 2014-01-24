@@ -86,7 +86,7 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 	}
 
 	@Override
-	protected TabButtons getTabButtons(final PageParameter pp) {
+	public TabButtons getTabButtons(final PageParameter pp) {
 		return singleton(NewsMgrPage.class).getTabButtons(pp);
 	}
 
