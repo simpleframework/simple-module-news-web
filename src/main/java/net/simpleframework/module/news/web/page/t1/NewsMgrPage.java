@@ -29,6 +29,8 @@ import net.simpleframework.module.news.web.NewsLogRef.NewsUpdateLogPage;
 import net.simpleframework.module.news.web.NewsUrlsFactory;
 import net.simpleframework.module.news.web.page.NewsForm;
 import net.simpleframework.module.news.web.page.NewsViewTPage;
+import net.simpleframework.module.news.web.page.t2.NewsListPage;
+import net.simpleframework.module.news.web.page.t2.NewsViewPage;
 import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.JavascriptForward;
@@ -147,8 +149,9 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		final EContentStatus status = news.getStatus();
 		if (status == EContentStatus.edit) {
 			js.append("$Actions.loc('")
-					.append(((INewsWebContext) context).getUrlsFactory().getNewsFormUrl(cp, news))
-					.append("');");
+					.append(
+							((INewsWebContext) context).getUrlsFactory().getUrl(cp,
+									NewsFormBasePage.class, news)).append("');");
 		} else {
 			js.append("if (confirm('").append($m("NewsMgrPage.8", status))
 					.append("')) { $Actions['NewsMgrPage_statusWindow']('op=")
@@ -216,13 +219,13 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		}
 
 		final NewsUrlsFactory uFactory = ((INewsWebContext) context).getUrlsFactory();
-		String url = uFactory.getNewsFormUrl(pp, null);
+		String url = uFactory.getUrl(pp, NewsFormBasePage.class, (News) null);
 		final NewsCategory category = getNewsCategory(pp);
 		if (category != null) {
 			url += "?categoryId=" + category.getId();
 			btns.append(SpanElement.SPACE).append(
 					new LinkButton($m("Button.Preview")).setOnclick("$Actions.loc('"
-							+ uFactory.getNewsListUrl(pp, category) + "', true);"));
+							+ uFactory.getUrl(pp, NewsListPage.class, category) + "', true);"));
 		}
 		add.setOnclick("$Actions.loc('" + url + "');");
 		return btns;
@@ -443,7 +446,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		protected String getRedirectUrl(final PageParameter pp) {
 			final News news = NewsViewTPage.getNews(pp);
 			return news == null ? PAGE404.getUrl() : ((INewsWebContext) context).getUrlsFactory()
-					.getNewsUrl(pp, news, true);
+					.getUrl(pp, NewsViewPage.class, news, "preview=true");
 		}
 	}
 

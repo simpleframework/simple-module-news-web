@@ -10,6 +10,7 @@ import net.simpleframework.module.common.web.content.ListRowHandler;
 import net.simpleframework.module.common.web.content.PageletCreator;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
+import net.simpleframework.module.news.web.page.t2.NewsViewPage;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.template.struct.Pagelet;
@@ -36,7 +37,7 @@ public class NewsPageletCreator extends PageletCreator<News> implements INewsCon
 	public static class NewsListRowHandler extends ListRowHandler<News> {
 		@Override
 		protected String getHref(final PageParameter pp, final News news) {
-			return ((INewsWebContext) context).getUrlsFactory().getNewsUrl(pp, news);
+			return ((INewsWebContext) context).getUrlsFactory().getUrl(pp, NewsViewPage.class, news);
 		}
 
 		@Override

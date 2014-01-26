@@ -26,6 +26,9 @@ import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsPageletCreator;
 import net.simpleframework.module.news.web.NewsUrlsFactory;
+import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
+import net.simpleframework.module.news.web.page.t2.NewsListPage;
+import net.simpleframework.module.news.web.page.t2.NewsViewPage;
 import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.IMVCConst;
 import net.simpleframework.mvc.PageParameter;
@@ -84,7 +87,8 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 	protected TabButtons getCategoryTabs(final PageParameter pp) {
 		final NewsUrlsFactory uFactory = ((INewsWebContext) context).getUrlsFactory();
 		final TabButtons btns = TabButtons.of();
-		btns.add(new TabButton($m("NewsListTPage.4"), uFactory.getNewsListUrl(pp, null)));
+		btns.add(new TabButton($m("NewsListTPage.4"), uFactory.getUrl(pp, NewsListPage.class,
+				(NewsCategory) null)));
 
 		final INewsCategoryService service = context.getNewsCategoryService();
 		NewsCategory category = getNewsCategory(pp);
@@ -95,8 +99,8 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 			if (i++ > 3) {
 				break;
 			}
-			btns.add(new TabButton(category.getText(), uFactory.getNewsListUrl(pp, category))
-					.setTabMatch(ETabMatch.params));
+			btns.add(new TabButton(category.getText(), uFactory.getUrl(pp, NewsListPage.class,
+					category)).setTabMatch(ETabMatch.params));
 		}
 		addSearchTab(pp, btns);
 		return btns;
@@ -116,12 +120,14 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		return ElementList.of(new SearchInput("NewsListTPage_search")
 				.setOnSearchClick(
 						"$Actions.loc('"
-								+ HttpUtils.addParameters(uFactory.getNewsListUrl(pp, null), "t=")
+								+ HttpUtils.addParameters(
+										uFactory.getUrl(pp, NewsListPage.class, (NewsCategory) null), "t=")
 								+ "' + encodeURIComponent($F('NewsListTPage_search')))")
 				.setOnAdvClick(
 						"$Actions['NewsListTPage_SearchWindow']('"
-								+ AdvSearchPage.encodeRefererUrl(uFactory.getNewsListUrl(pp, category))
-								+ "');").setText(StringUtils.blank(pp.getLocaleParameter("t"))));
+								+ AdvSearchPage.encodeRefererUrl(uFactory.getUrl(pp, NewsListPage.class,
+										category)) + "');")
+				.setText(StringUtils.blank(pp.getLocaleParameter("t"))));
 	}
 
 	public IForward doPageletTab(final ComponentParameter cp) {
@@ -179,7 +185,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 				AbstractElement<?> link;
 				if (i > 0) {
 					link = new LinkElement(txt).setHref(((INewsWebContext) context).getUrlsFactory()
-							.getNewsListUrl(pp, category));
+							.getUrl(pp, NewsListPage.class, category));
 				} else {
 					link = new LabelElement(txt);
 				}
@@ -191,8 +197,8 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 
 	@Override
 	public FilterButtons getFilterButtons(final PageParameter pp) {
-		final String url = ((INewsWebContext) context).getUrlsFactory().getNewsListUrl(pp,
-				getNewsCategory(pp));
+		final String url = ((INewsWebContext) context).getUrlsFactory().getUrl(pp,
+				NewsListPage.class, getNewsCategory(pp));
 		final FilterButtons btns = FilterButtons.of();
 		final NewsAdvSearchPage sPage = singleton(NewsAdvSearchPage.class);
 		FilterButton btn = sPage.createFilterButton(pp, url, "as_topic");
@@ -305,7 +311,8 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		}
 
 		protected String getTopicEditUrl(final ComponentParameter cp, final News news) {
-			String url = ((INewsWebContext) context).getUrlsFactory().getNewsFormUrl(cp, news);
+			String url = ((INewsWebContext) context).getUrlsFactory().getUrl(cp,
+					NewsFormBasePage.class, news);
 			final String referer = cp.getParameter(IMVCConst.PARAM_REFERER);
 			if (StringUtils.hasText(referer)) {
 				url = HttpUtils.addParameters(url, "url=" + HttpUtils.encodeUrl(referer));
@@ -326,7 +333,8 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		protected Object getDataProperty(final ComponentParameter cp, final Object dataObject,
 				final String key) {
 			if (OP_TOPIC_URL.equals(key)) {
-				return ((INewsWebContext) context).getUrlsFactory().getNewsUrl(cp, (News) dataObject);
+				return ((INewsWebContext) context).getUrlsFactory().getUrl(cp, NewsViewPage.class,
+						(News) dataObject);
 			} else if (OP_DATE.equals(key)) {
 				return ((News) dataObject).getCreateDate();
 			}

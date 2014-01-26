@@ -1,5 +1,6 @@
 package net.simpleframework.module.news.web;
 
+import net.simpleframework.common.StringUtils;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.page.t1.NewsFormAttachPage;
@@ -20,59 +21,38 @@ import net.simpleframework.mvc.common.UrlsCache;
  */
 public class NewsUrlsFactory extends UrlsCache {
 
-	protected Class<? extends AbstractMVCPage> getNewsListPage(final NewsCategory category) {
-		return NewsListPage.class;
+	public NewsUrlsFactory() {
+		put(NewsMgrPage.class);
+
+		put(NewsListPage.class);
+		put(NewsViewPage.class);
+		put(NewsFormBasePage.class);
+		put(NewsFormAttachPage.class);
+		put(NewsFormVotePage.class);
 	}
 
-	public String getNewsListUrl(final PageParameter pp, final NewsCategory category) {
-		String url = AbstractMVCPage.url(getNewsListPage(category));
-		if (category != null) {
-			url += "?categoryId=" + category.getId();
-		}
-		return url;
+	public String getUrl(final PageParameter pp, final Class<? extends AbstractMVCPage> mClass,
+			final NewsCategory category) {
+		return getUrl(pp, mClass, category, null);
 	}
 
-	public String getNewsManagerUrl(final PageParameter pp, final NewsCategory category) {
-		String url = AbstractMVCPage.url(NewsMgrPage.class);
-		if (category != null) {
-			url += "?categoryId=" + category.getId();
-		}
-		return url;
+	public String getUrl(final PageParameter pp, final Class<? extends AbstractMVCPage> mClass,
+			final NewsCategory category, final String params) {
+		return getUrl(
+				pp,
+				mClass,
+				StringUtils.join(new String[] {
+						category != null ? "categoryId=" + category.getId() : null, params }, "&"));
 	}
 
-	protected Class<? extends AbstractMVCPage> getNewsFormPage(final News news) {
-		return NewsFormBasePage.class;
+	public String getUrl(final PageParameter pp, final Class<? extends AbstractMVCPage> mClass,
+			final News news) {
+		return getUrl(pp, mClass, news, null);
 	}
 
-	public String getNewsFormUrl(final PageParameter pp, final News news) {
-		String url = AbstractMVCPage.url(getNewsFormPage(news));
-		if (news != null) {
-			url += "?newsId=" + news.getId();
-		}
-		return url;
-	}
-
-	public String getNewsForm_AttachUrl(final PageParameter pp, final News news) {
-		return AbstractMVCPage.url(NewsFormAttachPage.class, "newsId=" + news.getId());
-	}
-
-	public String getNewsForm_VoteUrl(final PageParameter pp, final News news) {
-		return AbstractMVCPage.url(NewsFormVotePage.class, "newsId=" + news.getId());
-	}
-
-	public String getNewsUrl(final PageParameter pp, final News news) {
-		return getNewsUrl(pp, news, false);
-	}
-
-	protected Class<? extends AbstractMVCPage> getNewsViewPage(final News news) {
-		return NewsViewPage.class;
-	}
-
-	public String getNewsUrl(final PageParameter pp, final News news, final boolean preview) {
-		String url = AbstractMVCPage.url(getNewsViewPage(news)) + "?newsId=" + news.getId();
-		if (preview) {
-			url += "&preview=true";
-		}
-		return url;
+	public String getUrl(final PageParameter pp, final Class<? extends AbstractMVCPage> mClass,
+			final News news, final String params) {
+		return getUrl(pp, mClass, StringUtils.join(
+				new String[] { news != null ? "newsId=" + news.getId() : null, params }, "&"));
 	}
 }

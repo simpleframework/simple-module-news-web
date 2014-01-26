@@ -16,6 +16,7 @@ import net.simpleframework.module.news.NewsComment;
 import net.simpleframework.module.news.web.NewsWebContext;
 import net.simpleframework.module.news.web.page.NewsForm;
 import net.simpleframework.module.news.web.page.t1.NewsCommentPage.NewsCommentTbl;
+import net.simpleframework.module.news.web.page.t2.NewsViewPage;
 import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageMapping;
@@ -117,9 +118,11 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 		protected String getContent(final PageParameter pp, final NewsComment comment) {
 			final News news = context.getNewsService().getBean(comment.getContentId());
 			final String txt = super.getContent(pp, comment);
-			return news != null ? LinkElement.BLANK(txt)
-					.setHref(((NewsWebContext) context).getUrlsFactory().getNewsUrl(pp, news))
-					.toString() : txt;
+			return news != null ? LinkElement
+					.BLANK(txt)
+					.setHref(
+							((NewsWebContext) context).getUrlsFactory().getUrl(pp, NewsViewPage.class,
+									news)).toString() : txt;
 		}
 	}
 }

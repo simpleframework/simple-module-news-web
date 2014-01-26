@@ -27,7 +27,9 @@ import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsAttachmentAction;
+import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
 import net.simpleframework.module.news.web.page.t1.NewsMgrPage;
+import net.simpleframework.module.news.web.page.t2.NewsViewPage;
 import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
@@ -162,8 +164,9 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 	protected JavascriptForward doSaveForward(final ComponentParameter cp, final News news) {
 		final JavascriptForward js = new JavascriptForward();
 		js.append("$Actions.loc('")
-				.append(((INewsWebContext) context).getUrlsFactory().getNewsFormUrl(cp, news))
-				.append("&op=save");
+				.append(
+						((INewsWebContext) context).getUrlsFactory().getUrl(cp, NewsFormBasePage.class,
+								news)).append("&op=save");
 		final String url = cp.getParameter("url");
 		if (StringUtils.hasText(url)) {
 			js.append("&url=").append(HttpUtils.encodeUrl(url));
@@ -341,8 +344,8 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		if (news != null) {
 			el.append(
 					new ButtonElement($m("Button.Preview")).setOnclick("$Actions.loc('"
-							+ ((INewsWebContext) context).getUrlsFactory().getNewsUrl(pp, news, true)
-							+ "', true);"), SpanElement.SPACE);
+							+ ((INewsWebContext) context).getUrlsFactory().getUrl(pp, NewsViewPage.class,
+									news, "preview=true") + "', true);"), SpanElement.SPACE);
 		}
 		el.append(SAVE_BTN());
 		return el;

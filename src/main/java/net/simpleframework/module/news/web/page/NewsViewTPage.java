@@ -33,6 +33,7 @@ import net.simpleframework.module.news.web.NewsFavoriteRef;
 import net.simpleframework.module.news.web.NewsPageletCreator;
 import net.simpleframework.module.news.web.NewsPageletCreator.NewsListRowHandler;
 import net.simpleframework.module.news.web.NewsVoteRef;
+import net.simpleframework.module.news.web.page.t2.NewsListPage;
 import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
@@ -228,7 +229,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		for (int i = al.size() - 1; i >= 0; i--) {
 			category = al.get(i);
 			btns.add(new LinkElement(category.getText()).setHref(((INewsWebContext) context)
-					.getUrlsFactory().getNewsListUrl(pp, category)));
+					.getUrlsFactory().getUrl(pp, NewsListPage.class, category)));
 		}
 		return btns;
 	}

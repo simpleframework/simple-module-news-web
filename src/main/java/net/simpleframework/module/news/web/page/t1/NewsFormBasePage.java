@@ -11,6 +11,7 @@ import net.simpleframework.common.StringUtils;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
+import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsUrlsFactory;
 import net.simpleframework.module.news.web.NewsVoteRef;
@@ -67,7 +68,8 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 		if (StringUtils.hasText(url)) {
 			backBtn.setHref(url);
 		} else {
-			backBtn.setOnclick("$Actions.loc('" + uFactory.getNewsManagerUrl(pp, null)
+			backBtn.setOnclick("$Actions.loc('"
+					+ uFactory.getUrl(pp, NewsMgrPage.class, (NewsCategory) null)
 					+ "?categoryId=' + $F('ne_categoryId'));");
 		}
 		final ElementList el = ElementList.of(backBtn);
@@ -83,14 +85,14 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 		final NewsUrlsFactory uFactory = ((INewsWebContext) context).getUrlsFactory();
 		final News news = context.getNewsService().getBean(pp.getParameter("newsId"));
 		final TabButtons tabs = TabButtons.of(new TabButton($m("NewsFormBasePage.0"), uFactory
-				.getNewsFormUrl(pp, news)));
+				.getUrl(pp, NewsFormBasePage.class, news)));
 		if (news != null) {
 			String t1 = $m("NewsFormBasePage.1");
 			final int attachs = context.getAttachmentService().queryByContent(news).getCount();
 			if (attachs > 0) {
 				t1 += SupElement.num(attachs);
 			}
-			tabs.append(new TabButton(t1, uFactory.getNewsForm_AttachUrl(pp, news)));
+			tabs.append(new TabButton(t1, uFactory.getUrl(pp, NewsFormAttachPage.class, news)));
 			final IModuleRef ref = ((INewsWebContext) context).getVoteRef();
 			if (ref != null) {
 				String t2 = $m("NewsFormBasePage.2");
@@ -98,7 +100,7 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 				if (votes > 0) {
 					t2 += SupElement.num(votes);
 				}
-				tabs.append(new TabButton(t2, uFactory.getNewsForm_VoteUrl(pp, news)));
+				tabs.append(new TabButton(t2, uFactory.getUrl(pp, NewsFormVotePage.class, news)));
 			}
 		}
 		return tabs;
