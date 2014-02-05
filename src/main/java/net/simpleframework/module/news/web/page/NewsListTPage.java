@@ -147,7 +147,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 	protected Pagelets getPagelets(final PageParameter pp) {
 		final INewsService service = context.getNewsService();
 		final NewsCategory category = getNewsCategory(pp);
-		final Object categoryId = category.getId();
+		final Object categoryId = category == null ? "" : category.getId();
 		final NewsPageletCreator creator = ((INewsWebContext) context).getPageletCreator();
 
 		final Pagelets lets = Pagelets.of();
