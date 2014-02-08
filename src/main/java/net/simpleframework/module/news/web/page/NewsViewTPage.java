@@ -197,7 +197,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 					@Override
 					protected News toBean(final Object o) {
 						final News news2 = super.toBean(o);
-						return news2 != null && !news2.getId().equals(news.getId()) ? news2 : null;
+						return news2 != null && !news2.equals(news) ? news2 : null;
 					}
 				}).setDotIcon(EImageDot.imgDot1)));
 
