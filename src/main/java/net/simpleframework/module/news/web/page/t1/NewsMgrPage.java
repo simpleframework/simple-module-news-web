@@ -182,7 +182,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 				return js;
 			}
 			if (status == EContentStatus.delete) {
-				deletes.add(Convert.toString(news.getId()));
+				deletes.add(news.getId().toString());
 			}
 		}
 		if (op == EContentStatus.delete && deletes.size() > 0) {

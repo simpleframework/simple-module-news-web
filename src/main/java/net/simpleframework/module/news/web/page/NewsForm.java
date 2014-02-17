@@ -330,10 +330,12 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 				.append(SpanElement.SPACE)
 				.append(new LinkButton($m("NewsForm.7")).setOnclick(attachClick))
 				.append(
-						new BlockElement("idNewsForm_opts").setStyle("display: none;").addElements(
-								opt_viewer, SpanElement.SPACE, opt_targetBlank, SpanElement.SPACE,
-								opt_removeClass, SpanElement.SPACE, opt_removeStyle, SpanElement.SPACE,
-								opt_removeTagFont));
+						new BlockElement()
+								.setId("idNewsForm_opts")
+								.setStyle("display: none;")
+								.addElements(opt_viewer, SpanElement.SPACE, opt_targetBlank,
+										SpanElement.SPACE, opt_removeClass, SpanElement.SPACE,
+										opt_removeStyle, SpanElement.SPACE, opt_removeTagFont));
 		return el;
 	}
 
