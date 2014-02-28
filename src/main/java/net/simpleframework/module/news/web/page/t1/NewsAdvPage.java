@@ -26,7 +26,7 @@ public class NewsAdvPage extends AbstractTemplatePage implements INewsContextAwa
 		super.onForward(pp);
 
 		addAjaxRequest(pp, "NewsAdvPage_reIndex").setConfirmMessage($m("NewsAdvPage.2"))
-				.setHandleMethod("doIndex");
+				.setHandlerMethod("doIndex");
 	}
 
 	@Override

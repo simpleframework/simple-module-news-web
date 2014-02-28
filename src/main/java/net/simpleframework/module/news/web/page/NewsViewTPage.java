@@ -90,7 +90,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 	}
 
 	protected AjaxRequestBean addAjaxRequest_Download(final PageParameter pp) {
-		return addAjaxRequest(pp, "NewsViewTPage_download").setHandleMethod("doDownload");
+		return addAjaxRequest(pp, "NewsViewTPage_download").setHandlerMethod("doDownload");
 	}
 
 	protected AjaxRequestBean addTooltipPage(final PageParameter pp) {

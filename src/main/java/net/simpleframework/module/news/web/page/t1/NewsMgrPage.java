@@ -98,14 +98,14 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 				}.setTextAlign(ETextAlign.left)).addColumn(TablePagerColumn.OPE().setWidth(140));
 
 		// edit
-		addAjaxRequest(pp, "NewsMgrPage_edit").setHandleMethod("doEdit");
+		addAjaxRequest(pp, "NewsMgrPage_edit").setHandlerMethod("doEdit");
 
 		// status
-		addAjaxRequest(pp, "NewsMgrPage_status").setHandleMethod("doStatus");
+		addAjaxRequest(pp, "NewsMgrPage_status").setHandlerMethod("doStatus");
 
 		// delete
 		addAjaxRequest(pp, "NewsMgrPage_delete").setConfirmMessage($m("NewsMgrPage.11"))
-				.setHandleMethod("doDelete");
+				.setHandlerMethod("doDelete");
 
 		// status
 		addAjaxRequest(pp, "NewsMgrPage_statusPage", StatusDescPage.class);

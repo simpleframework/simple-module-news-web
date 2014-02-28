@@ -55,7 +55,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 				.addColumn(TablePagerColumn.OPE().setWidth(80));
 
 		// allowComments
-		addAjaxRequest(pp, "NewsCommentPage_allowComments").setHandleMethod("doAllowComments");
+		addAjaxRequest(pp, "NewsCommentPage_allowComments").setHandlerMethod("doAllowComments");
 
 		// delete
 		addDeleteAjaxRequest(pp, "NewsCommentPage_delete");

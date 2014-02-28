@@ -55,7 +55,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		final TablePagerBean tablePager = (TablePagerBean) addComponentBean(pp,
 				"NewsTabAttachPage_tbl", TablePagerBean.class)
 				.setPagerBarLayout(EPagerBarLayout.bottom).setContainerId("tbl_" + hashId)
-				.setHandleClass(NewsAttachmentTbl.class);
+				.setHandlerClass(NewsAttachmentTbl.class);
 		tablePager
 				.addColumn(
 						new TablePagerColumn("topic", $m("NewsFormAttachPage.0"))

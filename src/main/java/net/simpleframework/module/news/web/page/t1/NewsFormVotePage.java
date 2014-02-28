@@ -49,7 +49,7 @@ public class NewsFormVotePage extends NewsFormBasePage {
 			if (ref != null) {
 				((NewsVoteRef) ref).addVotesTbl(pp).setShowFilterBar(false)
 						.setNoResultDesc($m("NewsForm_Vote.0")).setPagerBarLayout(EPagerBarLayout.bottom)
-						.setContainerId("table_" + hashId).setHandleClass(NewsVoteListHandler.class);
+						.setContainerId("table_" + hashId).setHandlerClass(NewsVoteListHandler.class);
 			}
 		}
 

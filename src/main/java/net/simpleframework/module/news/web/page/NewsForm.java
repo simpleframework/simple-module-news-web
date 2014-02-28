@@ -81,7 +81,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		addHtmlEditorBean(pp).setTextarea("ne_content");
 
 		// 类目字典
-		addComponentBean(pp, "NewsForm_dict_tree", TreeBean.class).setHandleClass(
+		addComponentBean(pp, "NewsForm_dict_tree", TreeBean.class).setHandlerClass(
 				CategorySelectedTree.class);
 		addComponentBean(pp, "NewsForm_dict", DictionaryBean.class).setBindingId("ne_categoryId")
 				.setBindingText("ne_categoryText").addTreeRef(pp, "NewsForm_dict_tree")
@@ -89,7 +89,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 
 		// 上传
 		addComponentBean(pp, "NewsForm_upload_page", AttachmentBean.class).setInsertTextarea(
-				"ne_content").setHandleClass(NewsAttachmentAction.class);
+				"ne_content").setHandlerClass(NewsAttachmentAction.class);
 		addComponentBean(pp, "NewsForm_upload", WindowBean.class)
 				.setContentRef("NewsForm_upload_page").setTitle($m("NewsForm.10")).setPopup(true)
 				.setHeight(480).setWidth(400);
