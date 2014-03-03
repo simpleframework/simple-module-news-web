@@ -224,7 +224,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 
 		final InputElement ne_description = InputElement.textarea("ne_description").setRows(3);
 		final InputElement ne_content = InputElement.textarea("ne_content")
-				.setStyle("display: none;");
+				.addStyle("display: none;");
 
 		final InputElement ne_cname = new InputElement("ne_cname");
 
@@ -332,7 +332,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 				.append(
 						new BlockElement()
 								.setId("idNewsForm_opts")
-								.setStyle("display: none;")
+								.addStyle("display: none;")
 								.addElements(opt_viewer, SpanElement.SPACE, opt_targetBlank,
 										SpanElement.SPACE, opt_removeClass, SpanElement.SPACE,
 										opt_removeStyle, SpanElement.SPACE, opt_removeTagFont));

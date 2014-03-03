@@ -51,7 +51,7 @@ public class NewsPageletCreator extends PageletCreator<News> implements INewsCon
 				cal.setTime(new Date());
 				cal.add(Calendar.HOUR_OF_DAY, -12);
 				if (lastCommentDate.after(cal.getTime())) {
-					sb.append(new SpanElement(c).setStyle("color: red;"));
+					sb.append(new SpanElement(c).addStyle("color: red;"));
 				}
 			}
 			if (sb.length() == 0) {
