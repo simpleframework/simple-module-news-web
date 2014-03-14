@@ -3,6 +3,7 @@ package net.simpleframework.module.news.web.page.t1;
 import static net.simpleframework.common.I18n.$m;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 
 import net.simpleframework.ado.query.IDataQuery;
@@ -65,7 +66,9 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 								.setTextAlign(ETextAlign.left))
 				.addColumn(new TablePagerColumn("downloads", $m("NewsFormAttachPage.2"), 80))
 				.addColumn(new TablePagerColumn("userId", $m("NewsFormAttachPage.3"), 100))
-				.addColumn(new TablePagerColumn("createDate", $m("NewsFormAttachPage.4"), 120))
+				.addColumn(
+						new TablePagerColumn("createDate", $m("NewsFormAttachPage.4"), 120)
+								.setPropertyClass(Date.class))
 				.addColumn(TablePagerColumn.OPE().setWidth(120));
 
 		if (((INewsWebContext) context).getLogRef() != null) {
