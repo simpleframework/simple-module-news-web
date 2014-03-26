@@ -95,9 +95,20 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 				.setHeight(480).setWidth(400);
 	}
 
+	protected boolean isHtmlEditorCodeEnabled() {
+		return false;
+	}
+
 	protected HtmlEditorBean addHtmlEditorBean(final PageParameter pp) {
-		return (HtmlEditorBean) addHtmlEditorBean(pp, "NewsForm_editor").setToolbar(Toolbar.STANDARD)
-				.setHeight("340");
+		String attachClick = "$Actions['NewsForm_upload']('" + OPT_VIEWER + "=' + $F('" + OPT_VIEWER
+				+ "')";
+		final News news = NewsViewTPage.getNews(pp);
+		if (news != null) {
+			attachClick += " + '&newsId=" + news.getId() + "'";
+		}
+		attachClick += ");";
+		return (HtmlEditorBean) addHtmlEditorBean(pp, "NewsForm_editor", isHtmlEditorCodeEnabled())
+				.setAttachAction(attachClick).setToolbar(NEWS_TOOLBAR).setHeight("340");
 	}
 
 	@Override
@@ -120,7 +131,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		} else {
 			if (!ObjectUtils.objectEquals(news.getCname(), ne_cname)
 					&& service.getBeanByName(ne_cname) != null) {
-				throw ContentException.of($m("NewsForm.20") + ne_cname);
+				throw ContentException.of($m("NewsForm.7") + ne_cname);
 			}
 		}
 
@@ -304,20 +315,16 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		final Checkbox opt_removeTagFont = new Checkbox(OPT_REMOVE_TAG_FONT, $m("NewsForm.19"));
 
 		final News news = NewsViewTPage.getNews(pp);
-		String attachClick = "$Actions['NewsForm_upload']('" + OPT_VIEWER + "=' + $F('" + OPT_VIEWER
-				+ "')";
 		if (news != null) {
 			opt_allowComments.setChecked(news.isAllowComments());
 			opt_indexed.setChecked(news.isIndexed());
 			opt_imageMark.setChecked(news.isImageMark());
-			attachClick += " + '&newsId=" + news.getId() + "'";
 		} else {
 			final News _news = new News();
 			opt_allowComments.setChecked(_news.isAllowComments());
 			opt_indexed.setChecked(_news.isIndexed());
 			opt_imageMark.setChecked(_news.isImageMark());
 		}
-		attachClick += ");";
 
 		final ElementList el = ElementList.of();
 		el.append(opt_allowComments)
@@ -327,8 +334,6 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 				.append(opt_indexed)
 				.append(SpanElement.SPACE)
 				.append(new LinkButton($m("NewsForm.15")).setOnclick("$('idNewsForm_opts').toggle();"))
-				.append(SpanElement.SPACE)
-				.append(new LinkButton($m("NewsForm.7")).setOnclick(attachClick))
 				.append(
 						new BlockElement()
 								.setId("idNewsForm_opts")
@@ -381,4 +386,14 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 			return ((NewsForm) get(cp)).getCategoryDictTreenodes(cp, parent);
 		}
 	}
+
+	private static Toolbar NEWS_TOOLBAR = Toolbar.of(new String[] { "Source" }, new String[] {
+			"Bold", "Italic", "Underline", "Strike" }, new String[] { "PasteText", "PasteFromWord" },
+			new String[] { "Find", "Replace", "-", "RemoveFormat" }, new String[] { "NumberedList",
+					"BulletedList", "-", "Outdent", "Indent", "Blockquote" }, new String[] {
+					"JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock" }, new String[] {
+					"Link", "Unlink", "Anchor" }, new String[] {}, new String[] { "Styles", "Format",
+					"Font", "FontSize" }, new String[] { "TextColor", "BGColor" }, new String[] {
+					"Image", "Table", "HorizontalRule", "Smiley", "SpecialChar" },
+			new String[] { "Attach" }, new String[] { "Maximize" });
 }
