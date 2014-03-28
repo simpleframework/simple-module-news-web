@@ -92,9 +92,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 	@Transaction(context = INewsContext.class)
 	public IForward doDelete(final ComponentParameter cp) {
 		final Object[] ids = StringUtils.split(cp.getParameter("id"));
-		if (ids != null) {
-			context.getAttachmentService().delete(ids);
-		}
+		context.getAttachmentService().delete(ids);
 		return new JavascriptForward("$Actions['NewsTabAttachPage_tbl']();");
 	}
 

@@ -165,9 +165,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 	@Transaction(context = INewsContext.class)
 	public IForward doDelete(final ComponentParameter cp) {
 		final Object[] ids = StringUtils.split(cp.getParameter("newsId"));
-		if (ids != null) {
-			context.getNewsService().delete(ids);
-		}
+		context.getNewsService().delete(ids);
 		return createTableRefresh();
 	}
 
@@ -479,14 +477,11 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
 			final EContentStatus op = cp.getEnumParameter(EContentStatus.class, "op");
 			final INewsService service = context.getNewsService();
-			final String[] arr = StringUtils.split(cp.getParameter("newsId"), ";");
-			if (arr != null) {
-				for (final String id : arr) {
-					final News news = service.getBean(id);
-					setLogDescription(cp, news);
-					news.setStatus(op);
-					service.update(new String[] { "status" }, news);
-				}
+			for (final String id : StringUtils.split(cp.getParameter("newsId"), ";")) {
+				final News news = service.getBean(id);
+				setLogDescription(cp, news);
+				news.setStatus(op);
+				service.update(new String[] { "status" }, news);
 			}
 			return super.onSave(cp)
 					.append(CategoryTableLCTemplatePage.createTableRefresh().toString());

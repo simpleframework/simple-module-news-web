@@ -189,7 +189,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		// 按相关度
 		final ILuceneManager lService = service.getLuceneService();
 		String[] arr = StringUtils.split(news.getKeyWords(), " ");
-		if (arr == null || arr.length < 3) {
+		if (arr.length < 3) {
 			arr = ArrayUtils.add(arr, lService.getQueryTokens(news.getTopic()));
 		}
 		lets.add(new Pagelet(new CategoryItem($m("NewsViewTPage.3")), creator.create(pp,
