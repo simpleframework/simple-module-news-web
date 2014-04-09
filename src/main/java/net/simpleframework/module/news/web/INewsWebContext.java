@@ -6,6 +6,7 @@ import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.module.common.web.content.IContentRefAware;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
+import net.simpleframework.mvc.IMVCContextVar;
 import net.simpleframework.mvc.common.IDownloadHandler;
 
 /**
@@ -14,7 +15,7 @@ import net.simpleframework.mvc.common.IDownloadHandler;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public interface INewsWebContext extends INewsContext, IContentRefAware {
+public interface INewsWebContext extends INewsContext, IContentRefAware, IMVCContextVar {
 
 	/**
 	 * 获取小页面的创建类
