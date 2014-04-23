@@ -73,7 +73,7 @@ public class NewsCommentHandler extends CommentCtxHandler<NewsComment> implement
 		}
 		comment.setCreateDate(new Date());
 		comment.setUserId(cp.getLoginId());
-		comment.setContent(cp.getParameter(PARAM_COMMENT));
+		comment.setComment(cp.getParameter(PARAM_COMMENT));
 		final AbstractComment parent = service.getBean(cp.getParameter(PARAM_PARENTID));
 		if (parent != null) {
 			comment.setParentId(parent.getId());
