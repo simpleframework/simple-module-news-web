@@ -166,7 +166,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 						aService.delete(deleteQueue.toArray(new Object[] { deleteQueue.size() }));
 					}
 				}
-				aService.insert(news2.getId(), cp.getLoginId(), addQueue);
+				aService.insert(news2.getId(), cp.getLoginId(), addQueue.values());
 			}
 		});
 		return doSaveForward(cp, news);
