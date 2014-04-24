@@ -174,7 +174,8 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 			final InputElement ae_topic = new InputElement("ae_topic");
 			final InputElement ae_description = InputElement.textarea("ae_description").setRows(4);
 
-			final Attachment attachment = getCacheBean(pp, newsContext.getAttachmentService(), "beanId");
+			final Attachment attachment = getCacheBean(pp, newsContext.getAttachmentService(),
+					"beanId");
 			if (attachment != null) {
 				beanId.setText(attachment.getId());
 				ae_topic.setText(attachment.getTopic());

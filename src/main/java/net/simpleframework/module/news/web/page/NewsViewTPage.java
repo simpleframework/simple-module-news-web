@@ -117,7 +117,8 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 	}
 
 	public IForward doDownload(final ComponentParameter cp) {
-		final Attachment attachment = newsContext.getAttachmentService().getBean(cp.getParameter("id"));
+		final Attachment attachment = newsContext.getAttachmentService().getBean(
+				cp.getParameter("id"));
 		final JavascriptForward js = new JavascriptForward();
 		if (attachment != null) {
 			final IAttachmentService<Attachment> service = newsContext.getAttachmentService();

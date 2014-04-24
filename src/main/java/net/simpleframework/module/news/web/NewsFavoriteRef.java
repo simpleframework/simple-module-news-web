@@ -54,8 +54,8 @@ public class NewsFavoriteRef extends FavoriteRef implements INewsContextAware {
 
 				@Override
 				public String getUrl() {
-					return ((INewsWebContext) newsContext).getUrlsFactory().getUrl(pp, NewsViewPage.class,
-							news);
+					return ((INewsWebContext) newsContext).getUrlsFactory().getUrl(pp,
+							NewsViewPage.class, news);
 				}
 			};
 		}

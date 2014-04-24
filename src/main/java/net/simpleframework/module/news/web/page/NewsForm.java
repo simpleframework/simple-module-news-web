@@ -176,8 +176,8 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		final JavascriptForward js = new JavascriptForward();
 		js.append("$Actions.loc('")
 				.append(
-						((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp, NewsFormBasePage.class,
-								news)).append("&op=save");
+						((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp,
+								NewsFormBasePage.class, news)).append("&op=save");
 		final String url = cp.getParameter("url");
 		if (StringUtils.hasText(url)) {
 			js.append("&url=").append(HttpUtils.encodeUrl(url));
@@ -351,8 +351,9 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		if (news != null) {
 			el.append(
 					new ButtonElement($m("Button.Preview")).setOnclick("$Actions.loc('"
-							+ ((INewsWebContext) newsContext).getUrlsFactory().getUrl(pp, NewsViewPage.class,
-									news, "preview=true") + "', true);"), SpanElement.SPACE);
+							+ ((INewsWebContext) newsContext).getUrlsFactory().getUrl(pp,
+									NewsViewPage.class, news, "preview=true") + "', true);"),
+					SpanElement.SPACE);
 		}
 		el.append(SAVE_BTN());
 		return el;
