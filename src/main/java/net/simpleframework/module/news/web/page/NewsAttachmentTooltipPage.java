@@ -32,7 +32,7 @@ public class NewsAttachmentTooltipPage extends AbstractAttachmentTooltipPage imp
 	protected void onForward(final PageParameter pp) {
 		super.onForward(pp);
 
-		if (((INewsWebContext) context).getLogRef() != null) {
+		if (((INewsWebContext) newsContext).getLogRef() != null) {
 			addComponentBean(pp, "AttachmentTooltipPage_logPage", AjaxRequestBean.class)
 					.setUrlForward(url(NewsDownloadLogPage.class));
 			addComponentBean(pp, "AttachmentTooltipPage_logWin", WindowBean.class)
@@ -43,7 +43,7 @@ public class NewsAttachmentTooltipPage extends AbstractAttachmentTooltipPage imp
 
 	@Override
 	protected LinkButton getPreviewButton(final PageParameter pp) {
-		final IModuleRef ref = ((INewsWebContext) context).getPDFRef();
+		final IModuleRef ref = ((INewsWebContext) newsContext).getPDFRef();
 		if (ref == null) {
 			return null;
 		}
@@ -56,7 +56,7 @@ public class NewsAttachmentTooltipPage extends AbstractAttachmentTooltipPage imp
 
 	@Override
 	protected AttachmentFile getAttachment(final PageParameter pp) {
-		final IAttachmentService<Attachment> service = context.getAttachmentService();
+		final IAttachmentService<Attachment> service = newsContext.getAttachmentService();
 		try {
 			return service.createAttachmentFile(service.getBean(pp.getParameter("id")));
 		} catch (final IOException e) {
@@ -76,7 +76,7 @@ public class NewsAttachmentTooltipPage extends AbstractAttachmentTooltipPage imp
 		if (downloads <= 0) {
 			return 0;
 		}
-		if (((INewsWebContext) context).getLogRef() != null) {
+		if (((INewsWebContext) newsContext).getLogRef() != null) {
 			return LinkButton.corner(downloads).setOnclick(
 					"$Actions['AttachmentTooltipPage_logWin']('beanId=" + attachment.getId() + "');");
 		} else {

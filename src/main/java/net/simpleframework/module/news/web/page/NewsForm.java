@@ -114,14 +114,14 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 	@Override
 	@Transaction(context = INewsContext.class)
 	public JavascriptForward onSave(final ComponentParameter cp) throws IOException {
-		final NewsCategory category = context.getNewsCategoryService().getBean(
+		final NewsCategory category = newsContext.getNewsCategoryService().getBean(
 				cp.getParameter("ne_categoryId"));
 		if (category == null) {
 			throw ContentException.of($m("NewsForm.9"));
 		}
 
 		final String ne_cname = cp.getParameter("ne_cname");
-		final INewsService service = context.getNewsService();
+		final INewsService service = newsContext.getNewsService();
 		News news = service.getBean(cp.getParameter("ne_id"));
 		final boolean insert = (news == null);
 		if (insert) {
@@ -157,7 +157,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 			@Override
 			public void save(final Map<String, AttachmentFile> addQueue, final Set<String> deleteQueue)
 					throws IOException {
-				final IAttachmentService<Attachment> aService = context.getAttachmentService();
+				final IAttachmentService<Attachment> aService = newsContext.getAttachmentService();
 				if (insert) {
 					service.insert(news2);
 				} else {
@@ -176,7 +176,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		final JavascriptForward js = new JavascriptForward();
 		js.append("$Actions.loc('")
 				.append(
-						((INewsWebContext) context).getUrlsFactory().getUrl(cp, NewsFormBasePage.class,
+						((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp, NewsFormBasePage.class,
 								news)).append("&op=save");
 		final String url = cp.getParameter("url");
 		if (StringUtils.hasText(url)) {
@@ -250,7 +250,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 			ne_author.setText(news.getAuthor());
 			ne_content.setText(HtmlUtils.wrapContextPath(pp.request, news.getContent()));
 			ne_description.setText(news.getDescription());
-			category = context.getNewsCategoryService().getBean(news.getCategoryId());
+			category = newsContext.getNewsCategoryService().getBean(news.getCategoryId());
 		} else {
 			final String _ne_cname = pp.getParameter("ne_cname");
 			if (StringUtils.hasText(_ne_cname)) {
@@ -258,7 +258,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 			}
 		}
 		if (category == null) {
-			category = context.getNewsCategoryService().getBean(pp.getParameter("categoryId"));
+			category = newsContext.getNewsCategoryService().getBean(pp.getParameter("categoryId"));
 		}
 		if (category != null) {
 			ne_categoryId.setText(category.getId());
@@ -351,7 +351,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		if (news != null) {
 			el.append(
 					new ButtonElement($m("Button.Preview")).setOnclick("$Actions.loc('"
-							+ ((INewsWebContext) context).getUrlsFactory().getUrl(pp, NewsViewPage.class,
+							+ ((INewsWebContext) newsContext).getUrlsFactory().getUrl(pp, NewsViewPage.class,
 									news, "preview=true") + "', true);"), SpanElement.SPACE);
 		}
 		el.append(SAVE_BTN());

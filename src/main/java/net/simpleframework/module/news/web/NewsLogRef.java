@@ -35,7 +35,7 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 		super.logDownload(beanId, topic, oFile);
 
 		// 更新计数
-		final IAttachmentService<Attachment> service = context.getAttachmentService();
+		final IAttachmentService<Attachment> service = newsContext.getAttachmentService();
 		final Attachment attachment = service.getBean(beanId);
 		if (attachment != null) {
 			attachment.setDownloads(getDownloadLogService().countLog(beanId));
@@ -47,7 +47,7 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 
 		@Override
 		protected IDbBeanService<?> getBeanService() {
-			return context.getNewsService();
+			return newsContext.getNewsService();
 		}
 
 		@Override
@@ -60,7 +60,7 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 
 		@Override
 		protected IDbBeanService<?> getBeanService() {
-			return context.getAttachmentService();
+			return newsContext.getAttachmentService();
 		}
 	}
 
@@ -68,12 +68,12 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 
 		@Override
 		protected IAttachmentService<Attachment> getAttachmentService() {
-			return context.getAttachmentService();
+			return newsContext.getAttachmentService();
 		}
 
 		@Override
 		protected INewsService getOwnerService() {
-			return context.getNewsService();
+			return newsContext.getNewsService();
 		}
 
 		@Override

@@ -80,11 +80,11 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 
 		final News news = getNews(pp);
 		if (news.isAllowComments()) {
-			addCommentBean(pp, NewsCommentHandler.class).setRole(context.getManagerRole());
+			addCommentBean(pp, NewsCommentHandler.class).setRole(newsContext.getManagerRole());
 		}
 
 		// 更新views
-		ContentUtils.updateViews(pp, news, context.getNewsService());
+		ContentUtils.updateViews(pp, news, newsContext.getNewsService());
 		// 记录到cookies
 		ContentUtils.addViewsCookie(pp, "news_views", news.getId());
 	}
@@ -117,10 +117,10 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 	}
 
 	public IForward doDownload(final ComponentParameter cp) {
-		final Attachment attachment = context.getAttachmentService().getBean(cp.getParameter("id"));
+		final Attachment attachment = newsContext.getAttachmentService().getBean(cp.getParameter("id"));
 		final JavascriptForward js = new JavascriptForward();
 		if (attachment != null) {
-			final IAttachmentService<Attachment> service = context.getAttachmentService();
+			final IAttachmentService<Attachment> service = newsContext.getAttachmentService();
 			try {
 				final AttachmentFile af = service.createAttachmentFile(attachment);
 				js.append("$Actions.loc('")
@@ -157,7 +157,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		sb.append(super.getTopic2(pp));
 
 		// 收藏
-		final IModuleRef ref = ((INewsWebContext) context).getFavoriteRef();
+		final IModuleRef ref = ((INewsWebContext) newsContext).getFavoriteRef();
 		if (ref != null) {
 			sb.append(SpanElement.SEP);
 			sb.append(((NewsFavoriteRef) ref).toFavoriteElement(pp, news.getId()));
@@ -166,12 +166,12 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 	}
 
 	public IForward doPageletTab(final ComponentParameter cp) {
-		final INewsService service = context.getNewsService();
-		final NewsPageletCreator creator = ((INewsWebContext) context).getPageletCreator();
+		final INewsService service = newsContext.getNewsService();
+		final NewsPageletCreator creator = ((INewsWebContext) newsContext).getPageletCreator();
 
 		final ETimePeriod tp = Convert.toEnum(ETimePeriod.class, cp.getParameter("time"));
 
-		final INewsCategoryService cService = context.getNewsCategoryService();
+		final INewsCategoryService cService = newsContext.getNewsCategoryService();
 		final IDataQuery<?> dq = service.queryRecommendationBeans(
 				cService.getBean(cp.getParameter("categoryId")), new TimePeriod(tp));
 		return new TextForward(cp.wrapHTMLContextPath(creator.create(cp, dq)
@@ -180,9 +180,9 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 
 	@Override
 	protected Pagelets getPagelets(final PageParameter pp) {
-		final INewsService service = context.getNewsService();
+		final INewsService service = newsContext.getNewsService();
 		final News news = getNews(pp);
-		final NewsPageletCreator creator = ((INewsWebContext) context).getPageletCreator();
+		final NewsPageletCreator creator = ((INewsWebContext) newsContext).getPageletCreator();
 
 		final Pagelets lets = Pagelets.of();
 
@@ -202,7 +202,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 				}).setDotIcon(EImageDot.imgDot1)));
 
 		// 按推荐
-		final INewsCategoryService cService = context.getNewsCategoryService();
+		final INewsCategoryService cService = newsContext.getNewsCategoryService();
 		final ID categoryId = news.getCategoryId();
 		final IDataQuery<?> dq = service.queryRecommendationBeans(cService.getBean(categoryId),
 				TimePeriod.week);
@@ -219,7 +219,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 	public NavigationButtons getNavigationBar(final PageParameter pp) {
 		final NavigationButtons btns = NavigationButtons.of();
 		final News news = getNews(pp);
-		final INewsCategoryService service = context.getNewsCategoryService();
+		final INewsCategoryService service = newsContext.getNewsCategoryService();
 		final ArrayList<NewsCategory> al = new ArrayList<NewsCategory>();
 		NewsCategory category = service.getBean(news.getCategoryId());
 		while (category != null) {
@@ -228,7 +228,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		}
 		for (int i = al.size() - 1; i >= 0; i--) {
 			category = al.get(i);
-			btns.add(new LinkElement(category.getText()).setHref(((INewsWebContext) context)
+			btns.add(new LinkElement(category.getText()).setHref(((INewsWebContext) newsContext)
 					.getUrlsFactory().getUrl(pp, NewsListPage.class, category)));
 		}
 		return btns;
@@ -241,9 +241,9 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 			return news.getCreateDate();
 		} else if (OP_CONTENT.equals(key)) {
 			final StringBuilder sb = new StringBuilder();
-			sb.append(ContentUtils.getContent(pp, context.getAttachmentService(), news));
+			sb.append(ContentUtils.getContent(pp, newsContext.getAttachmentService(), news));
 			// vote
-			final IModuleRef ref = ((INewsWebContext) context).getVoteRef();
+			final IModuleRef ref = ((INewsWebContext) newsContext).getVoteRef();
 			if (ref != null) {
 				final IDataQuery<?> dq = ((NewsVoteRef) ref).queryVotes(news);
 				if (dq.getCount() > 0) {
@@ -261,7 +261,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 	}
 
 	public static News getNews(final PageParameter pp) {
-		return getCacheBean(pp, context.getNewsService(), "newsId");
+		return getCacheBean(pp, newsContext.getNewsService(), "newsId");
 	}
 
 	public static boolean _isPage404(final PageParameter pp) {

@@ -43,7 +43,7 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 
 	@Override
 	public String getRole(final PageParameter pp) {
-		return context.getManagerRole();
+		return newsContext.getManagerRole();
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 
 	@Override
 	public ElementList getLeftElements(final PageParameter pp) {
-		final NewsUrlsFactory uFactory = ((INewsWebContext) context).getUrlsFactory();
+		final NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
 		final LinkButton backBtn = backBtn();
 		final String url = pp.getParameter("url");
 		if (StringUtils.hasText(url)) {
@@ -82,18 +82,18 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 
 	@Override
 	public TabButtons getTabButtons(final PageParameter pp) {
-		final NewsUrlsFactory uFactory = ((INewsWebContext) context).getUrlsFactory();
-		final News news = context.getNewsService().getBean(pp.getParameter("newsId"));
+		final NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
+		final News news = newsContext.getNewsService().getBean(pp.getParameter("newsId"));
 		final TabButtons tabs = TabButtons.of(new TabButton($m("NewsFormBasePage.0"), uFactory
 				.getUrl(pp, NewsFormBasePage.class, news)));
 		if (news != null) {
 			String t1 = $m("NewsFormBasePage.1");
-			final int attachs = context.getAttachmentService().queryByContent(news).getCount();
+			final int attachs = newsContext.getAttachmentService().queryByContent(news).getCount();
 			if (attachs > 0) {
 				t1 += SupElement.num(attachs);
 			}
 			tabs.append(new TabButton(t1, uFactory.getUrl(pp, NewsFormAttachPage.class, news)));
-			final IModuleRef ref = ((INewsWebContext) context).getVoteRef();
+			final IModuleRef ref = ((INewsWebContext) newsContext).getVoteRef();
 			if (ref != null) {
 				String t2 = $m("NewsFormBasePage.2");
 				final int votes = ((NewsVoteRef) ref).queryVotes(news).getCount();

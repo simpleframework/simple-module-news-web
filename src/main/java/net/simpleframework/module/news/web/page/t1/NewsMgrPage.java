@@ -121,7 +121,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 				.setTitle($m("AbstractContentBean.2"));
 
 		// log window
-		final IModuleRef ref = ((INewsWebContext) context).getLogRef();
+		final IModuleRef ref = ((INewsWebContext) newsContext).getLogRef();
 		if (ref != null) {
 			pp.addComponentBean("NewsMgrPage_update_logPage", AjaxRequestBean.class).setUrlForward(
 					AbstractMVCPage.url(NewsUpdateLogPage.class));
@@ -142,17 +142,17 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 	@Override
 	public String getRole(final PageParameter pp) {
-		return context.getManagerRole();
+		return newsContext.getManagerRole();
 	}
 
 	public IForward doEdit(final ComponentParameter cp) {
 		final JavascriptForward js = new JavascriptForward();
-		final News news = context.getNewsService().getBean(cp.getParameter("newsId"));
+		final News news = newsContext.getNewsService().getBean(cp.getParameter("newsId"));
 		final EContentStatus status = news.getStatus();
 		if (status == EContentStatus.edit) {
 			js.append("$Actions.loc('")
 					.append(
-							((INewsWebContext) context).getUrlsFactory().getUrl(cp,
+							((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp,
 									NewsFormBasePage.class, news)).append("');");
 		} else {
 			js.append("if (confirm('").append($m("NewsMgrPage.8", status))
@@ -165,7 +165,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 	@Transaction(context = INewsContext.class)
 	public IForward doDelete(final ComponentParameter cp) {
 		final Object[] ids = StringUtils.split(cp.getParameter("newsId"));
-		context.getNewsService().delete(ids);
+		newsContext.getNewsService().delete(ids);
 		return createTableRefresh();
 	}
 
@@ -175,7 +175,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		final String newsId = cp.getParameter("newsId");
 		final ArrayList<String> deletes = new ArrayList<String>();
 		for (final String id : StringUtils.split(newsId, ";")) {
-			final News news = context.getNewsService().getBean(id);
+			final News news = newsContext.getNewsService().getBean(id);
 			final EContentStatus status = news.getStatus();
 			if (op == status && op != EContentStatus.delete) {
 				js.append("alert('").append($m("NewsMgrPage.9", op)).append("');");
@@ -212,13 +212,13 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 				.append(SpanElement.SPACE)
 				.add(createStatusButton(EContentStatus.edit).setText($m("NewsMgrPage.7")));
 
-		if (pp.getLogin().isMember(context.getManagerRole())) {
+		if (pp.getLogin().isMember(newsContext.getManagerRole())) {
 			btns.append(SpanElement.SPACE).add(
 					new LinkButton($m("NewsMgrPage.13"))
 							.setOnclick("$Actions['NewsMgrPage_advWindow']();"));
 		}
 
-		final NewsUrlsFactory uFactory = ((INewsWebContext) context).getUrlsFactory();
+		final NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
 		String url = uFactory.getUrl(pp, NewsFormBasePage.class, (News) null);
 		final NewsCategory category = getNewsCategory(pp);
 		if (category != null) {
@@ -240,7 +240,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 	public TabButtons getTabButtons(final PageParameter pp) {
 		final TabButton cTab = new TabButton($m("NewsCommentMgrPage.0"),
 				url(NewsCommentMgrPage.class));
-		final int c = context.getCommentService()
+		final int c = newsContext.getCommentService()
 				.queryByParams(FilterItems.of(new FilterItem("createdate", TimePeriod.day))).getCount();
 		if (c > 0) {
 			cTab.setStat(c);
@@ -251,7 +251,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 	}
 
 	private static NewsCategory getNewsCategory(final PageParameter pp) {
-		return getCacheBean(pp, context.getNewsCategoryService(), "categoryId");
+		return getCacheBean(pp, newsContext.getNewsCategoryService(), "categoryId");
 	}
 
 	public static class NewsTableHandler extends LCTemplateTablePagerHandler {
@@ -266,7 +266,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 			if (status != null) {
 				cp.addFormParameter("status", status.name());
 			}
-			return context.getNewsService().queryBeans(category, status);
+			return newsContext.getNewsService().queryBeans(category, status);
 		}
 
 		@Override
@@ -311,7 +311,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 						kv.put("topic", sb.toString());
 					} else {
 						kv.put("topic", news.getTopic());
-						final NewsCategory category = context.getNewsCategoryService().getBean(
+						final NewsCategory category = newsContext.getNewsCategoryService().getBean(
 								news.getCategoryId());
 						if (category != null) {
 							kv.put("categoryId", category.getText());
@@ -342,7 +342,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 					}
 					sb.append(SpanElement.SPACE);
 					sb.append(ButtonElement.logBtn()
-							.setDisabled(((INewsWebContext) context).getLogRef() == null)
+							.setDisabled(((INewsWebContext) newsContext).getLogRef() == null)
 							.setOnclick("$Actions['NewsMgrPage_update_log']('newsId=" + id + "');"));
 					sb.append(SpanElement.SPACE).append(AbstractTablePagerSchema.IMG_DOWNMENU);
 					kv.put(TablePagerColumn.OPE, sb.toString());
@@ -367,7 +367,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 					if (s == EContentStatus.lock) {
 						sb.append(";4");
 					}
-					if (((INewsWebContext) context).getLogRef() == null) {
+					if (((INewsWebContext) newsContext).getLogRef() == null) {
 						sb.append(";7");
 					}
 					if (sb.length() > 0) {
@@ -424,7 +424,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 						@Override
 						protected NewsCategory get(final Object id) {
-							return context.getNewsCategoryService().getBean(id);
+							return newsContext.getNewsCategoryService().getBean(id);
 						}
 
 						@Override
@@ -436,7 +436,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 		@Override
 		public Object getRowBeanById(final ComponentParameter cp, final Object id) {
-			return context.getNewsService().getBean(id);
+			return newsContext.getNewsService().getBean(id);
 		}
 	}
 
@@ -445,7 +445,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		@Override
 		protected String getRedirectUrl(final PageParameter pp) {
 			final News news = NewsViewTPage.getNews(pp);
-			return news == null ? PAGE404.getUrl() : ((INewsWebContext) context).getUrlsFactory()
+			return news == null ? PAGE404.getUrl() : ((INewsWebContext) newsContext).getUrlsFactory()
 					.getUrl(pp, NewsViewPage.class, news, "preview=true");
 		}
 	}
@@ -454,7 +454,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 		@Override
 		protected INewsService getBeanService() {
-			return context.getNewsService();
+			return newsContext.getNewsService();
 		}
 
 		@Override
@@ -476,7 +476,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		@Transaction(context = INewsContext.class)
 		public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
 			final EContentStatus op = cp.getEnumParameter(EContentStatus.class, "op");
-			final INewsService service = context.getNewsService();
+			final INewsService service = newsContext.getNewsService();
 			for (final String id : StringUtils.split(cp.getParameter("newsId"), ";")) {
 				final News news = service.getBean(id);
 				setLogDescription(cp, news);

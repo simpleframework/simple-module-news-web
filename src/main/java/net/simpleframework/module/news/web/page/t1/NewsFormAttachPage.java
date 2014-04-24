@@ -71,7 +71,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 								.setPropertyClass(Date.class))
 				.addColumn(TablePagerColumn.OPE().setWidth(120));
 
-		if (((INewsWebContext) context).getLogRef() != null) {
+		if (((INewsWebContext) newsContext).getLogRef() != null) {
 			// 下载日志
 			addComponentBean(pp, "NewsTabAttachPage_logPage", AjaxRequestBean.class).setUrlForward(
 					url(NewsDownloadLogPage.class));
@@ -92,7 +92,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 	@Transaction(context = INewsContext.class)
 	public IForward doDelete(final ComponentParameter cp) {
 		final Object[] ids = StringUtils.split(cp.getParameter("id"));
-		context.getAttachmentService().delete(ids);
+		newsContext.getAttachmentService().delete(ids);
 		return new JavascriptForward("$Actions['NewsTabAttachPage_tbl']();");
 	}
 
@@ -107,10 +107,10 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 	public static class NewsAttachmentTbl extends AbstractDbTablePagerHandler {
 		@Override
 		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
-			final News news = context.getNewsService().getBean(cp.getParameter("newsId"));
+			final News news = newsContext.getNewsService().getBean(cp.getParameter("newsId"));
 			if (news != null) {
 				cp.addFormParameter("newsId", news.getId());
-				return context.getAttachmentService().queryByContent(news);
+				return newsContext.getAttachmentService().queryByContent(news);
 			}
 			return null;
 		}
@@ -121,7 +121,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 			final KVMap kv = new KVMap();
 			final Object id = attachment.getId();
 			try {
-				final AttachmentFile af = context.getAttachmentService().createAttachmentFile(
+				final AttachmentFile af = newsContext.getAttachmentService().createAttachmentFile(
 						attachment);
 				kv.put(
 						"topic",
@@ -132,7 +132,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 				kv.put("topic", attachment.getTopic());
 			}
 			kv.put("attachsize", FileUtils.toFileSize(attachment.getAttachsize()));
-			if (((INewsWebContext) context).getLogRef() != null) {
+			if (((INewsWebContext) newsContext).getLogRef() != null) {
 				kv.put("downloads", new ButtonElement(attachment.getDownloads())
 						.setOnclick("$Actions['NewsTabAttachPage_logWin']('beanId=" + id + "');"));
 			} else {
@@ -156,7 +156,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		@Transaction(context = INewsContext.class)
 		@Override
 		public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
-			final IAttachmentService<Attachment> aService = context.getAttachmentService();
+			final IAttachmentService<Attachment> aService = newsContext.getAttachmentService();
 			final Attachment attachment = getCacheBean(cp, aService, "beanId");
 			if (attachment != null) {
 				attachment.setTopic(cp.getParameter("ae_topic"));
@@ -174,7 +174,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 			final InputElement ae_topic = new InputElement("ae_topic");
 			final InputElement ae_description = InputElement.textarea("ae_description").setRows(4);
 
-			final Attachment attachment = getCacheBean(pp, context.getAttachmentService(), "beanId");
+			final Attachment attachment = getCacheBean(pp, newsContext.getAttachmentService(), "beanId");
 			if (attachment != null) {
 				beanId.setText(attachment.getId());
 				ae_topic.setText(attachment.getTopic());

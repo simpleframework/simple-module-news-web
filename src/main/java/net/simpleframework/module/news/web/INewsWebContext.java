@@ -39,7 +39,7 @@ public interface INewsWebContext extends INewsContext, IContentRefAware, IMVCCon
 
 		@Override
 		public void onDownloaded(final Object beanId, final String topic, final File oFile) {
-			final IModuleRef ref = ((INewsWebContext) context).getLogRef();
+			final IModuleRef ref = ((INewsWebContext) newsContext).getLogRef();
 			if (ref != null) {
 				// 记录下载日志
 				((NewsLogRef) ref).logDownload(beanId, topic, oFile);

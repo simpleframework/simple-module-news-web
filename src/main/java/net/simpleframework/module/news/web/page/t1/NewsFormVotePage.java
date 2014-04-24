@@ -45,7 +45,7 @@ public class NewsFormVotePage extends NewsFormBasePage {
 		protected void onForward(final PageParameter pp) {
 			super.onForward(pp);
 
-			final IModuleRef ref = ((INewsWebContext) context).getVoteRef();
+			final IModuleRef ref = ((INewsWebContext) newsContext).getVoteRef();
 			if (ref != null) {
 				((NewsVoteRef) ref).addVotesTbl(pp).setShowFilterBar(false)
 						.setNoResultDesc($m("NewsForm_Vote.0")).setPagerBarLayout(EPagerBarLayout.bottom)
@@ -55,7 +55,7 @@ public class NewsFormVotePage extends NewsFormBasePage {
 
 		@Override
 		public ElementList getLeftElements(final PageParameter pp) {
-			final IModuleRef ref = ((INewsWebContext) context).getVoteRef();
+			final IModuleRef ref = ((INewsWebContext) newsContext).getVoteRef();
 			if (ref != null) {
 				final News news = NewsViewTPage.getNews(pp);
 				return ElementList.of(((NewsVoteRef) ref).toAddVoteElement(pp,
@@ -69,7 +69,7 @@ public class NewsFormVotePage extends NewsFormBasePage {
 
 		@Override
 		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
-			final IModuleRef ref = ((INewsWebContext) context).getVoteRef();
+			final IModuleRef ref = ((INewsWebContext) newsContext).getVoteRef();
 			if (ref == null) {
 				return DataQueryUtils.nullQuery();
 			}

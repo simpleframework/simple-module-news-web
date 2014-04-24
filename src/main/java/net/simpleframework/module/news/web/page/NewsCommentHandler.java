@@ -44,7 +44,7 @@ public class NewsCommentHandler extends CommentCtxHandler<NewsComment> implement
 
 	@Override
 	protected INewsCommentService getBeanService() {
-		return context.getCommentService();
+		return newsContext.getCommentService();
 	}
 
 	@Override
@@ -83,6 +83,6 @@ public class NewsCommentHandler extends CommentCtxHandler<NewsComment> implement
 	}
 
 	protected News getNews(final ComponentParameter cp) {
-		return context.getNewsService().getBean(cp.getParameter("newsId"));
+		return newsContext.getNewsService().getBean(cp.getParameter("newsId"));
 	}
 }

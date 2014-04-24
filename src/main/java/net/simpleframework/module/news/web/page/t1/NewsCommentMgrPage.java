@@ -69,13 +69,13 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 	@Transaction(context = INewsContext.class)
 	public IForward doDelete(final ComponentParameter cp) {
 		final Object[] ids = StringUtils.split(cp.getParameter("id"));
-		context.getCommentService().delete(ids);
+		newsContext.getCommentService().delete(ids);
 		return new JavascriptForward("$Actions['NewsCommentMgrPage_tbl']();");
 	}
 
 	@Override
 	public String getRole(final PageParameter pp) {
-		return context.getManagerRole();
+		return newsContext.getManagerRole();
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 	public static class NewsCommentMgrTbl extends NewsCommentTbl {
 		@Override
 		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
-			return context.getCommentService().queryAll();
+			return newsContext.getCommentService().queryAll();
 		}
 
 		@Override
@@ -114,12 +114,12 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 
 		@Override
 		protected String getContent(final PageParameter pp, final NewsComment comment) {
-			final News news = context.getNewsService().getBean(comment.getContentId());
+			final News news = newsContext.getNewsService().getBean(comment.getContentId());
 			final String txt = super.getContent(pp, comment);
 			return news != null ? LinkElement
 					.BLANK(txt)
 					.setHref(
-							((NewsWebContext) context).getUrlsFactory().getUrl(pp, NewsViewPage.class,
+							((NewsWebContext) newsContext).getUrlsFactory().getUrl(pp, NewsViewPage.class,
 									news)).toString() : txt;
 		}
 	}

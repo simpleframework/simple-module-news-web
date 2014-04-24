@@ -45,7 +45,7 @@ public class NewsFavoriteRef extends FavoriteRef implements INewsContextAware {
 
 		@Override
 		public IFavoriteContent getContent(final PageParameter pp, final Object contentId) {
-			final News news = context.getNewsService().getBean(contentId);
+			final News news = newsContext.getNewsService().getBean(contentId);
 			return new AbstractFavoriteContent(news) {
 				@Override
 				public ID getCategoryId() {
@@ -54,7 +54,7 @@ public class NewsFavoriteRef extends FavoriteRef implements INewsContextAware {
 
 				@Override
 				public String getUrl() {
-					return ((INewsWebContext) context).getUrlsFactory().getUrl(pp, NewsViewPage.class,
+					return ((INewsWebContext) newsContext).getUrlsFactory().getUrl(pp, NewsViewPage.class,
 							news);
 				}
 			};
@@ -62,7 +62,7 @@ public class NewsFavoriteRef extends FavoriteRef implements INewsContextAware {
 
 		@Override
 		public String getCategoryText(final Object categoryId) {
-			final NewsCategory category = context.getNewsCategoryService().getBean(categoryId);
+			final NewsCategory category = newsContext.getNewsCategoryService().getBean(categoryId);
 			return category != null ? category.getText() : null;
 		}
 

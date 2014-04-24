@@ -36,7 +36,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 
 	@Override
 	protected INewsCategoryService getBeanService() {
-		return context.getNewsCategoryService();
+		return newsContext.getNewsCategoryService();
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			tn.setJsClickCallback(CategoryTableLCTemplatePage.createTableRefresh(
 					"categoryId=&status=" + EContentStatus.delete.name()).toString());
 			tn.setImage(imgBase + "recycle_bin.png");
-			setCount(tn, context.getNewsService().queryBeans(null, EContentStatus.delete).getCount());
+			setCount(tn, newsContext.getNewsService().queryBeans(null, EContentStatus.delete).getCount());
 			tn.setContextMenu("none");
 			nodes.add(tn);
 			return nodes;
@@ -83,7 +83,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 				parent.setJsClickCallback(CategoryTableLCTemplatePage.createTableRefresh(
 						"status=&categoryId=" + category.getId()).toString());
 				final String imgBase = getImgBase(cp, NewsForm.class);
-				setCount(parent, context.getNewsService().count(category));
+				setCount(parent, newsContext.getNewsService().count(category));
 				parent.setImage(imgBase + "folder.png");
 			}
 			return super.getCategoryTreenodes(cp, treeBean, parent);
@@ -97,7 +97,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			treeNode.setImage(getImgBase(cp, NewsForm.class) + "folder.png");
 			final Object o = treeNode.getDataObject();
 			if (o instanceof NewsCategory) {
-				setCount(treeNode, context.getNewsService().count((NewsCategory) o));
+				setCount(treeNode, newsContext.getNewsService().count((NewsCategory) o));
 			}
 		}
 		return super.getCategoryTreenodes(cp, treeBean, treeNode);

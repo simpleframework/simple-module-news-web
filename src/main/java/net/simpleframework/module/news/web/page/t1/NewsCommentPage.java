@@ -64,7 +64,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 	public IForward doAllowComments(final ComponentParameter cp) {
 		final News news = NewsViewTPage.getNews(cp);
 		news.setAllowComments(cp.getBoolParameter("val"));
-		context.getNewsService().update(new String[] { "allowComments" }, news);
+		newsContext.getNewsService().update(new String[] { "allowComments" }, news);
 		return new JavascriptForward("$('nc_allowComments').checked=").append(news.isAllowComments())
 				.append(";");
 	}
@@ -72,7 +72,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 	@Transaction(context = INewsContext.class)
 	public IForward doDelete(final ComponentParameter cp) {
 		final Object[] ids = StringUtils.split(cp.getParameter("id"));
-		context.getCommentService().delete(ids);
+		newsContext.getCommentService().delete(ids);
 		return new JavascriptForward("$Actions['NewsCommentPage_tbl']();");
 	}
 
@@ -98,7 +98,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 
 	@Override
 	public String getRole(final PageParameter pp) {
-		return context.getManagerRole();
+		return newsContext.getManagerRole();
 	}
 
 	public static class NewsCommentTbl extends AbstractDbTablePagerHandler {
@@ -106,7 +106,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
 			final News news = NewsViewTPage.getNews(cp);
 			cp.addFormParameter("newsId", news.getId());
-			return context.getCommentService().queryByContent(news);
+			return newsContext.getCommentService().queryByContent(news);
 		}
 
 		protected ButtonElement createDelBtn(final NewsComment comment) {

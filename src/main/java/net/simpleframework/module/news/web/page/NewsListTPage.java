@@ -85,12 +85,12 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 
 	@Override
 	protected TabButtons getCategoryTabs(final PageParameter pp) {
-		final NewsUrlsFactory uFactory = ((INewsWebContext) context).getUrlsFactory();
+		final NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
 		final TabButtons btns = TabButtons.of();
 		btns.add(new TabButton($m("NewsListTPage.4"), uFactory.getUrl(pp, NewsListPage.class,
 				(NewsCategory) null)));
 
-		final INewsCategoryService service = context.getNewsCategoryService();
+		final INewsCategoryService service = newsContext.getNewsCategoryService();
 		NewsCategory category = getNewsCategory(pp);
 		final IDataQuery<?> dq = service.queryChildren(category == null ? null : service
 				.getBean(category.getParentId()));
@@ -115,7 +115,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
-		final NewsUrlsFactory uFactory = ((INewsWebContext) context).getUrlsFactory();
+		final NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
 		final NewsCategory category = getNewsCategory(pp);
 		return ElementList.of(new SearchInput("NewsListTPage_search")
 				.setOnSearchClick(
@@ -131,8 +131,8 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 	}
 
 	public IForward doPageletTab(final ComponentParameter cp) {
-		final INewsService service = context.getNewsService();
-		final NewsPageletCreator creator = ((INewsWebContext) context).getPageletCreator();
+		final INewsService service = newsContext.getNewsService();
+		final NewsPageletCreator creator = ((INewsWebContext) newsContext).getPageletCreator();
 
 		final ETimePeriod tp = Convert.toEnum(ETimePeriod.class, cp.getParameter("time"));
 
@@ -145,10 +145,10 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 
 	@Override
 	protected Pagelets getPagelets(final PageParameter pp) {
-		final INewsService service = context.getNewsService();
+		final INewsService service = newsContext.getNewsService();
 		final NewsCategory category = getNewsCategory(pp);
 		final Object categoryId = category == null ? "" : category.getId();
-		final NewsPageletCreator creator = ((INewsWebContext) context).getPageletCreator();
+		final NewsPageletCreator creator = ((INewsWebContext) newsContext).getPageletCreator();
 
 		final Pagelets lets = Pagelets.of();
 		// 按评论
@@ -169,7 +169,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 	@Override
 	public NavigationButtons getNavigationBar(final PageParameter pp) {
 		final NavigationButtons btns = NavigationButtons.of();
-		final INewsCategoryService service = context.getNewsCategoryService();
+		final INewsCategoryService service = newsContext.getNewsCategoryService();
 		NewsCategory category = service.getBean(pp.getParameter("categoryId"));
 		if (category == null) {
 			btns.add(new SpanElement($m("NewsListTPage.4")));
@@ -184,7 +184,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 				final String txt = category.getText();
 				AbstractElement<?> link;
 				if (i > 0) {
-					link = new LinkElement(txt).setHref(((INewsWebContext) context).getUrlsFactory()
+					link = new LinkElement(txt).setHref(((INewsWebContext) newsContext).getUrlsFactory()
 							.getUrl(pp, NewsListPage.class, category));
 				} else {
 					link = new LabelElement(txt);
@@ -197,7 +197,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 
 	@Override
 	public FilterButtons getFilterButtons(final PageParameter pp) {
-		final String url = ((INewsWebContext) context).getUrlsFactory().getUrl(pp,
+		final String url = ((INewsWebContext) newsContext).getUrlsFactory().getUrl(pp,
 				NewsListPage.class, getNewsCategory(pp));
 		final FilterButtons btns = FilterButtons.of();
 		final NewsAdvSearchPage sPage = singleton(NewsAdvSearchPage.class);
@@ -217,7 +217,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 	}
 
 	public static NewsCategory getNewsCategory(final PageParameter pp) {
-		return getCacheBean(pp, context.getNewsCategoryService(), "categoryId");
+		return getCacheBean(pp, newsContext.getNewsCategoryService(), "categoryId");
 	}
 
 	protected Checkbox createMyFilterCheckbox(final PageParameter pp) {
@@ -239,7 +239,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		@Override
 		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
 			final String t = cp.getLocaleParameter("t");
-			final INewsService nService = context.getNewsService();
+			final INewsService nService = newsContext.getNewsService();
 			if (StringUtils.hasText(t)) {
 				return nService.getLuceneService().query(t, News.class);
 			}
@@ -311,7 +311,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		}
 
 		protected String getTopicEditUrl(final ComponentParameter cp, final News news) {
-			String url = ((INewsWebContext) context).getUrlsFactory().getUrl(cp,
+			String url = ((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp,
 					NewsFormBasePage.class, news);
 			final String referer = cp.getParameter(IMVCConst.PARAM_REFERER);
 			if (StringUtils.hasText(referer)) {
@@ -333,7 +333,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		protected Object getDataProperty(final ComponentParameter cp, final Object dataObject,
 				final String key) {
 			if (OP_TOPIC_URL.equals(key)) {
-				return ((INewsWebContext) context).getUrlsFactory().getUrl(cp, NewsViewPage.class,
+				return ((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp, NewsViewPage.class,
 						(News) dataObject);
 			} else if (OP_DATE.equals(key)) {
 				return ((News) dataObject).getCreateDate();

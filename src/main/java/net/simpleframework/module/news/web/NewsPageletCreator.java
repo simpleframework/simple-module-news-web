@@ -37,7 +37,7 @@ public class NewsPageletCreator extends PageletCreator<News> implements INewsCon
 	public static class NewsListRowHandler extends ListRowHandler<News> {
 		@Override
 		protected String getHref(final PageParameter pp, final News news) {
-			return ((INewsWebContext) context).getUrlsFactory().getUrl(pp, NewsViewPage.class, news);
+			return ((INewsWebContext) newsContext).getUrlsFactory().getUrl(pp, NewsViewPage.class, news);
 		}
 
 		@Override
@@ -63,7 +63,7 @@ public class NewsPageletCreator extends PageletCreator<News> implements INewsCon
 
 		@Override
 		protected IADOBeanService<News> getBeanService() {
-			return context.getNewsService();
+			return newsContext.getNewsService();
 		}
 	}
 }
