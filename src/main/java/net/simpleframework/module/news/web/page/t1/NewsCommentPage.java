@@ -106,7 +106,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
 			final News news = NewsViewTPage.getNews(cp);
 			cp.addFormParameter("newsId", news.getId());
-			return newsContext.getCommentService().queryByContent(news);
+			return newsContext.getCommentService().queryComments(news);
 		}
 
 		protected ButtonElement createDelBtn(final NewsComment comment) {

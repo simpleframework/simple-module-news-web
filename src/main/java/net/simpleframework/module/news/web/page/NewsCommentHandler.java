@@ -3,7 +3,6 @@ package net.simpleframework.module.news.web.page;
 import java.util.Date;
 import java.util.Map;
 
-import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.coll.KVMap;
@@ -49,11 +48,7 @@ public class NewsCommentHandler extends CommentCtxHandler<NewsComment> implement
 
 	@Override
 	public IDataQuery<?> comments(final ComponentParameter cp) {
-		final ID newsId = getOwnerId(cp);
-		if (newsId == null) {
-			return DataQueryUtils.nullQuery();
-		}
-		return getBeanService().queryByContent(newsId);
+		return getBeanService().queryComments(getOwnerId(cp));
 	}
 
 	@Transaction(context = INewsContext.class)
