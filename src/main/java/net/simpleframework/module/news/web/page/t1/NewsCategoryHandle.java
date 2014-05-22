@@ -4,7 +4,6 @@ import static net.simpleframework.common.I18n.$m;
 
 import java.util.Map;
 
-import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.module.common.content.ECategoryMark;
@@ -37,12 +36,6 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 	@Override
 	protected INewsCategoryService getBeanService() {
 		return newsContext.getNewsCategoryService();
-	}
-
-	@Override
-	protected IDataQuery<?> categoryBeans(final ComponentParameter cp, final Object categoryId) {
-		final INewsCategoryService service = getBeanService();
-		return service.queryChildren(service.getBean(categoryId));
 	}
 
 	private void setCount(final TreeNode tn, final int cc) {
