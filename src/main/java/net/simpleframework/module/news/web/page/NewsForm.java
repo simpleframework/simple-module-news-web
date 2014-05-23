@@ -20,6 +20,7 @@ import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.module.common.content.Attachment;
 import net.simpleframework.module.common.content.ContentException;
 import net.simpleframework.module.common.content.IAttachmentService;
+import net.simpleframework.module.common.web.content.ContentUtils;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.INewsService;
@@ -53,7 +54,6 @@ import net.simpleframework.mvc.component.ext.attachments.AttachmentUtils;
 import net.simpleframework.mvc.component.ext.attachments.IAttachmentSaveCallback;
 import net.simpleframework.mvc.component.ext.category.ICategoryHandler;
 import net.simpleframework.mvc.component.ext.ckeditor.HtmlEditorBean;
-import net.simpleframework.mvc.component.ext.ckeditor.Toolbar;
 import net.simpleframework.mvc.component.ui.dictionary.DictionaryBean;
 import net.simpleframework.mvc.component.ui.dictionary.DictionaryTreeHandler;
 import net.simpleframework.mvc.component.ui.tree.TreeBean;
@@ -108,7 +108,8 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		}
 		attachClick += ");";
 		return (HtmlEditorBean) addHtmlEditorBean(pp, "NewsForm_editor", isHtmlEditorCodeEnabled())
-				.setAttachAction(attachClick).setToolbar(NEWS_TOOLBAR).setHeight("340");
+				.setAttachAction(attachClick).setToolbar(ContentUtils.HTML_TOOLBAR_BASE)
+				.setHeight("340");
 	}
 
 	@Override
@@ -387,14 +388,4 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 			return ((NewsForm) get(cp)).getCategoryDictTreenodes(cp, parent);
 		}
 	}
-
-	private static Toolbar NEWS_TOOLBAR = Toolbar.of(new String[] { "Source" }, new String[] {
-			"Bold", "Italic", "Underline", "Strike" }, new String[] { "PasteText", "PasteFromWord" },
-			new String[] { "Find", "Replace", "-", "RemoveFormat" }, new String[] { "NumberedList",
-					"BulletedList", "-", "Outdent", "Indent", "Blockquote" }, new String[] {
-					"JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock" }, new String[] {
-					"Link", "Unlink", "Anchor" }, new String[] {}, new String[] { "Styles", "Format",
-					"Font", "FontSize" }, new String[] { "TextColor", "BGColor" }, new String[] {
-					"Image", "Table", "HorizontalRule", "Smiley", "SpecialChar" },
-			new String[] { "Attach" }, new String[] { "Maximize" });
 }
