@@ -112,8 +112,8 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 				.setHeight("340");
 	}
 
-	@Override
 	@Transaction(context = INewsContext.class)
+	@Override
 	public JavascriptForward onSave(final ComponentParameter cp) throws IOException {
 		final NewsCategory category = newsContext.getNewsCategoryService().getBean(
 				cp.getParameter("ne_categoryId"));
