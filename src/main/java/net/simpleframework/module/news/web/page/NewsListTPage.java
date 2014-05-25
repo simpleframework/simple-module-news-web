@@ -2,6 +2,7 @@ package net.simpleframework.module.news.web.page;
 
 import static net.simpleframework.common.I18n.$m;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import net.simpleframework.ado.ColumnData;
@@ -18,6 +19,7 @@ import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.common.web.HttpUtils;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.module.common.content.EContentStatus;
+import net.simpleframework.module.common.web.content.ContentUtils;
 import net.simpleframework.module.news.INewsCategoryService;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.INewsService;
@@ -40,6 +42,7 @@ import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.InputElement;
 import net.simpleframework.mvc.common.element.LabelElement;
 import net.simpleframework.mvc.common.element.LinkElement;
+import net.simpleframework.mvc.common.element.PhotoImage;
 import net.simpleframework.mvc.common.element.SearchInput;
 import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.common.element.TabButton;
@@ -323,10 +326,15 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		@Override
 		protected String toHTML_image(final ComponentParameter cp, final Object dataObject) {
 			final String t = cp.getParameter("t");
-			if (StringUtils.hasText(t)) {
-				return "";
+			if (!StringUtils.hasText(t)) {
+				try {
+					return new PhotoImage(ContentUtils.getImagePath(cp,
+							newsContext.getAttachmentService(), doc(cp, dataObject).select("img").first(),
+							128, 128)).toString();
+				} catch (final IOException e) {
+				}
 			}
-			return super.toHTML_image(cp, dataObject);
+			return "";
 		}
 
 		@Override
