@@ -203,6 +203,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		if (pp.getBoolParameter(OPT_TARGET_BLANK)) {
 			setVisitor_targetBlank(news, al);
 		}
+		ContentUtils.doContent(pp, newsContext.getAttachmentService(), doc);
 		return HtmlUtils.doDocument(doc, al.toArray(new IElementVisitor[al.size()])).html();
 	}
 
