@@ -2,7 +2,6 @@ package net.simpleframework.module.news.web.page;
 
 import static net.simpleframework.common.I18n.$m;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import net.simpleframework.ado.ColumnData;
@@ -327,12 +326,8 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		protected String toHTML_image(final ComponentParameter cp, final Object dataObject) {
 			final String t = cp.getParameter("t");
 			if (!StringUtils.hasText(t)) {
-				try {
-					return new PhotoImage(ContentUtils.getImagePath(cp,
-							newsContext.getAttachmentService(), doc(cp, dataObject).select("img").first(),
-							128, 128)).toString();
-				} catch (final IOException e) {
-				}
+				return new PhotoImage(ContentUtils.getImagePath(cp, newsContext.getAttachmentService(),
+						doc(cp, dataObject).select("img").first(), 128, 128)).toString();
 			}
 			return "";
 		}

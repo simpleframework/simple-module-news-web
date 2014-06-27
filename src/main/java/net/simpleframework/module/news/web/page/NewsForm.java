@@ -203,7 +203,6 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		if (pp.getBoolParameter(OPT_TARGET_BLANK)) {
 			setVisitor_targetBlank(news, al);
 		}
-		ContentUtils.doContent(pp, newsContext.getAttachmentService(), doc);
 		return HtmlUtils.doDocument(doc, al.toArray(new IElementVisitor[al.size()])).html();
 	}
 
@@ -250,7 +249,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 			ne_keyWords.setText(news.getKeyWords());
 			ne_source.setText(news.getSource());
 			ne_author.setText(news.getAuthor());
-			ne_content.setText(HtmlUtils.wrapContextPath(pp.request, news.getContent()));
+			ne_content.setText(ContentUtils.getContent(pp, newsContext.getAttachmentService(), news));
 			ne_description.setText(news.getDescription());
 			category = newsContext.getNewsCategoryService().getBean(news.getCategoryId());
 		} else {
