@@ -27,6 +27,7 @@ import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.InputElement;
 import net.simpleframework.mvc.common.element.LinkElement;
+import net.simpleframework.mvc.common.element.Option;
 import net.simpleframework.mvc.common.element.RowField;
 import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.common.element.TableRow;
@@ -161,6 +162,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 			if (attachment != null) {
 				attachment.setTopic(cp.getParameter("ae_topic"));
 				attachment.setDescription(cp.getParameter("ae_description"));
+				// attachment.setAttachtype(attachtype);
 				aService.update(new String[] { "topic", "description" }, attachment);
 			}
 			final JavascriptForward js = super.onSave(cp);
@@ -172,6 +174,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		protected TableRows getTableRows(final PageParameter pp) {
 			final InputElement beanId = InputElement.hidden("beanId");
 			final InputElement ae_topic = new InputElement("ae_topic");
+			final InputElement ae_attachtype = InputElement.select("ae_attachtype").addElements();// Option.from()
 			final InputElement ae_description = InputElement.textarea("ae_description").setRows(4);
 
 			final Attachment attachment = getCacheBean(pp, newsContext.getAttachmentService(),
@@ -183,7 +186,8 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 			}
 			return TableRows.of(new TableRow(
 					new RowField($m("AttachmentEditPage.1"), beanId, ae_topic)), new TableRow(
-					new RowField($m("Description"), ae_description)));
+					new RowField($m("AttachmentEditPage.2"), ae_attachtype)), new TableRow(new RowField(
+					$m("Description"), ae_description)));
 		}
 	}
 }
