@@ -157,7 +157,8 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		} else {
 			js.append("if (confirm('").append($m("NewsMgrPage.8", status))
 					.append("')) { $Actions['NewsMgrPage_statusWindow']('op=")
-					.append(EContentStatus.edit).append("&newsId=").append(news.getId()).append("'); }");
+					.append(EContentStatus.edit.name()).append("&newsId=").append(news.getId())
+					.append("'); }");
 		}
 		return js;
 	}
@@ -491,7 +492,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		public String getTitle(final PageParameter pp) {
 			final EContentStatus op = pp.getEnumParameter(EContentStatus.class, "op");
 			return $m("StatusDescLogPage.0",
-					op == EContentStatus.edit ? $m("NewsMgrPage.7") : op.toString());
+					op == EContentStatus.edit ? $m("NewsMgrPage.7") : Convert.toString(op));
 		}
 
 		@Override
@@ -499,7 +500,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 			final EContentStatus op = pp.getEnumParameter(EContentStatus.class, "op");
 			return super.createTextarea(pp).setText(
 					$m("StatusDescLogPage.1",
-							op == EContentStatus.edit ? $m("NewsMgrPage.7") : op.toString(),
+							op == EContentStatus.edit ? $m("NewsMgrPage.7") : Convert.toString(op),
 							Convert.toDateString(new Date()), pp.getLogin()));
 		}
 	}
