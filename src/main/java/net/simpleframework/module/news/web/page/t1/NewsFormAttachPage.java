@@ -14,6 +14,7 @@ import net.simpleframework.ctx.common.bean.AttachmentFile;
 import net.simpleframework.ctx.trans.Transaction;
 import net.simpleframework.module.common.content.Attachment;
 import net.simpleframework.module.common.content.IAttachmentService;
+import net.simpleframework.module.news.ENewsAttach;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.web.INewsWebContext;
@@ -87,7 +88,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		// 编辑
 		addAjaxRequest(pp, "NewsFormAttachPage_editPage", AttachmentEditPage.class);
 		addWindowBean(pp, "NewsFormAttachPage_edit").setContentRef("NewsFormAttachPage_editPage")
-				.setHeight(240).setWidth(420).setTitle($m("AttachmentEditPage.0"));
+				.setHeight(280).setWidth(420).setTitle($m("AttachmentEditPage.0"));
 	}
 
 	@Transaction(context = INewsContext.class)
@@ -162,8 +163,11 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 			if (attachment != null) {
 				attachment.setTopic(cp.getParameter("ae_topic"));
 				attachment.setDescription(cp.getParameter("ae_description"));
-				// attachment.setAttachtype(attachtype);
-				aService.update(new String[] { "topic", "description" }, attachment);
+				final ENewsAttach attachtype = cp.getEnumParameter(ENewsAttach.class, "ae_attachtype");
+				if (attachtype != null) {
+					attachment.setAttachtype(attachtype.ordinal());
+				}
+				aService.update(new String[] { "topic", "attachtype", "description" }, attachment);
 			}
 			final JavascriptForward js = super.onSave(cp);
 			js.append("$Actions['NewsTabAttachPage_tbl']();");
@@ -174,7 +178,8 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		protected TableRows getTableRows(final PageParameter pp) {
 			final InputElement beanId = InputElement.hidden("beanId");
 			final InputElement ae_topic = new InputElement("ae_topic");
-			final InputElement ae_attachtype = InputElement.select("ae_attachtype").addElements();// Option.from()
+
+			final Option[] opts = Option.from(ENewsAttach.values());
 			final InputElement ae_description = InputElement.textarea("ae_description").setRows(4);
 
 			final Attachment attachment = getCacheBean(pp, newsContext.getAttachmentService(),
@@ -182,12 +187,14 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 			if (attachment != null) {
 				beanId.setText(attachment.getId());
 				ae_topic.setText(attachment.getTopic());
+				opts[attachment.getAttachtype()].setSelected(true);
 				ae_description.setText(attachment.getDescription());
 			}
 			return TableRows.of(new TableRow(
 					new RowField($m("AttachmentEditPage.1"), beanId, ae_topic)), new TableRow(
-					new RowField($m("AttachmentEditPage.2"), ae_attachtype)), new TableRow(new RowField(
-					$m("Description"), ae_description)));
+					new RowField($m("AttachmentEditPage.2"), InputElement.select("ae_attachtype")
+							.addElements(opts))), new TableRow(new RowField($m("Description"),
+					ae_description)));
 		}
 	}
 }
