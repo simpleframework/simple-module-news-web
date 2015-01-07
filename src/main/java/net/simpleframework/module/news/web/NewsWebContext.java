@@ -67,6 +67,6 @@ public class NewsWebContext extends NewsContext implements INewsWebContext {
 		return ModuleFunctions.of(FUNC_NEWS_MGR);
 	}
 
-	public WebModuleFunction FUNC_NEWS_MGR = (WebModuleFunction) new WebModuleFunction(
+	public WebModuleFunction FUNC_NEWS_MGR = (WebModuleFunction) new WebModuleFunction(this,
 			NewsMgrPage.class).setName(MODULE_NAME + "-NewsMgrPage").setText($m("NewsContext.0"));
 }
