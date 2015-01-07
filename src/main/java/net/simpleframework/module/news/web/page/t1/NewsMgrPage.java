@@ -142,7 +142,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 	@Override
 	public String getRole(final PageParameter pp) {
-		return newsContext.getManagerRole();
+		return newsContext.getModule().getManagerRole();
 	}
 
 	public IForward doEdit(final ComponentParameter cp) {
@@ -213,7 +213,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 				.append(SpanElement.SPACE)
 				.add(createStatusButton(EContentStatus.edit).setText($m("NewsMgrPage.7")));
 
-		if (pp.getLogin().isMember(newsContext.getManagerRole())) {
+		if (pp.getLogin().isMember(newsContext.getModule().getManagerRole())) {
 			btns.append(SpanElement.SPACE).add(
 					new LinkButton($m("NewsMgrPage.13"))
 							.setOnclick("$Actions['NewsMgrPage_advWindow']();"));

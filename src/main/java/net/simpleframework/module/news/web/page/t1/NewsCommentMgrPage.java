@@ -75,7 +75,7 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 
 	@Override
 	public String getRole(final PageParameter pp) {
-		return newsContext.getManagerRole();
+		return newsContext.getModule().getManagerRole();
 	}
 
 	@Override
