@@ -70,6 +70,8 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 	protected void onForward(final PageParameter pp) {
 		super.onForward(pp);
 
+		pp.addImportCSS(NewsListTPage.class, "/news_t2.css");
+
 		addTablePagerBean(pp);
 
 		addAjaxRequest(pp, "NewsListTPage_SearchPage", NewsAdvSearchPage.class);

@@ -7,3 +7,7 @@
   width: 80%;
   margin: 10px 0 20px;
 }
+
+.List_PageletsPage .tablepager .itr>td {
+  padding: 6px 8px;  
+}
