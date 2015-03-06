@@ -126,8 +126,9 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 
 		propEditor.getFormFields().add(
 				1,
-				new PropField($m("NewsCategoryHandle.1")).addComponents(InputComp.select(
-						"category_mark").setDefaultValue(ECategoryMark.normal, ECategoryMark.builtIn)));
+				new PropField($m("NewsCategoryHandle.1"))
+						.addComponents(InputComp.select("category_mark").setDefaultEnumValue(
+								ECategoryMark.normal, ECategoryMark.builtIn)));
 		return propEditor;
 	}
 }
