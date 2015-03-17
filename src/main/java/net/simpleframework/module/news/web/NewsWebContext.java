@@ -3,6 +3,7 @@ package net.simpleframework.module.news.web;
 import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleRef;
+import net.simpleframework.ctx.Module;
 import net.simpleframework.ctx.ModuleFunctions;
 import net.simpleframework.module.news.impl.NewsContext;
 import net.simpleframework.module.news.web.page.t1.NewsMgrPage;
@@ -54,6 +55,11 @@ public class NewsWebContext extends NewsContext implements INewsWebContext {
 	@Override
 	public IModuleRef getPDFRef() {
 		return getRef("net.simpleframework.module.news.web.NewsPDFRef");
+	}
+
+	@Override
+	protected Module createModule() {
+		return super.createModule().setDefaultFunction(MODULE_NAME + "-NewsMgrPage");
 	}
 
 	@Override
