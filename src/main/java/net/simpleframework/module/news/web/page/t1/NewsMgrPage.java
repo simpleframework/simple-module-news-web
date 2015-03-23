@@ -37,7 +37,6 @@ import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageMapping;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ButtonElement;
-import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.Icon;
 import net.simpleframework.mvc.common.element.InputElement;
@@ -83,8 +82,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		addCategoryBean(pp, NewsCategoryHandle.class);
 
 		addTablePagerBean(pp, NewsTableHandler.class)
-				.addColumn(
-						new TablePagerColumn("topic", $m("NewsMgrPage.1")).setTextAlign(ETextAlign.left))
+				.addColumn(new TablePagerColumn("topic", $m("NewsMgrPage.1")))
 				.addColumn(
 						new TablePagerColumn("views", $m("NewsMgrPage.2"), 70)
 								.setPropertyClass(Float.class))
@@ -97,7 +95,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 					protected Option[] getFilterOptions() {
 						return Option.from(STATUS_ARR);
 					};
-				}.setTextAlign(ETextAlign.left)).addColumn(TablePagerColumn.OPE().setWidth(140));
+				}).addColumn(TablePagerColumn.OPE().setWidth(140));
 
 		// edit
 		addAjaxRequest(pp, "NewsMgrPage_edit").setHandlerMethod("doEdit");

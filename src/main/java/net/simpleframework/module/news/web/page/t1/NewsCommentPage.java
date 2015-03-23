@@ -19,7 +19,6 @@ import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.Checkbox;
-import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.common.element.SpanElement;
@@ -46,7 +45,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 		tablePager
 				.addColumn(
 						new TablePagerColumn("content", $m("NewsCommentPage.0")).setNowrap(false)
-								.setTextAlign(ETextAlign.left).setSort(false))
+								.setSort(false))
 				.addColumn(
 						new TablePagerColumn("userId", $m("NewsCommentPage.1"), 100).setFilter(false))
 				.addColumn(

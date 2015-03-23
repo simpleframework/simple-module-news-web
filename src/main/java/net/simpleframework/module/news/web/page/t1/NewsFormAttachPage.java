@@ -25,7 +25,6 @@ import net.simpleframework.mvc.PageMapping;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.DownloadUtils;
 import net.simpleframework.mvc.common.element.ButtonElement;
-import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.InputElement;
 import net.simpleframework.mvc.common.element.LinkElement;
 import net.simpleframework.mvc.common.element.Option;
@@ -60,12 +59,8 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 				.setPagerBarLayout(EPagerBarLayout.bottom).setContainerId("tbl_" + hashId)
 				.setHandlerClass(NewsAttachmentTbl.class);
 		tablePager
-				.addColumn(
-						new TablePagerColumn("topic", $m("NewsFormAttachPage.0"))
-								.setTextAlign(ETextAlign.left))
-				.addColumn(
-						new TablePagerColumn("attachsize", $m("NewsFormAttachPage.1"), 80)
-								.setTextAlign(ETextAlign.left))
+				.addColumn(new TablePagerColumn("topic", $m("NewsFormAttachPage.0")))
+				.addColumn(new TablePagerColumn("attachsize", $m("NewsFormAttachPage.1"), 80))
 				.addColumn(new TablePagerColumn("downloads", $m("NewsFormAttachPage.2"), 80))
 				.addColumn(new TablePagerColumn("userId", $m("NewsFormAttachPage.3"), 100))
 				.addColumn(

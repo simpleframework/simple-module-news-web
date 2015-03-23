@@ -22,7 +22,6 @@ import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageMapping;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ButtonElement;
-import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.common.element.LinkElement;
@@ -54,7 +53,7 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 		tablePager
 				.addColumn(
 						new TablePagerColumn("content", $m("NewsCommentPage.0")).setNowrap(false)
-								.setTextAlign(ETextAlign.left).setSort(false))
+								.setSort(false))
 				.addColumn(
 						new TablePagerColumn("userId", $m("NewsCommentPage.1"), 100).setFilter(false))
 				.addColumn(
