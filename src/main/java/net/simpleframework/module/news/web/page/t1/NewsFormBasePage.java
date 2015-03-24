@@ -63,7 +63,7 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 	@Override
 	public ElementList getLeftElements(final PageParameter pp) {
 		final NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
-		final LinkButton backBtn = backBtn();
+		final LinkButton backBtn = LinkButton.backBtn();
 		final String url = pp.getParameter("url");
 		if (StringUtils.hasText(url)) {
 			backBtn.setHref(url);
