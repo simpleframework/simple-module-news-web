@@ -38,7 +38,6 @@ import net.simpleframework.mvc.component.ui.pager.EPagerBarLayout;
 import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
 import net.simpleframework.mvc.component.ui.pager.db.AbstractDbTablePagerHandler;
-import net.simpleframework.mvc.component.ui.window.WindowBean;
 import net.simpleframework.mvc.template.lets.FormTableRowTemplatePage;
 
 /**
@@ -70,10 +69,9 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 
 		if (((INewsWebContext) newsContext).getLogRef() != null) {
 			// 下载日志
-			addComponentBean(pp, "NewsTabAttachPage_logPage", AjaxRequestBean.class).setUrlForward(
-					url(NewsDownloadLogPage.class));
-			addComponentBean(pp, "NewsTabAttachPage_logWin", WindowBean.class)
-					.setContentRef("NewsTabAttachPage_logPage").setHeight(480).setWidth(800)
+			final AjaxRequestBean ajaxRequest = addAjaxRequest(pp, "NewsTabAttachPage_logPage",
+					NewsDownloadLogPage.class);
+			addWindowBean(pp, "NewsTabAttachPage_logWin", ajaxRequest).setHeight(480).setWidth(800)
 					.setTitle($m("NewsFormAttachPage.5"));
 		}
 
@@ -81,9 +79,10 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		addDeleteAjaxRequest(pp, "NewsFormAttachPage_delete");
 
 		// 编辑
-		addAjaxRequest(pp, "NewsFormAttachPage_editPage", AttachmentEditPage.class);
-		addWindowBean(pp, "NewsFormAttachPage_edit").setContentRef("NewsFormAttachPage_editPage")
-				.setHeight(280).setWidth(420).setTitle($m("AttachmentEditPage.0"));
+		final AjaxRequestBean ajaxRequest = addAjaxRequest(pp, "NewsFormAttachPage_editPage",
+				AttachmentEditPage.class);
+		addWindowBean(pp, "NewsFormAttachPage_edit", ajaxRequest).setHeight(280).setWidth(420)
+				.setTitle($m("AttachmentEditPage.0"));
 	}
 
 	@Transaction(context = INewsContext.class)

@@ -17,7 +17,6 @@ import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.common.element.LinkElement;
 import net.simpleframework.mvc.component.base.ajaxrequest.AjaxRequestBean;
-import net.simpleframework.mvc.component.ui.window.WindowBean;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -33,11 +32,10 @@ public class NewsAttachmentTooltipPage extends AbstractAttachmentTooltipPage imp
 		super.onForward(pp);
 
 		if (((INewsWebContext) newsContext).getLogRef() != null) {
-			addComponentBean(pp, "AttachmentTooltipPage_logPage", AjaxRequestBean.class)
-					.setUrlForward(url(NewsDownloadLogPage.class));
-			addComponentBean(pp, "AttachmentTooltipPage_logWin", WindowBean.class)
-					.setContentRef("AttachmentTooltipPage_logPage").setHeight(480).setWidth(800)
-					.setTitle($m("NewsFormAttachPage.5"));
+			final AjaxRequestBean ajaxRequest = addAjaxRequest(pp, "AttachmentTooltipPage_logPage",
+					NewsDownloadLogPage.class);
+			addWindowBean(pp, "AttachmentTooltipPage_logWin", ajaxRequest).setHeight(480)
+					.setWidth(800).setTitle($m("NewsFormAttachPage.5"));
 		}
 	}
 

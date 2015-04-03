@@ -31,7 +31,6 @@ import net.simpleframework.module.news.web.page.NewsForm;
 import net.simpleframework.module.news.web.page.NewsViewTPage;
 import net.simpleframework.module.news.web.page.t2.NewsListPage;
 import net.simpleframework.module.news.web.page.t2.NewsViewPage;
-import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageMapping;
@@ -55,7 +54,6 @@ import net.simpleframework.mvc.component.ui.menu.MenuItems;
 import net.simpleframework.mvc.component.ui.pager.AbstractTablePagerSchema;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumns;
-import net.simpleframework.mvc.component.ui.window.WindowBean;
 import net.simpleframework.mvc.template.AbstractTemplatePage;
 import net.simpleframework.mvc.template.struct.NavigationButtons;
 import net.simpleframework.mvc.template.t1.ext.CategoryTableLCTemplatePage;
@@ -113,29 +111,26 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 				.setWidth(420).setHeight(240);
 
 		// 推荐
-		addAjaxRequest(pp, "NewsMgrPage_recommendationPage", RecommendationPage.class);
-		addComponentBean(pp, "NewsMgrPage_recommendation", WindowBean.class)
-				.setContentRef("NewsMgrPage_recommendationPage").setHeight(240).setWidth(450)
+		AjaxRequestBean ajaxRequest = addAjaxRequest(pp, "NewsMgrPage_recommendationPage",
+				RecommendationPage.class);
+		addWindowBean(pp, "NewsMgrPage_recommendation", ajaxRequest).setHeight(240).setWidth(450)
 				.setTitle($m("AbstractContentBean.2"));
 
 		// log window
 		final IModuleRef ref = ((INewsWebContext) newsContext).getLogRef();
 		if (ref != null) {
-			pp.addComponentBean("NewsMgrPage_update_logPage", AjaxRequestBean.class).setUrlForward(
-					AbstractMVCPage.url(NewsUpdateLogPage.class));
-			pp.addComponentBean("NewsMgrPage_update_log", WindowBean.class)
-					.setContentRef("NewsMgrPage_update_logPage").setHeight(540).setWidth(864);
+			ajaxRequest = addAjaxRequest(pp, "NewsMgrPage_update_logPage", NewsUpdateLogPage.class);
+			addWindowBean(pp, "NewsMgrPage_update_log", ajaxRequest).setHeight(540).setWidth(864);
 		}
 
 		// comment window
-		addAjaxRequest(pp, "NewsMgrPage_commentPage", NewsCommentPage.class);
-		addWindowBean(pp, "NewsMgrPage_commentWindow").setContentRef("NewsMgrPage_commentPage")
-				.setHeight(540).setWidth(864);
+		ajaxRequest = addAjaxRequest(pp, "NewsMgrPage_commentPage", NewsCommentPage.class);
+		addWindowBean(pp, "NewsMgrPage_commentWindow", ajaxRequest).setHeight(540).setWidth(864);
 
 		// adv window
-		addAjaxRequest(pp, "NewsMgrPage_advPage", NewsAdvPage.class);
-		addWindowBean(pp, "NewsMgrPage_advWindow").setContentRef("NewsMgrPage_advPage")
-				.setTitle($m("NewsMgrPage.13")).setHeight(280).setWidth(420);
+		ajaxRequest = addAjaxRequest(pp, "NewsMgrPage_advPage", NewsAdvPage.class);
+		addWindowBean(pp, "NewsMgrPage_advWindow", ajaxRequest).setTitle($m("NewsMgrPage.13"))
+				.setHeight(280).setWidth(420);
 	}
 
 	@Override
