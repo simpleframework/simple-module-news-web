@@ -31,7 +31,6 @@ import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
 import net.simpleframework.module.news.web.page.t2.NewsListPage;
 import net.simpleframework.module.news.web.page.t2.NewsViewPage;
 import net.simpleframework.mvc.IForward;
-import net.simpleframework.mvc.IMVCConst;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.TextForward;
 import net.simpleframework.mvc.common.element.AbstractElement;
@@ -227,7 +226,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 	protected Checkbox createMyFilterCheckbox(final PageParameter pp) {
 		final Checkbox cb = new Checkbox("NewsListTPage_myFilter", $m("NewsListTPage.6"))
 				.setChecked("my".equals(pp.getParameter("f")));
-		String referer = pp.getParameter(IMVCConst.PARAM_REFERER);
+		String referer = pp.getRefererParam();
 		if (StringUtils.hasText(referer)) {
 			if (cb.isChecked()) {
 				referer = HttpUtils.addParameters(referer, new KVMap().add("f", null));
@@ -317,7 +316,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		protected String getTopicEditUrl(final ComponentParameter cp, final News news) {
 			String url = ((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp,
 					NewsFormBasePage.class, news);
-			final String referer = cp.getParameter(IMVCConst.PARAM_REFERER);
+			final String referer = cp.getRefererParam();
 			if (StringUtils.hasText(referer)) {
 				url = HttpUtils.addParameters(url, "url=" + HttpUtils.encodeUrl(referer));
 			}
