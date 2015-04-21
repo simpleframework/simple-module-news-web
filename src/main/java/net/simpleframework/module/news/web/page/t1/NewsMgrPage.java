@@ -206,7 +206,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 				.append(SpanElement.SPACE)
 				.add(createStatusButton(EContentStatus.edit).setText($m("NewsMgrPage.7")));
 
-		if (pp.getLogin().isMember(newsContext.getModule().getManagerRole())) {
+		if (pp.isLmember(newsContext.getModule().getManagerRole())) {
 			btns.append(SpanElement.SPACE).add(
 					new LinkButton($m("NewsMgrPage.13"))
 							.setOnclick("$Actions['NewsMgrPage_advWindow']();"));

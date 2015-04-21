@@ -270,7 +270,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 				new RowField($m("NewsForm.0"), ne_id, ne_topic).setStarMark(true), new RowField(
 						$m("NewsForm.1"), ne_categoryId, ne_categoryText)
 						.setElementsStyle("width:150px;").setStarMark(true));
-		if (pp.getLogin().isManager()) {
+		if (pp.isLmanager()) {
 			// 唯一名称，保留给系统管理员
 			r1.append(new RowField($m("NewsForm.13"), ne_cname).setElementsStyle("width:150px;"));
 		}
