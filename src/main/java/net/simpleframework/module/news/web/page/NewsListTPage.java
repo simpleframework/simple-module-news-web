@@ -273,12 +273,9 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 			}
 
 			// 条件过滤
-			params.append(
-					new FilterItem("topic", EFilterRelation.like, cp.getLocaleParameter("as_topic")))
-					.append(
-							new FilterItem("author", EFilterRelation.like, cp
-									.getLocaleParameter("as_author")))
-					.append(new FilterItem("createDate", new TimePeriod(cp.getParameter("as_time"))));
+			params.addLike("topic", cp.getLocaleParameter("as_topic"))
+					.addLike("author", cp.getLocaleParameter("as_author"))
+					.addEqual("createDate", new TimePeriod(cp.getParameter("as_time")));
 			return nService.queryByParams(params);
 		}
 
