@@ -28,7 +28,7 @@ public class NewsAttachmentTooltipPage extends AbstractAttachmentTooltipPage imp
 		INewsContextAware {
 
 	@Override
-	protected void onForward(final PageParameter pp) {
+	protected void onForward(final PageParameter pp) throws Exception {
 		super.onForward(pp);
 
 		if (((INewsWebContext) newsContext).getLogRef() != null) {

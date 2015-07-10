@@ -66,7 +66,7 @@ import net.simpleframework.mvc.template.struct.Pagelets;
 public class NewsViewTPage extends View_PageletsPage implements INewsContextAware {
 
 	@Override
-	protected void onForward(final PageParameter pp) {
+	protected void onForward(final PageParameter pp) throws Exception {
 		super.onForward(pp);
 
 		pp.addImportCSS(NewsViewTPage.class, "/news_t2.css");

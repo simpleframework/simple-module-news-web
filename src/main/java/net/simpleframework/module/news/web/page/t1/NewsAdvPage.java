@@ -22,7 +22,7 @@ import net.simpleframework.mvc.template.AbstractTemplatePage;
 public class NewsAdvPage extends AbstractTemplatePage implements INewsContextAware {
 
 	@Override
-	protected void onForward(final PageParameter pp) {
+	protected void onForward(final PageParameter pp) throws Exception {
 		super.onForward(pp);
 
 		addAjaxRequest(pp, "NewsAdvPage_reIndex").setConfirmMessage($m("NewsAdvPage.2"))

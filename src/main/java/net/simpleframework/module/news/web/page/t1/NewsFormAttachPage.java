@@ -50,7 +50,7 @@ import net.simpleframework.mvc.template.lets.FormTableRowTemplatePage;
 public class NewsFormAttachPage extends NewsFormBasePage {
 
 	@Override
-	protected void onForward(final PageParameter pp) {
+	protected void onForward(final PageParameter pp) throws Exception {
 		super.onForward(pp);
 
 		final TablePagerBean tablePager = (TablePagerBean) addComponentBean(pp,

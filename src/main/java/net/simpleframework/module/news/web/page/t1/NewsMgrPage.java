@@ -72,7 +72,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 			EContentStatus.publish, EContentStatus.lock };
 
 	@Override
-	protected void onForward(final PageParameter pp) {
+	protected void onForward(final PageParameter pp) throws Exception {
 		super.onForward(pp);
 
 		pp.addImportCSS(NewsForm.class, "/news.css");

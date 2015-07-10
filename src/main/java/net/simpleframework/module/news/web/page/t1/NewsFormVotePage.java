@@ -42,7 +42,7 @@ public class NewsFormVotePage extends NewsFormBasePage {
 	public static class NewsForm_Vote extends OneTableTemplatePage implements INewsContextAware {
 
 		@Override
-		protected void onForward(final PageParameter pp) {
+		protected void onForward(final PageParameter pp) throws Exception {
 			super.onForward(pp);
 
 			final IModuleRef ref = ((INewsWebContext) newsContext).getVoteRef();

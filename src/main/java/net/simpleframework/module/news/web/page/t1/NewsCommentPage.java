@@ -37,7 +37,7 @@ import net.simpleframework.mvc.template.lets.OneTableTemplatePage;
 public class NewsCommentPage extends OneTableTemplatePage implements INewsContextAware {
 
 	@Override
-	protected void onForward(final PageParameter pp) {
+	protected void onForward(final PageParameter pp) throws Exception {
 		super.onForward(pp);
 
 		final TablePagerBean tablePager = addTablePagerBean(pp, "NewsCommentPage_tbl",

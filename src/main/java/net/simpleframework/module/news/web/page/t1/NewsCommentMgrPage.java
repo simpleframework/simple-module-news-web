@@ -42,7 +42,7 @@ import net.simpleframework.mvc.template.t1.T1ResizedTemplatePage;
 public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsContextAware {
 
 	@Override
-	protected void onForward(final PageParameter pp) {
+	protected void onForward(final PageParameter pp) throws Exception {
 		super.onForward(pp);
 
 		pp.addImportCSS(NewsForm.class, "/news.css");
