@@ -11,3 +11,7 @@
 .List_PageletsPage .tablepager .itr>td {
   padding: 6px 8px;  
 }
+
+.List_PageletsPage .nc {
+  min-height: 70px;
+}

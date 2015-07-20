@@ -273,9 +273,15 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 			}
 
 			// 条件过滤
-			params.addLike("topic", cp.getLocaleParameter("as_topic"))
-					.addLike("author", cp.getLocaleParameter("as_author"))
-					.addEqual("createDate", new TimePeriod(cp.getParameter("as_time")));
+			final String topic = cp.getLocaleParameter("as_topic");
+			if (StringUtils.hasText(topic)) {
+				params.addLike("topic", topic);
+			}
+			final String author = cp.getLocaleParameter("as_author");
+			if (StringUtils.hasText(author)) {
+				params.addLike("author", author);
+			}
+			params.addEqual("createDate", new TimePeriod(cp.getParameter("as_time")));
 			return nService.queryByParams(params);
 		}
 

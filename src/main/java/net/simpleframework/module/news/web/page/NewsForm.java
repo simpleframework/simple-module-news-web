@@ -85,7 +85,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 				CategorySelectedTree.class);
 		addComponentBean(pp, "NewsForm_dict", DictionaryBean.class).setBindingId("ne_categoryId")
 				.setBindingText("ne_categoryText").addTreeRef(pp, "NewsForm_dict_tree")
-				.setTitle($m("NewsForm.1"));
+				.setTitle($m("NewsForm.1")).setHeight(320);
 
 		// 上传
 		addComponentBean(pp, "NewsForm_upload_page", AttachmentBean.class).setInsertTextarea(
