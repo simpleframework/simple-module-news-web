@@ -38,6 +38,7 @@ import net.simpleframework.mvc.common.element.Checkbox;
 import net.simpleframework.mvc.common.element.ETabMatch;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.InputElement;
+import net.simpleframework.mvc.common.element.JS;
 import net.simpleframework.mvc.common.element.LabelElement;
 import net.simpleframework.mvc.common.element.LinkElement;
 import net.simpleframework.mvc.common.element.PhotoImage;
@@ -233,7 +234,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 			} else {
 				referer = HttpUtils.addParameters(referer, "f=my");
 			}
-			cb.setOnclick("$Actions.loc('" + referer + "')");
+			cb.setOnclick(JS.loc(referer));
 		}
 		return cb;
 	}

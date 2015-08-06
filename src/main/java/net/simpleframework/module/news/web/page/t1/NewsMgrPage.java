@@ -39,6 +39,7 @@ import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.Icon;
 import net.simpleframework.mvc.common.element.InputElement;
+import net.simpleframework.mvc.common.element.JS;
 import net.simpleframework.mvc.common.element.LabelElement;
 import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.common.element.LinkElement;
@@ -221,7 +222,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 					new LinkButton($m("Button.Preview")).setOnclick("$Actions.loc('"
 							+ uFactory.getUrl(pp, NewsListPage.class, category) + "', true);"));
 		}
-		add.setOnclick("$Actions.loc('" + url + "');");
+		add.setOnclick(JS.loc(url));
 		return btns;
 	}
 
