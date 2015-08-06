@@ -39,6 +39,7 @@ import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.Checkbox;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.InputElement;
+import net.simpleframework.mvc.common.element.JS;
 import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.common.element.RowField;
 import net.simpleframework.mvc.common.element.SpanElement;
@@ -174,17 +175,15 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 	}
 
 	protected JavascriptForward doSaveForward(final ComponentParameter cp, final News news) {
-		final JavascriptForward js = new JavascriptForward();
-		js.append("$Actions.loc('")
-				.append(
-						((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp,
-								NewsFormBasePage.class, news)).append("&op=save");
+		final StringBuilder js = new StringBuilder();
+		js.append(
+				((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp, NewsFormBasePage.class,
+						news)).append("&op=save");
 		final String url = cp.getParameter("url");
 		if (StringUtils.hasText(url)) {
 			js.append("&url=").append(HttpUtils.encodeUrl(url));
 		}
-		js.append("');");
-		return js;
+		return new JavascriptForward(JS.loc(js.toString()));
 	}
 
 	public String doNewsContent(final PageParameter pp, final News news, final Document doc) {
@@ -350,11 +349,9 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		final News news = NewsViewTPage.getNews(pp);
 		final ElementList el = ElementList.of();
 		if (news != null) {
-			el.append(
-					new ButtonElement($m("Button.Preview")).setOnclick("$Actions.loc('"
-							+ ((INewsWebContext) newsContext).getUrlsFactory().getUrl(pp,
-									NewsViewPage.class, news, "preview=true") + "', true);"),
-					SpanElement.SPACE);
+			el.append(new ButtonElement($m("Button.Preview")).setOnclick(JS.loc(
+					((INewsWebContext) newsContext).getUrlsFactory().getUrl(pp, NewsViewPage.class,
+							news, "preview=true"), true)), SpanElement.SPACE);
 		}
 		el.append(SAVE_BTN());
 		return el;

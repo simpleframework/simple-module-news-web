@@ -26,6 +26,7 @@ import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.DownloadUtils;
 import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.InputElement;
+import net.simpleframework.mvc.common.element.JS;
 import net.simpleframework.mvc.common.element.LinkElement;
 import net.simpleframework.mvc.common.element.Option;
 import net.simpleframework.mvc.common.element.RowField;
@@ -122,7 +123,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 				kv.put(
 						"topic",
 						new LinkElement(attachment.getTopic()).setOnclick(
-								"$Actions.loc('" + DownloadUtils.getDownloadHref(af) + "');").setTitle(
+								JS.loc(DownloadUtils.getDownloadHref(af))).setTitle(
 								attachment.getDescription()));
 			} catch (final IOException e) {
 				kv.put("topic", attachment.getTopic());

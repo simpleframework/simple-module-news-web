@@ -40,6 +40,7 @@ import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.TextForward;
 import net.simpleframework.mvc.common.DownloadUtils;
 import net.simpleframework.mvc.common.element.EElementEvent;
+import net.simpleframework.mvc.common.element.JS;
 import net.simpleframework.mvc.common.element.LinkElement;
 import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.component.ComponentParameter;
@@ -125,9 +126,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 			final IAttachmentService<Attachment> service = newsContext.getAttachmentService();
 			try {
 				final AttachmentFile af = service.createAttachmentFile(attachment);
-				js.append("$Actions.loc('")
-						.append(DownloadUtils.getDownloadHref(af, AttachmentDownloadHandler.class))
-						.append("');");
+				js.append(JS.loc(DownloadUtils.getDownloadHref(af, AttachmentDownloadHandler.class)));
 			} catch (final IOException e) {
 				throw ContentException.of(e);
 			}

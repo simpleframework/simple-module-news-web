@@ -144,10 +144,8 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		final News news = newsContext.getNewsService().getBean(cp.getParameter("newsId"));
 		final EContentStatus status = news.getStatus();
 		if (status == EContentStatus.edit) {
-			js.append("$Actions.loc('")
-					.append(
-							((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp,
-									NewsFormBasePage.class, news)).append("');");
+			js.append(JS.loc(((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp,
+					NewsFormBasePage.class, news)));
 		} else {
 			js.append("if (confirm('").append($m("NewsMgrPage.8", status))
 					.append("')) { $Actions['NewsMgrPage_statusWindow']('op=")
@@ -219,8 +217,8 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		if (category != null) {
 			url += "?categoryId=" + category.getId();
 			btns.append(SpanElement.SPACE).append(
-					new LinkButton($m("Button.Preview")).setOnclick("$Actions.loc('"
-							+ uFactory.getUrl(pp, NewsListPage.class, category) + "', true);"));
+					new LinkButton($m("Button.Preview")).setOnclick(JS.loc(
+							uFactory.getUrl(pp, NewsListPage.class, category), true)));
 		}
 		add.setOnclick(JS.loc(url));
 		return btns;
@@ -332,8 +330,8 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 								.setOnclick(
 										"$Actions['NewsMgrPage_status']('op=publish&newsId=" + id + "');"));
 					} else {
-						sb.append(new ButtonElement($m("Button.Preview")).setOnclick("$Actions.loc('"
-								+ url(ViewControlPage.class, "newsId=" + id) + "', true);"));
+						sb.append(new ButtonElement($m("Button.Preview")).setOnclick(JS.loc(
+								url(ViewControlPage.class, "newsId=" + id), true)));
 					}
 					sb.append(SpanElement.SPACE);
 					sb.append(ButtonElement.logBtn()
