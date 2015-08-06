@@ -307,8 +307,8 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 			final News news = (News) dataObject;
 			if (news.getUserId().equals(cp.getLoginId()) && news.getStatus() == EContentStatus.edit) {
 				final StringBuilder sb = new StringBuilder();
-				sb.append(new SpanElement(getDataProperty(cp, dataObject, OP_TOPIC))
-						.setClassName("f3 nt").setColor("#b00").setItalic(true));
+				sb.append(SpanElement.colora00(getDataProperty(cp, dataObject, OP_TOPIC))
+						.setClassName("f3 nt").setItalic(true));
 				sb.append(SpanElement.SPACE).append("[ ")
 						.append(new LinkElement($m("Edit")).setHref(getTopicEditUrl(cp, news)))
 						.append(" ]");
