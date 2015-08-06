@@ -86,9 +86,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 						new TablePagerColumn("views", $m("NewsMgrPage.2"), 70)
 								.setPropertyClass(Float.class))
 				.addColumn(new TablePagerColumn("comments", $m("NewsMgrPage.3"), 70))
-				.addColumn(
-						new TablePagerColumn("createDate", $m("NewsMgrPage.4"), 120)
-								.setPropertyClass(Date.class))
+				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsMgrPage.4")))
 				.addColumn(new TablePagerColumn("status", $m("NewsMgrPage.5"), 70) {
 					@Override
 					protected Option[] getFilterOptions() {

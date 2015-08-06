@@ -2,7 +2,6 @@ package net.simpleframework.module.news.web.page.t1;
 
 import static net.simpleframework.common.I18n.$m;
 
-import java.util.Date;
 import java.util.Map;
 
 import net.simpleframework.ado.query.IDataQuery;
@@ -48,9 +47,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 								.setSort(false))
 				.addColumn(
 						new TablePagerColumn("userId", $m("NewsCommentPage.1"), 100).setFilter(false))
-				.addColumn(
-						new TablePagerColumn("createDate", $m("NewsCommentPage.2"), 120)
-								.setPropertyClass(Date.class))
+				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsCommentPage.2")))
 				.addColumn(TablePagerColumn.OPE().setWidth(80));
 
 		// allowComments
