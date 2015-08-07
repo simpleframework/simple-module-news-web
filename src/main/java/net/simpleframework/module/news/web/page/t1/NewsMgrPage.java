@@ -92,7 +92,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 					protected Option[] getFilterOptions() {
 						return Option.from(STATUS_ARR);
 					};
-				}).addColumn(TablePagerColumn.OPE().setWidth(140));
+				}).addColumn(TablePagerColumn.OPE(140));
 
 		// edit
 		addAjaxRequest(pp, "NewsMgrPage_edit").setHandlerMethod("doEdit");

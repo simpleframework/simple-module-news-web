@@ -62,7 +62,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 				.addColumn(new TablePagerColumn("downloads", $m("NewsFormAttachPage.2"), 80))
 				.addColumn(new TablePagerColumn("userId", $m("NewsFormAttachPage.3"), 100))
 				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsFormAttachPage.4")))
-				.addColumn(TablePagerColumn.OPE().setWidth(120));
+				.addColumn(TablePagerColumn.OPE(120));
 
 		if (((INewsWebContext) newsContext).getLogRef() != null) {
 			// 下载日志

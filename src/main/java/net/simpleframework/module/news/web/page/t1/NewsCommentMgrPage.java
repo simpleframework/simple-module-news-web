@@ -56,7 +56,7 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 				.addColumn(
 						new TablePagerColumn("userId", $m("NewsCommentPage.1"), 100).setFilter(false))
 				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsCommentPage.2")))
-				.addColumn(TablePagerColumn.OPE().setWidth(80));
+				.addColumn(TablePagerColumn.OPE(80));
 
 		// delete
 		addDeleteAjaxRequest(pp, "NewsCommentMgrPage_delete");

@@ -48,7 +48,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 				.addColumn(
 						new TablePagerColumn("userId", $m("NewsCommentPage.1"), 100).setFilter(false))
 				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsCommentPage.2")))
-				.addColumn(TablePagerColumn.OPE().setWidth(80));
+				.addColumn(TablePagerColumn.OPE(80));
 
 		// allowComments
 		addAjaxRequest(pp, "NewsCommentPage_allowComments").setHandlerMethod("doAllowComments");
