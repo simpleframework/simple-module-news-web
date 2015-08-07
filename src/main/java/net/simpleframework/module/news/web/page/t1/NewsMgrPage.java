@@ -335,7 +335,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 					sb.append(ButtonElement.logBtn()
 							.setDisabled(((INewsWebContext) newsContext).getLogRef() == null)
 							.setOnclick("$Actions['NewsMgrPage_update_log']('newsId=" + id + "');"));
-					sb.append(SpanElement.SPACE).append(AbstractTablePagerSchema.IMG_DOWNMENU);
+					sb.append(AbstractTablePagerSchema.IMG_DOWNMENU);
 					kv.put(TablePagerColumn.OPE, sb.toString());
 
 					return kv;
