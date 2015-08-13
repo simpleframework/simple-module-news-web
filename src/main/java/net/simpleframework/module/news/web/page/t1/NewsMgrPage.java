@@ -36,6 +36,7 @@ import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageMapping;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ButtonElement;
+import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.Icon;
 import net.simpleframework.mvc.common.element.InputElement;
@@ -55,6 +56,8 @@ import net.simpleframework.mvc.component.ui.menu.MenuItems;
 import net.simpleframework.mvc.component.ui.pager.AbstractTablePagerSchema;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumns;
+import net.simpleframework.mvc.component.ui.pager.db.NavigationTitle;
+import net.simpleframework.mvc.component.ui.pager.db.NavigationTitle.NavigationTitleCallback;
 import net.simpleframework.mvc.template.AbstractTemplatePage;
 import net.simpleframework.mvc.template.struct.NavigationButtons;
 import net.simpleframework.mvc.template.t1.ext.CategoryTableLCTemplatePage;
@@ -85,14 +88,16 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 				.addColumn(
 						new TablePagerColumn("views", $m("NewsMgrPage.2"), 70)
 								.setPropertyClass(Float.class))
-				.addColumn(new TablePagerColumn("comments", $m("NewsMgrPage.3"), 70))
+				.addColumn(
+						new TablePagerColumn("comments", $m("NewsMgrPage.3"), 70)
+								.setTextAlign(ETextAlign.center))
 				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsMgrPage.4")))
 				.addColumn(new TablePagerColumn("status", $m("NewsMgrPage.5"), 70) {
 					@Override
 					protected Option[] getFilterOptions() {
 						return Option.from(STATUS_ARR);
 					};
-				}).addColumn(TablePagerColumn.OPE(140));
+				}).addColumn(TablePagerColumn.OPE(120));
 
 		// edit
 		addAjaxRequest(pp, "NewsMgrPage_edit").setHandlerMethod("doEdit");
@@ -191,7 +196,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 	}
 
 	@Override
-	public ElementList getLeftElements(final PageParameter pp) {
+	public ElementList getRightElements(final PageParameter pp) {
 		final LinkButton add = new LinkButton($m("NewsMgrPage.6"));
 		final ElementList btns = ElementList.of(add).append(SpanElement.SPACE);
 		final EContentStatus status = pp.getEnumParameter(EContentStatus.class, "status");
@@ -220,6 +225,32 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		}
 		add.setOnclick(JS.loc(url));
 		return btns;
+	}
+
+	@Override
+	public ElementList getLeftElements(final PageParameter pp) {
+		return ElementList.of(NavigationTitle.toElement(pp, getNewsCategory(pp),
+				new NavigationTitleCallback<NewsCategory>() {
+					@Override
+					protected String getRootText() {
+						return $m("NewsCategoryHandle.0");
+					}
+
+					@Override
+					protected NewsCategory get(final Object id) {
+						return newsContext.getNewsCategoryService().getBean(id);
+					}
+
+					@Override
+					protected String getComponentTable() {
+						return COMPONENT_TABLE;
+					}
+
+					@Override
+					protected String getText(final NewsCategory t) {
+						return t.toString() + SpanElement.shortText("(" + t.getName() + ")");
+					}
+				}));
 	}
 
 	@Override
@@ -402,27 +433,6 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 				return items;
 			}
 			return null;
-		}
-
-		@Override
-		protected ElementList getNavigationTitle(final ComponentParameter cp) {
-			return doNavigationTitle(cp, getNewsCategory(cp),
-					new NavigationTitleCallback<NewsCategory>() {
-						@Override
-						protected String rootText() {
-							return $m("NewsCategoryHandle.0");
-						}
-
-						@Override
-						protected NewsCategory get(final Object id) {
-							return newsContext.getNewsCategoryService().getBean(id);
-						}
-
-						@Override
-						protected String getText(final NewsCategory t) {
-							return t.toString() + SpanElement.shortText("(" + t.getName() + ")");
-						}
-					});
 		}
 
 		@Override
