@@ -47,7 +47,7 @@ public class NewsFormVotePage extends NewsFormBasePage {
 
 			final IModuleRef ref = ((INewsWebContext) newsContext).getVoteRef();
 			if (ref != null) {
-				((NewsVoteRef) ref).addVotesTbl(pp).setShowFilterBar(false)
+				((NewsVoteRef) ref).addVotesTbl(pp).setFilter(false)
 						.setNoResultDesc($m("NewsForm_Vote.0")).setPagerBarLayout(EPagerBarLayout.bottom)
 						.setContainerId("table_" + hashId).setHandlerClass(NewsVoteListHandler.class);
 			}
