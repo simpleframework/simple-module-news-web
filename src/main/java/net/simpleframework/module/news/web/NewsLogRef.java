@@ -38,7 +38,7 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 		final IAttachmentService<Attachment> service = newsContext.getAttachmentService();
 		final Attachment attachment = service.getBean(beanId);
 		if (attachment != null) {
-			attachment.setDownloads(getDownloadLogService().countLog(beanId));
+			attachment.setDownloads(getDownloadLogService().clog(beanId));
 			service.update(new String[] { "downloads" }, attachment);
 		}
 	}
