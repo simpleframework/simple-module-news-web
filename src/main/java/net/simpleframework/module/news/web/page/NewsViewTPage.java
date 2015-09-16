@@ -143,24 +143,24 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		final String author = news.getAuthor();
 		if (StringUtils.hasText(author)) {
 			sb.append($m("NewsViewTPage.0")).append(": ");
-			sb.append(author).append(SpanElement.SEP);
+			sb.append(author).append(SpanElement.SEP());
 		}
 		final String source = news.getSource();
 		if (StringUtils.hasText(source)) {
 			sb.append($m("NewsViewTPage.1")).append(": ");
-			sb.append(source).append(SpanElement.SEP);
+			sb.append(source).append(SpanElement.SEP());
 		}
 		final String keyWords = news.getKeyWords();
 		if (StringUtils.hasText(keyWords)) {
 			sb.append($m("NewsViewTPage.2")).append(": ");
-			sb.append(keyWords).append(SpanElement.SEP);
+			sb.append(keyWords).append(SpanElement.SEP());
 		}
 		sb.append(super.getTopic2(pp));
 
 		// 收藏
 		final IModuleRef ref = ((INewsWebContext) newsContext).getFavoriteRef();
 		if (ref != null) {
-			sb.append(SpanElement.SEP);
+			sb.append(SpanElement.SEP());
 			sb.append(((NewsFavoriteRef) ref).toFavoriteElement(pp, news.getId()));
 		}
 		return sb.toString();
