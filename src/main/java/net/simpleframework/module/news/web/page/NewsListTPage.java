@@ -5,6 +5,7 @@ import static net.simpleframework.common.I18n.$m;
 import java.util.ArrayList;
 
 import net.simpleframework.ado.ColumnData;
+import net.simpleframework.ado.EFilterOpe;
 import net.simpleframework.ado.EFilterRelation;
 import net.simpleframework.ado.FilterItem;
 import net.simpleframework.ado.FilterItems;
@@ -259,11 +260,12 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 				}
 			} else {
 				final FilterItem status = new FilterItem("status", EContentStatus.publish);
+				params.add(status);
 				ID loginId;
 				if ((loginId = cp.getLoginId()) != null) {
-					status.setOrItem(new FilterItem("userId", loginId));
+					status.setLbracket(true);
+					params.add(new FilterItem("userId", loginId).setRbracket(true).setOpe(EFilterOpe.or));
 				}
-				params.add(status);
 			}
 
 			// category
