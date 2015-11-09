@@ -43,7 +43,7 @@ public class NewsCommentHandler extends CommentCtxHandler<NewsComment> implement
 
 	@Override
 	protected INewsCommentService getBeanService() {
-		return newsContext.getCommentService();
+		return _newsCommentService;
 	}
 
 	@Override

@@ -115,7 +115,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 	@Transaction(context = INewsContext.class)
 	@Override
 	public JavascriptForward onSave(final ComponentParameter cp) throws IOException {
-		final NewsCategory category = _newscService.getBean(cp.getParameter("ne_categoryId"));
+		final NewsCategory category = _newsCategoryService.getBean(cp.getParameter("ne_categoryId"));
 		if (category == null) {
 			throw ContentException.of($m("NewsForm.9"));
 		}
@@ -247,7 +247,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 			ne_author.setText(news.getAuthor());
 			ne_content.setText(ContentUtils.getContent(pp, newsContext.getAttachmentService(), news));
 			ne_description.setText(news.getDescription());
-			category = _newscService.getBean(news.getCategoryId());
+			category = _newsCategoryService.getBean(news.getCategoryId());
 		} else {
 			final String _ne_cname = pp.getParameter("ne_cname");
 			if (StringUtils.hasText(_ne_cname)) {
@@ -255,7 +255,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 			}
 		}
 		if (category == null) {
-			category = _newscService.getBean(pp.getParameter("categoryId"));
+			category = _newsCategoryService.getBean(pp.getParameter("categoryId"));
 		}
 		if (category != null) {
 			ne_categoryId.setText(category.getId());

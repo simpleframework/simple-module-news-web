@@ -65,7 +65,7 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 	@Transaction(context = INewsContext.class)
 	public IForward doDelete(final ComponentParameter cp) {
 		final Object[] ids = StringUtils.split(cp.getParameter("id"));
-		newsContext.getCommentService().delete(ids);
+		_newsCommentService.delete(ids);
 		return new JavascriptForward("$Actions['NewsCommentMgrPage_tbl']();");
 	}
 
@@ -98,7 +98,7 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 	public static class NewsCommentMgrTbl extends NewsCommentTbl {
 		@Override
 		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
-			return newsContext.getCommentService().queryAll();
+			return _newsCommentService.queryAll();
 		}
 
 		@Override

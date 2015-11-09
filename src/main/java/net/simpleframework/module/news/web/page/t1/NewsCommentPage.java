@@ -68,7 +68,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 	@Transaction(context = INewsContext.class)
 	public IForward doDelete(final ComponentParameter cp) {
 		final Object[] ids = StringUtils.split(cp.getParameter("id"));
-		newsContext.getCommentService().delete(ids);
+		_newsCommentService.delete(ids);
 		return new JavascriptForward("$Actions['NewsCommentPage_tbl']();");
 	}
 
@@ -102,7 +102,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
 			final News news = NewsViewTPage.getNews(cp);
 			cp.addFormParameter("newsId", news.getId());
-			return newsContext.getCommentService().queryComments(news);
+			return _newsCommentService.queryComments(news);
 		}
 
 		protected ButtonElement createDelBtn(final NewsComment comment) {

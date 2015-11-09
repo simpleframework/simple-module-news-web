@@ -238,7 +238,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 					@Override
 					protected NewsCategory get(final Object id) {
-						return _newscService.getBean(id);
+						return _newsCategoryService.getBean(id);
 					}
 
 					@Override
@@ -262,8 +262,8 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 	public TabButtons getTabButtons(final PageParameter pp) {
 		final TabButton cTab = new TabButton($m("NewsCommentMgrPage.0"),
 				url(NewsCommentMgrPage.class));
-		final int c = newsContext.getCommentService()
-				.queryByParams(FilterItems.of(new FilterItem("createdate", TimePeriod.day))).getCount();
+		final int c = _newsCommentService.queryByParams(
+				FilterItems.of(new FilterItem("createdate", TimePeriod.day))).getCount();
 		if (c > 0) {
 			cTab.setStat(c);
 		}
@@ -273,7 +273,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 	}
 
 	private static NewsCategory getNewsCategory(final PageParameter pp) {
-		return getCacheBean(pp, _newscService, "categoryId");
+		return getCacheBean(pp, _newsCategoryService, "categoryId");
 	}
 
 	public static class NewsTableHandler extends LCTemplateTablePagerHandler {
@@ -333,7 +333,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 						kv.put("topic", sb.toString());
 					} else {
 						kv.put("topic", news.getTopic());
-						final NewsCategory category = _newscService.getBean(news.getCategoryId());
+						final NewsCategory category = _newsCategoryService.getBean(news.getCategoryId());
 						if (category != null) {
 							kv.put("categoryId", category.getText());
 						}

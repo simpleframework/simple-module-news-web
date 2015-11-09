@@ -94,8 +94,8 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 				(NewsCategory) null)));
 
 		NewsCategory category = getNewsCategory(pp);
-		final IDataQuery<?> dq = _newscService.queryChildren(category == null ? null : _newscService
-				.getBean(category.getParentId()));
+		final IDataQuery<?> dq = _newsCategoryService.queryChildren(category == null ? null
+				: _newsCategoryService.getBean(category.getParentId()));
 		int i = 0;
 		while ((category = (NewsCategory) dq.next()) != null) {
 			if (i++ > 3) {
@@ -170,14 +170,14 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 	@Override
 	public NavigationButtons getNavigationBar(final PageParameter pp) {
 		final NavigationButtons btns = NavigationButtons.of();
-		NewsCategory category = _newscService.getBean(pp.getParameter("categoryId"));
+		NewsCategory category = _newsCategoryService.getBean(pp.getParameter("categoryId"));
 		if (category == null) {
 			btns.add(new SpanElement($m("NewsListTPage.4")));
 		} else {
 			final ArrayList<NewsCategory> al = new ArrayList<NewsCategory>();
 			while (category != null) {
 				al.add(category);
-				category = _newscService.getBean(category.getParentId());
+				category = _newsCategoryService.getBean(category.getParentId());
 			}
 			for (int i = al.size() - 1; i >= 0; i--) {
 				category = al.get(i);
@@ -217,7 +217,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 	}
 
 	public static NewsCategory getNewsCategory(final PageParameter pp) {
-		return getCacheBean(pp, _newscService, "categoryId");
+		return getCacheBean(pp, _newsCategoryService, "categoryId");
 	}
 
 	protected Checkbox createMyFilterCheckbox(final PageParameter pp) {

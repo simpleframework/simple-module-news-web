@@ -62,7 +62,7 @@ public class NewsFavoriteRef extends FavoriteRef implements INewsContextAware {
 
 		@Override
 		public String getCategoryText(final Object categoryId) {
-			final NewsCategory category = _newscService.getBean(categoryId);
+			final NewsCategory category = _newsCategoryService.getBean(categoryId);
 			return category != null ? category.getText() : null;
 		}
 

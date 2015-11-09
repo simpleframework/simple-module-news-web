@@ -35,7 +35,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 
 	@Override
 	protected INewsCategoryService getBeanService() {
-		return _newscService;
+		return _newsCategoryService;
 	}
 
 	private void setCount(final TreeNode tn, final int cc) {
