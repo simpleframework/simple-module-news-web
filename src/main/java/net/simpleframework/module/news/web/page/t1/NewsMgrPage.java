@@ -144,7 +144,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 	public IForward doEdit(final ComponentParameter cp) {
 		final JavascriptForward js = new JavascriptForward();
-		final News news = newsContext.getNewsService().getBean(cp.getParameter("newsId"));
+		final News news = _newsService.getBean(cp.getParameter("newsId"));
 		final EContentStatus status = news.getStatus();
 		if (status == EContentStatus.edit) {
 			js.append(JS.loc(((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp,
@@ -161,7 +161,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 	@Transaction(context = INewsContext.class)
 	public IForward doDelete(final ComponentParameter cp) {
 		final Object[] ids = StringUtils.split(cp.getParameter("newsId"));
-		newsContext.getNewsService().delete(ids);
+		_newsService.delete(ids);
 		return createTableRefresh();
 	}
 
@@ -171,7 +171,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		final String newsId = cp.getParameter("newsId");
 		final ArrayList<String> deletes = new ArrayList<String>();
 		for (final String id : StringUtils.split(newsId, ";")) {
-			final News news = newsContext.getNewsService().getBean(id);
+			final News news = _newsService.getBean(id);
 			final EContentStatus status = news.getStatus();
 			if (op == status && op != EContentStatus.delete) {
 				js.append("alert('").append($m("NewsMgrPage.9", op)).append("');");
@@ -238,7 +238,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 					@Override
 					protected NewsCategory get(final Object id) {
-						return newsContext.getNewsCategoryService().getBean(id);
+						return _newscService.getBean(id);
 					}
 
 					@Override
@@ -273,7 +273,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 	}
 
 	private static NewsCategory getNewsCategory(final PageParameter pp) {
-		return getCacheBean(pp, newsContext.getNewsCategoryService(), "categoryId");
+		return getCacheBean(pp, _newscService, "categoryId");
 	}
 
 	public static class NewsTableHandler extends LCTemplateTablePagerHandler {
@@ -288,7 +288,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 			if (status != null) {
 				cp.addFormParameter("status", status.name());
 			}
-			return newsContext.getNewsService().queryBeans(category, status);
+			return _newsService.queryBeans(category, status);
 		}
 
 		@Override
@@ -333,8 +333,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 						kv.put("topic", sb.toString());
 					} else {
 						kv.put("topic", news.getTopic());
-						final NewsCategory category = newsContext.getNewsCategoryService().getBean(
-								news.getCategoryId());
+						final NewsCategory category = _newscService.getBean(news.getCategoryId());
 						if (category != null) {
 							kv.put("categoryId", category.getText());
 						}
@@ -437,7 +436,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 		@Override
 		public Object getRowBeanById(final ComponentParameter cp, final Object id) {
-			return newsContext.getNewsService().getBean(id);
+			return _newsService.getBean(id);
 		}
 	}
 
@@ -455,7 +454,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 		@Override
 		protected INewsService getBeanService() {
-			return newsContext.getNewsService();
+			return _newsService;
 		}
 
 		@Override
@@ -477,12 +476,11 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		@Transaction(context = INewsContext.class)
 		public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
 			final EContentStatus op = cp.getEnumParameter(EContentStatus.class, "op");
-			final INewsService service = newsContext.getNewsService();
 			for (final String id : StringUtils.split(cp.getParameter("newsId"), ";")) {
-				final News news = service.getBean(id);
+				final News news = _newsService.getBean(id);
 				setLogDescription(cp, news);
 				news.setStatus(op);
-				service.update(new String[] { "status" }, news);
+				_newsService.update(new String[] { "status" }, news);
 			}
 			return super.onSave(cp)
 					.append(CategoryTableLCTemplatePage.createTableRefresh().toString());

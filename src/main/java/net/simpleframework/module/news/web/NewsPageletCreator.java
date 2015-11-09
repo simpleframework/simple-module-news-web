@@ -64,7 +64,7 @@ public class NewsPageletCreator extends PageletCreator<News> implements INewsCon
 
 		@Override
 		protected IADOBeanService<News> getBeanService() {
-			return newsContext.getNewsService();
+			return _newsService;
 		}
 	}
 }

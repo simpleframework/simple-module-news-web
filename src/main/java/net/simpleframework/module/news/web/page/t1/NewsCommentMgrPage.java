@@ -110,7 +110,7 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 
 		@Override
 		protected String getContent(final PageParameter pp, final NewsComment comment) {
-			final News news = newsContext.getNewsService().getBean(comment.getContentId());
+			final News news = _newsService.getBean(comment.getContentId());
 			final String txt = super.getContent(pp, comment);
 			return news != null ? LinkElement
 					.BLANK(txt)

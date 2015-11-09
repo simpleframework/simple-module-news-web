@@ -23,7 +23,6 @@ import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.module.common.web.content.ContentUtils;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
-import net.simpleframework.module.news.INewsService;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
@@ -116,23 +115,21 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 	@Transaction(context = INewsContext.class)
 	@Override
 	public JavascriptForward onSave(final ComponentParameter cp) throws IOException {
-		final NewsCategory category = newsContext.getNewsCategoryService().getBean(
-				cp.getParameter("ne_categoryId"));
+		final NewsCategory category = _newscService.getBean(cp.getParameter("ne_categoryId"));
 		if (category == null) {
 			throw ContentException.of($m("NewsForm.9"));
 		}
 
 		final String ne_cname = cp.getParameter("ne_cname");
-		final INewsService service = newsContext.getNewsService();
-		News news = service.getBean(cp.getParameter("ne_id"));
+		News news = _newsService.getBean(cp.getParameter("ne_id"));
 		final boolean insert = (news == null);
 		if (insert) {
-			news = service.createBean();
+			news = _newsService.createBean();
 			news.setCreateDate(new Date());
 			news.setUserId(cp.getLoginId());
 		} else {
 			if (!ObjectUtils.objectEquals(news.getCname(), ne_cname)
-					&& service.getBeanByName(ne_cname) != null) {
+					&& _newsService.getBeanByName(ne_cname) != null) {
 				throw ContentException.of($m("NewsForm.7") + ne_cname);
 			}
 		}
@@ -161,9 +158,9 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 					throws IOException {
 				final IAttachmentService<Attachment> aService = newsContext.getAttachmentService();
 				if (insert) {
-					service.insert(news2);
+					_newsService.insert(news2);
 				} else {
-					service.update(news2);
+					_newsService.update(news2);
 					if (deleteQueue != null) {
 						aService.delete(deleteQueue.toArray(new Object[] { deleteQueue.size() }));
 					}
@@ -250,7 +247,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 			ne_author.setText(news.getAuthor());
 			ne_content.setText(ContentUtils.getContent(pp, newsContext.getAttachmentService(), news));
 			ne_description.setText(news.getDescription());
-			category = newsContext.getNewsCategoryService().getBean(news.getCategoryId());
+			category = _newscService.getBean(news.getCategoryId());
 		} else {
 			final String _ne_cname = pp.getParameter("ne_cname");
 			if (StringUtils.hasText(_ne_cname)) {
@@ -258,7 +255,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 			}
 		}
 		if (category == null) {
-			category = newsContext.getNewsCategoryService().getBean(pp.getParameter("categoryId"));
+			category = _newscService.getBean(pp.getParameter("categoryId"));
 		}
 		if (category != null) {
 			ne_categoryId.setText(category.getId());

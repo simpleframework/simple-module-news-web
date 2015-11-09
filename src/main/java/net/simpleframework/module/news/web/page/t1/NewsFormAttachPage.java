@@ -100,7 +100,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 	public static class NewsAttachmentTbl extends AbstractDbTablePagerHandler {
 		@Override
 		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
-			final News news = newsContext.getNewsService().getBean(cp.getParameter("newsId"));
+			final News news = _newsService.getBean(cp.getParameter("newsId"));
 			if (news != null) {
 				cp.addFormParameter("newsId", news.getId());
 				return newsContext.getAttachmentService().queryByContent(news);

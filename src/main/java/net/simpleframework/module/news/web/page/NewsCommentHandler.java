@@ -78,6 +78,6 @@ public class NewsCommentHandler extends CommentCtxHandler<NewsComment> implement
 	}
 
 	protected News getNews(final ComponentParameter cp) {
-		return newsContext.getNewsService().getBean(cp.getParameter("newsId"));
+		return _newsService.getBean(cp.getParameter("newsId"));
 	}
 }

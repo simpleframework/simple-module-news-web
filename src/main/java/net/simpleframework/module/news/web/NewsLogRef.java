@@ -47,7 +47,7 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 
 		@Override
 		protected IDbBeanService<?> getBeanService() {
-			return newsContext.getNewsService();
+			return _newsService;
 		}
 
 		@Override
@@ -73,7 +73,7 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 
 		@Override
 		protected INewsService getOwnerService() {
-			return newsContext.getNewsService();
+			return _newsService;
 		}
 
 		@Override

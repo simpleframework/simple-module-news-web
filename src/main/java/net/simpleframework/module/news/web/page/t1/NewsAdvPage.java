@@ -35,7 +35,7 @@ public class NewsAdvPage extends AbstractTemplatePage implements INewsContextAwa
 	}
 
 	public IForward doIndex(final ComponentParameter cp) {
-		newsContext.getNewsService().getLuceneService().rebuildIndex();
+		_newsService.getLuceneService().rebuildIndex();
 		return new JavascriptForward("alert('").append($m("NewsAdvPage.3")).append("');");
 	}
 }

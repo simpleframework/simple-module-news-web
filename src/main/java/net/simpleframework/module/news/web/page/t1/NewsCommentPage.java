@@ -60,7 +60,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 	public IForward doAllowComments(final ComponentParameter cp) {
 		final News news = NewsViewTPage.getNews(cp);
 		news.setAllowComments(cp.getBoolParameter("val"));
-		newsContext.getNewsService().update(new String[] { "allowComments" }, news);
+		_newsService.update(new String[] { "allowComments" }, news);
 		return new JavascriptForward("$('nc_allowComments').checked=").append(news.isAllowComments())
 				.append(";");
 	}
