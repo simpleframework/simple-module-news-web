@@ -112,9 +112,16 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 				.setHeight("340");
 	}
 
+	protected News createNews(final PageParameter pp) {
+		final News news = _newsService.createBean();
+		news.setCreateDate(new Date());
+		news.setUserId(pp.getLoginId());
+		return news;
+	}
+
 	@Transaction(context = INewsContext.class)
 	@Override
-	public JavascriptForward onSave(final ComponentParameter cp) throws IOException {
+	public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
 		final NewsCategory category = _newsCategoryService.getBean(cp.getParameter("ne_categoryId"));
 		if (category == null) {
 			throw ContentException.of($m("NewsForm.9"));
@@ -124,9 +131,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		News news = _newsService.getBean(cp.getParameter("ne_id"));
 		final boolean insert = (news == null);
 		if (insert) {
-			news = _newsService.createBean();
-			news.setCreateDate(new Date());
-			news.setUserId(cp.getLoginId());
+			news = createNews(cp);
 		} else {
 			if (!ObjectUtils.objectEquals(news.getCname(), ne_cname)
 					&& _newsService.getBeanByName(ne_cname) != null) {
