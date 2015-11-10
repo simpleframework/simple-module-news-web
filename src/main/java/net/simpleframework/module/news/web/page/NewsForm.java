@@ -116,6 +116,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		final News news = _newsService.createBean();
 		news.setCreateDate(new Date());
 		news.setUserId(pp.getLoginId());
+		news.setDomainId(pp.getLdept().getDomainId());
 		return news;
 	}
 
