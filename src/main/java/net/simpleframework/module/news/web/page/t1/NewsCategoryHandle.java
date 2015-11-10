@@ -11,6 +11,7 @@ import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.news.INewsCategoryService;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.NewsCategory;
+import net.simpleframework.module.news.NewsStat;
 import net.simpleframework.module.news.web.page.NewsForm;
 import net.simpleframework.mvc.IPageHandler.PageSelector;
 import net.simpleframework.mvc.component.AbstractComponentBean;
@@ -61,7 +62,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			tn.setJsClickCallback(CategoryTableLCTemplatePage.createTableRefresh(
 					"categoryId=&status=" + EContentStatus.delete.name()).toString());
 			tn.setImage(imgBase + "recycle_bin.png");
-			setCount(tn, _newsService.queryBeans(null, EContentStatus.delete).getCount());
+			setCount(tn, _newsStatService.getNewsStat_delete(cp.getLdept().getDomainId()));
 			tn.setContextMenu("none");
 			nodes.add(tn);
 			return nodes;
@@ -76,7 +77,9 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 				parent.setJsClickCallback(CategoryTableLCTemplatePage.createTableRefresh(
 						"status=&categoryId=" + category.getId()).toString());
 				final String imgBase = getImgBase(cp, NewsForm.class);
-				setCount(parent, _newsService.count(category));
+				final NewsStat stat = _newsStatService.getNewsStat(category.getId(), cp.getLdept()
+						.getDomainId());
+				setCount(parent, stat.getNums() - stat.getNums_delete());
 				parent.setImage(imgBase + "folder.png");
 			}
 			return super.getCategoryTreenodes(cp, treeBean, parent);
@@ -90,7 +93,9 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			treeNode.setImage(getImgBase(cp, NewsForm.class) + "folder.png");
 			final Object o = treeNode.getDataObject();
 			if (o instanceof NewsCategory) {
-				setCount(treeNode, _newsService.count((NewsCategory) o));
+				final NewsStat stat = _newsStatService.getNewsStat(((NewsCategory) o).getId(), cp
+						.getLdept().getDomainId());
+				setCount(treeNode, stat.getNums() - stat.getNums_delete());
 			}
 		}
 		return super.getCategoryTreenodes(cp, treeBean, treeNode);
