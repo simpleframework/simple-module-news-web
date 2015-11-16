@@ -5,6 +5,7 @@ import static net.simpleframework.common.I18n.$m;
 import java.util.Map;
 
 import net.simpleframework.common.Convert;
+import net.simpleframework.common.ID;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.module.common.content.ECategoryMark;
 import net.simpleframework.module.common.content.EContentStatus;
@@ -14,6 +15,7 @@ import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.NewsStat;
 import net.simpleframework.module.news.web.page.NewsForm;
 import net.simpleframework.mvc.IPageHandler.PageSelector;
+import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.component.AbstractComponentBean;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.category.ctx.CategoryBeanAwareHandler;
@@ -62,7 +64,6 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			tn.setJsClickCallback(CategoryTableLCTemplatePage.createTableRefresh(
 					"categoryId=&status=" + EContentStatus.delete.name()).toString());
 			tn.setImage(imgBase + "recycle_bin.png");
-			setCount(tn, _newsStatService.getNewsStat_delete(cp.getLdept().getDomainId()));
 			tn.setContextMenu("none");
 			nodes.add(tn);
 			return nodes;
@@ -77,13 +78,23 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 				parent.setJsClickCallback(CategoryTableLCTemplatePage.createTableRefresh(
 						"status=&categoryId=" + category.getId()).toString());
 				final String imgBase = getImgBase(cp, NewsForm.class);
-				final NewsStat stat = _newsStatService.getNewsStat(category.getId(), cp.getLdept()
-						.getDomainId());
-				setCount(parent, stat.getNums() - stat.getNums_delete());
+				setCount(parent, getNums(cp, category));
 				parent.setImage(imgBase + "folder.png");
 			}
 			return super.getCategoryTreenodes(cp, treeBean, parent);
 		}
+	}
+
+	private int getNums(final PageParameter pp, final NewsCategory category) {
+		final ID categoryId = category.getId();
+		NewsStat stat = _newsStatService.getNewsStat(categoryId, null);
+		int c = stat.getNums() - stat.getNums_delete();
+		final ID domainId = pp.getLDomainId();
+		if (domainId != null) {
+			stat = _newsStatService.getNewsStat(categoryId, domainId);
+			c += (stat.getNums() - stat.getNums_delete());
+		}
+		return c;
 	}
 
 	@Override
@@ -93,9 +104,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			treeNode.setImage(getImgBase(cp, NewsForm.class) + "folder.png");
 			final Object o = treeNode.getDataObject();
 			if (o instanceof NewsCategory) {
-				final NewsStat stat = _newsStatService.getNewsStat(((NewsCategory) o).getId(), cp
-						.getLdept().getDomainId());
-				setCount(treeNode, stat.getNums() - stat.getNums_delete());
+				setCount(treeNode, getNums(cp, (NewsCategory) o));
 			}
 		}
 		return super.getCategoryTreenodes(cp, treeBean, treeNode);
