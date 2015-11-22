@@ -4,10 +4,8 @@ import static net.simpleframework.common.I18n.$m;
 
 import java.util.Map;
 
-import net.simpleframework.common.Convert;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.coll.KVMap;
-import net.simpleframework.module.common.content.ECategoryMark;
 import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.news.INewsCategoryService;
 import net.simpleframework.module.news.INewsContextAware;
@@ -19,9 +17,7 @@ import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.component.AbstractComponentBean;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.category.ctx.CategoryBeanAwareHandler;
-import net.simpleframework.mvc.component.ui.propeditor.InputComp;
 import net.simpleframework.mvc.component.ui.propeditor.PropEditorBean;
-import net.simpleframework.mvc.component.ui.propeditor.PropField;
 import net.simpleframework.mvc.component.ui.tree.TreeBean;
 import net.simpleframework.mvc.component.ui.tree.TreeNode;
 import net.simpleframework.mvc.component.ui.tree.TreeNodes;
@@ -60,7 +56,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			tn.setImage(imgBase + "news.png");
 			nodes.add(tn);
 
-			tn = new TreeNode(treeBean, parent, $m("NewsCategoryHandle.2"));
+			tn = new TreeNode(treeBean, parent, $m("NewsCategoryHandle.1"));
 			tn.setJsClickCallback(CategoryTableLCTemplatePage.createTableRefresh(
 					"categoryId=&status=" + EContentStatus.delete.name()).toString());
 			tn.setImage(imgBase + "recycle_bin.png");
@@ -114,9 +110,6 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 	protected void onLoaded_dataBinding(final ComponentParameter cp,
 			final Map<String, Object> dataBinding, final PageSelector selector,
 			final NewsCategory category) {
-		if (category != null) {
-			dataBinding.put("category_mark", category.getMark());
-		}
 	}
 
 	@Override
@@ -125,23 +118,22 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 		if (insert) {
 			category.setUserId(cp.getLoginId());
 		}
-		category.setMark(Convert.toEnum(ECategoryMark.class, cp.getParameter("category_mark")));
 	}
 
 	@Override
 	public Map<String, Object> categoryEdit_attri(final ComponentParameter cp) {
-		return ((KVMap) super.categoryEdit_attri(cp)).add(window_height, 330);
+		return ((KVMap) super.categoryEdit_attri(cp)).add(window_height, 380);
 	}
 
 	@Override
 	protected AbstractComponentBean categoryEdit_createPropEditor(final ComponentParameter cp) {
 		final PropEditorBean propEditor = (PropEditorBean) super.categoryEdit_createPropEditor(cp);
 
-		propEditor.getFormFields().add(
-				1,
-				new PropField($m("NewsCategoryHandle.1"))
-						.addComponents(InputComp.select("category_mark").setDefaultEnumValue(
-								ECategoryMark.normal, ECategoryMark.builtIn)));
+		// propEditor.getFormFields().add(
+		// 1,
+		// new PropField($m("NewsCategoryHandle.1"))
+		// .addComponents(InputComp.select("category_mark").setDefaultEnumValue(
+		// ECategoryMark.normal, ECategoryMark.builtIn)));
 		return propEditor;
 	}
 }

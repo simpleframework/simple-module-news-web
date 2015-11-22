@@ -6,8 +6,10 @@ import java.util.Map;
 import net.simpleframework.module.common.web.page.AbstractMgrTPage;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.web.page.NewsForm;
+import net.simpleframework.module.news.web.page.t1.NewsCategoryHandle;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ElementList;
+import net.simpleframework.mvc.component.ext.category.CategoryBean;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -20,8 +22,11 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 	@Override
 	protected void onForward(final PageParameter pp) throws Exception {
 		super.onForward(pp);
-
 		pp.addImportCSS(NewsForm.class, "/news_mgr2.css");
+
+		// 导航树
+		addComponentBean(pp, "NewsMgrTPage_tree", CategoryBean.class).setDraggable(pp.isLmanager())
+				.setContainerId("idNewsMgrTPage_category").setHandlerClass(_NewsCategoryHandle.class);
 	}
 
 	@Override
@@ -40,5 +45,8 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 		sb.append(" </tr></table>");
 		sb.append("</div>");
 		return sb.toString();
+	}
+
+	public static class _NewsCategoryHandle extends NewsCategoryHandle {
 	}
 }
