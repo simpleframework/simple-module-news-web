@@ -22,13 +22,11 @@ import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsUpdateLogPage;
-import net.simpleframework.module.news.web.NewsUrlsFactory;
 import net.simpleframework.module.news.web.page.NewsCategoryHandle;
 import net.simpleframework.module.news.web.page.NewsFormTPage;
 import net.simpleframework.module.news.web.page.NewsListTbl;
 import net.simpleframework.module.news.web.page.NewsUtils;
 import net.simpleframework.module.news.web.page.NewsViewTPage;
-import net.simpleframework.module.news.web.page.t2.NewsListPage;
 import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageMapping;
@@ -186,8 +184,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
-		final LinkButton add = new LinkButton($m("NewsMgrPage.6"));
-		final ElementList btns = ElementList.of(add).append(SpanElement.SPACE);
+		final ElementList btns = ElementList.of(NewsUtils.createAddNew(pp)).append(SpanElement.SPACE);
 		final EContentStatus status = pp.getEnumParameter(EContentStatus.class, "status");
 		if (status != EContentStatus.delete) {
 			btns.append(createStatusButton(EContentStatus.publish))
@@ -195,24 +192,18 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		}
 		btns.append(createStatusButton(EContentStatus.delete).setIconClass(Icon.trash))
 				.append(SpanElement.SPACE)
-				.add(createStatusButton(EContentStatus.edit).setText($m("NewsMgrPage.7")));
+				.append(createStatusButton(EContentStatus.edit).setText($m("NewsMgrPage.7")));
 
 		if (pp.isLmember(newsContext.getModule().getManagerRole())) {
-			btns.append(SpanElement.SPACE).add(
+			btns.append(SpanElement.SPACE).append(
 					new LinkButton($m("NewsMgrPage.13"))
 							.setOnclick("$Actions['NewsMgrPage_advWindow']();"));
 		}
 
-		final NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
-		String url = uFactory.getUrl(pp, NewsFormBasePage.class, (News) null);
-		final NewsCategory category = NewsUtils.getNewsCategory(pp);
-		if (category != null) {
-			url += "?categoryId=" + category.getId();
-			btns.append(SpanElement.SPACE).append(
-					new LinkButton($m("Button.Preview")).setOnclick(JS.loc(
-							uFactory.getUrl(pp, NewsListPage.class, category), true)));
+		final LinkButton preview = NewsUtils.createNewsPreview(pp);
+		if (preview != null) {
+			btns.append(SpanElement.SPACE).append(preview);
 		}
-		add.setOnclick(JS.loc(url));
 		return btns;
 	}
 

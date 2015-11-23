@@ -13,6 +13,7 @@ import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.page.t2.NewsViewPage;
+import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.JS;
@@ -114,7 +115,7 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 							"$Actions['NewsMgrPage_status']('op=publish&newsId=" + id + "');"));
 				} else {
 					sb.append(new ButtonElement($m("Button.Preview")).setOnclick(JS.loc(
-							AbstractTemplatePage.url(ViewControlPage.class, "newsId=" + id), true)));
+							AbstractMVCPage.url(ViewControlPage.class, "newsId=" + id), true)));
 				}
 				sb.append(SpanElement.SPACE);
 				sb.append(ButtonElement.logBtn()
@@ -169,9 +170,9 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 				items.append(MenuItem.itemEdit().setOnclick_act("NewsMgrPage_edit", "newsId"))
 						.append(MenuItem.sep())
 						.append(
-								MenuItem.of($m("Button.Preview"), null, "$Actions.loc('"
-										+ AbstractTemplatePage.url(ViewControlPage.class)
-										+ "?newsId=' + $pager_action(item).rowId(), true);"))
+								MenuItem.of($m("Button.Preview"), null,
+										"$Actions.loc('" + AbstractMVCPage.url(ViewControlPage.class)
+												+ "?newsId=' + $pager_action(item).rowId(), true);"))
 						.append(MenuItem.sep())
 						.append(
 								MenuItem.of($m("AbstractContentBean.2")).setOnclick_act(

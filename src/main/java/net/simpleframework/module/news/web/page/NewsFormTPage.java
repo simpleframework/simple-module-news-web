@@ -270,16 +270,17 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 
 		final TableRow r1 = new TableRow(
 				new RowField($m("NewsFormTPage.0"), ne_id, ne_topic).setStarMark(true), new RowField(
-						$m("NewsFormTPage.1"), ne_categoryId, ne_categoryText)
-						.setElementsStyle("width:150px;").setStarMark(true));
+						$m("NewsFormTPage.1"), ne_categoryId, ne_categoryText).setElementsStyle(
+						"width:150px;").setStarMark(true));
 		if (pp.isLmanager()) {
 			// 唯一名称，保留给系统管理员
 			r1.append(new RowField($m("NewsFormTPage.13"), ne_cname).setElementsStyle("width:150px;"));
 		}
-		final TableRow r2 = new TableRow(new RowField($m("NewsFormTPage.2"), ne_keyWords), new RowField(
-				$m("NewsFormTPage.3"), ne_source).setElementsStyle("width:150px;"), new RowField(
-				$m("NewsFormTPage.4"), ne_author).setElementsStyle("width:150px;"));
-		final TableRow r3 = new TableRow(new RowField($m("NewsFormTPage.5"), ne_content).setStarMark(true));
+		final TableRow r2 = new TableRow(new RowField($m("NewsFormTPage.2"), ne_keyWords),
+				new RowField($m("NewsFormTPage.3"), ne_source).setElementsStyle("width:150px;"),
+				new RowField($m("NewsFormTPage.4"), ne_author).setElementsStyle("width:150px;"));
+		final TableRow r3 = new TableRow(
+				new RowField($m("NewsFormTPage.5"), ne_content).setStarMark(true));
 		final TableRow r4 = new TableRow(new RowField($m("NewsFormTPage.6"), ne_description));
 		final TableRows rows = TableRows.of(r1, r2, r3, r4);
 		return rows;
@@ -336,7 +337,9 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 				.append(SpanElement.SPACE)
 				.append(opt_indexed)
 				.append(SpanElement.SPACE)
-				.append(new LinkButton($m("NewsFormTPage.15")).setOnclick("$('idNewsForm_opts').toggle();"))
+				.append(
+						new LinkButton($m("NewsFormTPage.15"))
+								.setOnclick("$('idNewsForm_opts').toggle();"))
 				.append(
 						new BlockElement()
 								.setId("idNewsForm_opts")

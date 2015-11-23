@@ -116,6 +116,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			final boolean insert) {
 		if (insert) {
 			category.setUserId(cp.getLoginId());
+			category.setDomainId(NewsUtils.getDomainId(cp));
 		}
 	}
 
