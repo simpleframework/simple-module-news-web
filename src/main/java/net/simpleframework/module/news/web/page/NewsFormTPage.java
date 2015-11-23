@@ -68,7 +68,7 @@ import net.simpleframework.mvc.template.lets.FormTableRowTemplatePage;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class NewsForm extends FormTableRowTemplatePage implements INewsContextAware {
+public class NewsFormTPage extends FormTableRowTemplatePage implements INewsContextAware {
 
 	@Override
 	protected void onForward(final PageParameter pp) throws Exception {
@@ -85,13 +85,13 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 				CategorySelectedTree.class);
 		addComponentBean(pp, "NewsForm_dict", DictionaryBean.class).setBindingId("ne_categoryId")
 				.setBindingText("ne_categoryText").addTreeRef(pp, "NewsForm_dict_tree")
-				.setTitle($m("NewsForm.1")).setHeight(320);
+				.setTitle($m("NewsFormTPage.1")).setHeight(320);
 
 		// 上传
 		addComponentBean(pp, "NewsForm_upload_page", AttachmentBean.class).setInsertTextarea(
 				"ne_content").setHandlerClass(NewsAttachmentAction.class);
 		addComponentBean(pp, "NewsForm_upload", WindowBean.class)
-				.setContentRef("NewsForm_upload_page").setTitle($m("NewsForm.10")).setPopup(true)
+				.setContentRef("NewsForm_upload_page").setTitle($m("NewsFormTPage.10")).setPopup(true)
 				.setHeight(480).setWidth(400);
 	}
 
@@ -125,7 +125,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 	public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
 		final NewsCategory category = _newsCategoryService.getBean(cp.getParameter("ne_categoryId"));
 		if (category == null) {
-			throw ContentException.of($m("NewsForm.9"));
+			throw ContentException.of($m("NewsFormTPage.9"));
 		}
 
 		final String ne_cname = cp.getParameter("ne_cname");
@@ -136,7 +136,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		} else {
 			if (!ObjectUtils.objectEquals(news.getCname(), ne_cname)
 					&& _newsService.getBeanByName(ne_cname) != null) {
-				throw ContentException.of($m("NewsForm.7") + ne_cname);
+				throw ContentException.of($m("NewsFormTPage.7") + ne_cname);
 			}
 		}
 
@@ -269,18 +269,18 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 		}
 
 		final TableRow r1 = new TableRow(
-				new RowField($m("NewsForm.0"), ne_id, ne_topic).setStarMark(true), new RowField(
-						$m("NewsForm.1"), ne_categoryId, ne_categoryText)
+				new RowField($m("NewsFormTPage.0"), ne_id, ne_topic).setStarMark(true), new RowField(
+						$m("NewsFormTPage.1"), ne_categoryId, ne_categoryText)
 						.setElementsStyle("width:150px;").setStarMark(true));
 		if (pp.isLmanager()) {
 			// 唯一名称，保留给系统管理员
-			r1.append(new RowField($m("NewsForm.13"), ne_cname).setElementsStyle("width:150px;"));
+			r1.append(new RowField($m("NewsFormTPage.13"), ne_cname).setElementsStyle("width:150px;"));
 		}
-		final TableRow r2 = new TableRow(new RowField($m("NewsForm.2"), ne_keyWords), new RowField(
-				$m("NewsForm.3"), ne_source).setElementsStyle("width:150px;"), new RowField(
-				$m("NewsForm.4"), ne_author).setElementsStyle("width:150px;"));
-		final TableRow r3 = new TableRow(new RowField($m("NewsForm.5"), ne_content).setStarMark(true));
-		final TableRow r4 = new TableRow(new RowField($m("NewsForm.6"), ne_description));
+		final TableRow r2 = new TableRow(new RowField($m("NewsFormTPage.2"), ne_keyWords), new RowField(
+				$m("NewsFormTPage.3"), ne_source).setElementsStyle("width:150px;"), new RowField(
+				$m("NewsFormTPage.4"), ne_author).setElementsStyle("width:150px;"));
+		final TableRow r3 = new TableRow(new RowField($m("NewsFormTPage.5"), ne_content).setStarMark(true));
+		final TableRow r4 = new TableRow(new RowField($m("NewsFormTPage.6"), ne_description));
 		final TableRows rows = TableRows.of(r1, r2, r3, r4);
 		return rows;
 	}
@@ -304,18 +304,18 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 
 	@Override
 	public ElementList getLeftElements(final PageParameter pp) {
-		final Checkbox opt_allowComments = new Checkbox(OPT_ALLOWCOMMENTS, $m("NewsForm.8"));
-		final Checkbox opt_indexed = new Checkbox(OPT_INDEXED, $m("NewsForm.14"));
-		final Checkbox opt_imageMark = new Checkbox(OPT_IMAGEMARK, $m("NewsForm.11"));
+		final Checkbox opt_allowComments = new Checkbox(OPT_ALLOWCOMMENTS, $m("NewsFormTPage.8"));
+		final Checkbox opt_indexed = new Checkbox(OPT_INDEXED, $m("NewsFormTPage.14"));
+		final Checkbox opt_imageMark = new Checkbox(OPT_IMAGEMARK, $m("NewsFormTPage.11"));
 
-		final Checkbox opt_viewer = new Checkbox(OPT_VIEWER, $m("NewsForm.12")).setChecked(true);
+		final Checkbox opt_viewer = new Checkbox(OPT_VIEWER, $m("NewsFormTPage.12")).setChecked(true);
 
-		final Checkbox opt_targetBlank = new Checkbox(OPT_TARGET_BLANK, $m("NewsForm.16"))
+		final Checkbox opt_targetBlank = new Checkbox(OPT_TARGET_BLANK, $m("NewsFormTPage.16"))
 				.setChecked(true);
-		final Checkbox opt_removeClass = new Checkbox(OPT_REMOVE_CLASS, $m("NewsForm.17"))
+		final Checkbox opt_removeClass = new Checkbox(OPT_REMOVE_CLASS, $m("NewsFormTPage.17"))
 				.setChecked(true);
-		final Checkbox opt_removeStyle = new Checkbox(OPT_REMOVE_STYLE, $m("NewsForm.18"));
-		final Checkbox opt_removeTagFont = new Checkbox(OPT_REMOVE_TAG_FONT, $m("NewsForm.19"));
+		final Checkbox opt_removeStyle = new Checkbox(OPT_REMOVE_STYLE, $m("NewsFormTPage.18"));
+		final Checkbox opt_removeTagFont = new Checkbox(OPT_REMOVE_TAG_FONT, $m("NewsFormTPage.19"));
 
 		final News news = NewsViewTPage.getNews(pp);
 		if (news != null) {
@@ -336,7 +336,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 				.append(SpanElement.SPACE)
 				.append(opt_indexed)
 				.append(SpanElement.SPACE)
-				.append(new LinkButton($m("NewsForm.15")).setOnclick("$('idNewsForm_opts').toggle();"))
+				.append(new LinkButton($m("NewsFormTPage.15")).setOnclick("$('idNewsForm_opts').toggle();"))
 				.append(
 						new BlockElement()
 								.setId("idNewsForm_opts")
@@ -385,7 +385,7 @@ public class NewsForm extends FormTableRowTemplatePage implements INewsContextAw
 
 		@Override
 		public TreeNodes getTreenodes(final ComponentParameter cp, final TreeNode parent) {
-			return ((NewsForm) get(cp)).getCategoryDictTreenodes(cp, parent);
+			return ((NewsFormTPage) get(cp)).getCategoryDictTreenodes(cp, parent);
 		}
 	}
 }

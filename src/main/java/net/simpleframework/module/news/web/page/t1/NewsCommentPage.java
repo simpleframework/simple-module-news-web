@@ -86,7 +86,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 				LinkButton.deleteBtn().setOnclick(
 						"$Actions['NewsCommentPage_tbl'].doAct('NewsCommentPage_delete');"),
 				SpanElement.SPACE,
-				new Checkbox("nc_allowComments", $m("NewsForm.8")).setChecked(news.isAllowComments())
+				new Checkbox("nc_allowComments", $m("NewsFormTPage.8")).setChecked(news.isAllowComments())
 						.setOnchange(
 								"$Actions['NewsCommentPage_allowComments']('newsId=" + news.getId()
 										+ "&val=' + this.checked);"));

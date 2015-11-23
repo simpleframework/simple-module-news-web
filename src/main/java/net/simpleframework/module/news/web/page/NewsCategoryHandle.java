@@ -1,4 +1,4 @@
-package net.simpleframework.module.news.web.page.t1;
+package net.simpleframework.module.news.web.page;
 
 import static net.simpleframework.common.I18n.$m;
 
@@ -11,7 +11,6 @@ import net.simpleframework.module.news.INewsCategoryService;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.NewsStat;
-import net.simpleframework.module.news.web.page.NewsForm;
 import net.simpleframework.mvc.IPageHandler.PageSelector;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.component.AbstractComponentBean;
@@ -52,7 +51,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			tn.setAcceptdrop(true);
 			tn.setJsClickCallback(CategoryTableLCTemplatePage
 					.createTableRefresh("categoryId=&status=").toString());
-			final String imgBase = getImgBase(cp, NewsForm.class);
+			final String imgBase = getImgBase(cp, NewsFormTPage.class);
 			tn.setImage(imgBase + "news.png");
 			nodes.add(tn);
 
@@ -73,7 +72,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 				final NewsCategory category = (NewsCategory) o;
 				parent.setJsClickCallback(CategoryTableLCTemplatePage.createTableRefresh(
 						"status=&categoryId=" + category.getId()).toString());
-				final String imgBase = getImgBase(cp, NewsForm.class);
+				final String imgBase = getImgBase(cp, NewsFormTPage.class);
 				setCount(parent, getNums(cp, category));
 				parent.setImage(imgBase + "folder.png");
 			}
@@ -97,7 +96,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 	public TreeNodes getCategoryDictTreenodes(final ComponentParameter cp, final TreeBean treeBean,
 			final TreeNode treeNode) {
 		if (treeNode != null) {
-			treeNode.setImage(getImgBase(cp, NewsForm.class) + "folder.png");
+			treeNode.setImage(getImgBase(cp, NewsFormTPage.class) + "folder.png");
 			final Object o = treeNode.getDataObject();
 			if (o instanceof NewsCategory) {
 				setCount(treeNode, getNums(cp, (NewsCategory) o));

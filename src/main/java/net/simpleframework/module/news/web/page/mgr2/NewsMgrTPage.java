@@ -5,8 +5,8 @@ import java.util.Map;
 
 import net.simpleframework.module.common.web.page.AbstractMgrTPage;
 import net.simpleframework.module.news.INewsContextAware;
-import net.simpleframework.module.news.web.page.NewsForm;
-import net.simpleframework.module.news.web.page.t1.NewsCategoryHandle;
+import net.simpleframework.module.news.web.page.NewsCategoryHandle;
+import net.simpleframework.module.news.web.page.NewsFormTPage;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.component.ext.category.CategoryBean;
@@ -22,11 +22,27 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 	@Override
 	protected void onForward(final PageParameter pp) throws Exception {
 		super.onForward(pp);
-		pp.addImportCSS(NewsForm.class, "/news_mgr2.css");
+		pp.addImportCSS(NewsFormTPage.class, "/news_mgr2.css");
 
 		// 导航树
 		addComponentBean(pp, "NewsMgrTPage_tree", CategoryBean.class).setDraggable(pp.isLmanager())
 				.setContainerId("idNewsMgrTPage_category").setHandlerClass(_NewsCategoryHandle.class);
+
+		// 表格
+		// final TablePagerBean tablePager = (TablePagerBean) addComponentBean(pp,
+		// "DictMgrTPage_tbl",
+		// TablePagerBean.class).setShowLineNo(true).setPageItems(30)
+		// .setPagerBarLayout(EPagerBarLayout.top).setContainerId("idDictMgrTPage_tbl")
+		// .setHandlerClass(_DictItemList.class);
+		// tablePager
+		// .addColumn(TablePagerColumn.ICON())
+		// .addColumn(new TablePagerColumn("text", $m("DictMgrPage.1")))
+		// .addColumn(new TablePagerColumn("codeNo", $m("DictMgrPage.2")))
+		// .addColumn(
+		// new TablePagerColumn("parentId", $m("DictMgrPage.8"),
+		// 100).setFilterSort(false))
+		// .addColumn(TablePagerColumn.OPE(70));
+
 	}
 
 	@Override

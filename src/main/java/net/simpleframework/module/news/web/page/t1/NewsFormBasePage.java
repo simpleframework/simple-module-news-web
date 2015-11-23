@@ -15,7 +15,7 @@ import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsUrlsFactory;
 import net.simpleframework.module.news.web.NewsVoteRef;
-import net.simpleframework.module.news.web.page.NewsForm;
+import net.simpleframework.module.news.web.page.NewsFormTPage;
 import net.simpleframework.mvc.PageMapping;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ElementList;
@@ -38,7 +38,7 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 	protected void onForward(final PageParameter pp) throws Exception {
 		super.onForward(pp);
 
-		pp.addImportCSS(NewsForm.class, "/news.css");
+		pp.addImportCSS(NewsFormTPage.class, "/news.css");
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 	}
 
 	protected String includeForm(final PageParameter pp) {
-		return pp.includeUrl(NewsForm.class);
+		return pp.includeUrl(NewsFormTPage.class);
 	}
 
 	@Override

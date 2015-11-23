@@ -13,7 +13,7 @@ import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsComment;
 import net.simpleframework.module.news.web.NewsWebContext;
-import net.simpleframework.module.news.web.page.NewsForm;
+import net.simpleframework.module.news.web.page.NewsFormTPage;
 import net.simpleframework.module.news.web.page.t1.NewsCommentPage.NewsCommentTbl;
 import net.simpleframework.module.news.web.page.t2.NewsViewPage;
 import net.simpleframework.mvc.IForward;
@@ -44,7 +44,7 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 	protected void onForward(final PageParameter pp) throws Exception {
 		super.onForward(pp);
 
-		pp.addImportCSS(NewsForm.class, "/news.css");
+		pp.addImportCSS(NewsFormTPage.class, "/news.css");
 
 		final TablePagerBean tablePager = (TablePagerBean) addTablePagerBean(pp,
 				"NewsCommentMgrPage_tbl").setPageItems(30).setPagerBarLayout(EPagerBarLayout.bottom)

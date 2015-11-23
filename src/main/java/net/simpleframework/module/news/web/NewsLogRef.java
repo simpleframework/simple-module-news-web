@@ -15,7 +15,7 @@ import net.simpleframework.module.log.web.page.EntityUpdateLogPage;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.INewsService;
 import net.simpleframework.module.news.News;
-import net.simpleframework.module.news.web.page.NewsForm;
+import net.simpleframework.module.news.web.page.NewsFormTPage;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.AbstractElement;
 import net.simpleframework.mvc.common.element.ImageElement;
@@ -84,7 +84,7 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 		@Override
 		public AbstractElement<?> getDownloadLink(final ComponentParameter cp,
 				final AttachmentFile attachmentFile, final String id) throws IOException {
-			if (Convert.toBool(cp.getParameter(NewsForm.OPT_VIEWER))) {
+			if (Convert.toBool(cp.getParameter(NewsFormTPage.OPT_VIEWER))) {
 				final ImageElement iElement = createImageViewer(cp, attachmentFile, id);
 				if (iElement != null) {
 					return iElement;
