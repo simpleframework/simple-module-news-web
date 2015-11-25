@@ -5,14 +5,20 @@ import static net.simpleframework.common.I18n.$m;
 import java.io.IOException;
 import java.util.Map;
 
+import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.module.common.web.page.AbstractMgrTPage;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.web.page.NewsCategoryHandle;
 import net.simpleframework.module.news.web.page.NewsFormTPage;
 import net.simpleframework.module.news.web.page.NewsListTbl;
+import net.simpleframework.module.news.web.page.NewsMgrActions;
+import net.simpleframework.module.news.web.page.NewsMgrActions.StatusDescPage;
 import net.simpleframework.module.news.web.page.NewsUtils;
+import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
+import net.simpleframework.mvc.common.element.AbstractElement;
+import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.category.CategoryBean;
@@ -47,9 +53,25 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 				.addColumn(TablePagerColumn.ICON())
 				.addColumn(new TablePagerColumn("topic", $m("NewsMgrPage.1")))
 				.addColumn(
-						new TablePagerColumn("stat", $m("NewsMgrPage.2") + "/" + $m("NewsMgrPage.3"), 90))
+						new TablePagerColumn("stat", $m("NewsMgrPage.2") + "/" + $m("NewsMgrPage.3"), 90)
+								.setTextAlign(ETextAlign.center).setFilterSort(false))
 				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsMgrPage.4")))
 				.addColumn(TablePagerColumn.OPE(70));
+
+		// edit
+		addAjaxRequest(pp, "NewsMgrPage_edit").setHandlerMethod("doEdit").setHandlerClass(
+				_NewsMgrActions.class);
+		// delete
+		addAjaxRequest(pp, "NewsMgrPage_delete").setConfirmMessage($m("NewsMgrPage.11"))
+				.setHandlerMethod("doDelete").setHandlerClass(_NewsMgrActions.class);
+		// status
+		addAjaxRequest(pp, "NewsMgrPage_status").setHandlerMethod("doStatus").setHandlerClass(
+				_NewsMgrActions.class);
+
+		// status window
+		addAjaxRequest(pp, "NewsMgrPage_statusPage", _StatusDescPage.class);
+		addWindowBean(pp, "NewsMgrPage_statusWindow").setContentRef("NewsMgrPage_statusPage")
+				.setWidth(420).setHeight(240);
 	}
 
 	@Override
@@ -75,6 +97,21 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 	}
 
 	public static class _NewsListTbl extends NewsListTbl {
+		@Override
+		protected Map<String, Object> getRowData(final ComponentParameter cp, final Object dataObject) {
+			final News news = (News) dataObject;
+			final KVMap kv = new KVMap();
+
+			final AbstractElement<?> img = createImageMark(cp, news);
+			if (img != null) {
+				kv.add(TablePagerColumn.ICON, img);
+			}
+			kv.add("topic", toTopicHTML(cp, news))
+					.add("stat", news.getViews() + "/" + news.getComments())
+					.add("createDate", news.getCreateDate())
+					.add(TablePagerColumn.OPE, toOpeHTML(cp, news));
+			return kv;
+		}
 
 		@Override
 		protected String toOpeHTML(final ComponentParameter cp, final News news) {
@@ -82,6 +119,22 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 			sb.append(createPublishBtn(cp, news));
 			sb.append(AbstractTablePagerSchema.IMG_DOWNMENU);
 			return sb.toString();
+		}
+	}
+
+	public static class _NewsMgrActions extends NewsMgrActions {
+
+		@Override
+		protected JavascriptForward createTableRefresh() {
+			return new JavascriptForward("$Actions['NewsMgrTPage_tbl']();");
+		}
+	}
+
+	public static class _StatusDescPage extends StatusDescPage {
+
+		@Override
+		protected JavascriptForward createTableRefresh() {
+			return new JavascriptForward("$Actions['NewsMgrTPage_tbl']();");
 		}
 	}
 }
