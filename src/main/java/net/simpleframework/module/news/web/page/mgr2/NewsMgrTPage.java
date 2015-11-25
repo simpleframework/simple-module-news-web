@@ -7,13 +7,16 @@ import java.util.Map;
 
 import net.simpleframework.module.common.web.page.AbstractMgrTPage;
 import net.simpleframework.module.news.INewsContextAware;
+import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.web.page.NewsCategoryHandle;
 import net.simpleframework.module.news.web.page.NewsFormTPage;
 import net.simpleframework.module.news.web.page.NewsListTbl;
 import net.simpleframework.module.news.web.page.NewsUtils;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ElementList;
+import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.category.CategoryBean;
+import net.simpleframework.mvc.component.ui.pager.AbstractTablePagerSchema;
 import net.simpleframework.mvc.component.ui.pager.EPagerBarLayout;
 import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
@@ -72,5 +75,13 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 	}
 
 	public static class _NewsListTbl extends NewsListTbl {
+
+		@Override
+		protected String toOpeHTML(final ComponentParameter cp, final News news) {
+			final StringBuilder sb = new StringBuilder();
+			sb.append(createPublishBtn(cp, news));
+			sb.append(AbstractTablePagerSchema.IMG_DOWNMENU);
+			return sb.toString();
+		}
 	}
 }

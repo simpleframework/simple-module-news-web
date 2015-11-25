@@ -68,9 +68,20 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 		if (StringUtils.hasText(url)) {
 			backBtn.setHref(url);
 		} else {
-			backBtn.setOnclick("$Actions.loc('"
-					+ uFactory.getUrl(pp, NewsMgrPage.class, (NewsCategory) null)
-					+ "?categoryId=' + $F('ne_categoryId'));");
+			String referer = pp.getRequestHeader("Referer");
+			if (StringUtils.hasText(referer) && (referer.contains("/news/mgr"))) {
+				backBtn.setHref(referer);
+				pp.setSessionAttr("_Referer", referer);
+			} else {
+				referer = (String) pp.getSessionAttr("_Referer");
+				if (referer != null) {
+					backBtn.setHref(referer);
+				} else {
+					backBtn.setOnclick("$Actions.loc('"
+							+ uFactory.getUrl(pp, NewsMgrPage.class, (NewsCategory) null)
+							+ "?categoryId=' + $F('ne_categoryId'));");
+				}
+			}
 		}
 		final ElementList el = ElementList.of(backBtn);
 		if ("save".equals(pp.getParameter("op"))) {

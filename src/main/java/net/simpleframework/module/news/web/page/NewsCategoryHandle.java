@@ -4,6 +4,7 @@ import static net.simpleframework.common.I18n.$m;
 
 import java.util.Map;
 
+import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.module.common.content.EContentStatus;
@@ -36,10 +37,10 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 		return _newsCategoryService;
 	}
 
-	private void setCount(final TreeNode tn, final int cc) {
-		if (cc > 0) {
-			tn.setPostfixText("(" + cc + ")");
-		}
+	@Override
+	protected IDataQuery<?> categoryBeans(final ComponentParameter cp, final Object categoryId) {
+		final NewsCategory category = _newsCategoryService.getBean(categoryId);
+		return _newsCategoryService.queryChildren(category, NewsUtils.getDomainId(cp));
 	}
 
 	@Override
@@ -77,6 +78,12 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 				parent.setImage(imgBase + "folder.png");
 			}
 			return super.getCategoryTreenodes(cp, treeBean, parent);
+		}
+	}
+
+	private void setCount(final TreeNode tn, final int cc) {
+		if (cc > 0) {
+			tn.setPostfixText("(" + cc + ")");
 		}
 	}
 

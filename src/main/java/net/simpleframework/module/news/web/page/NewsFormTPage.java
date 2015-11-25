@@ -27,10 +27,10 @@ import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsAttachmentAction;
+import net.simpleframework.module.news.web.page.mgr2.NewsMgrTPage;
 import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
 import net.simpleframework.module.news.web.page.t1.NewsMgrPage;
 import net.simpleframework.module.news.web.page.t2.NewsViewPage;
-import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.BlockElement;
@@ -116,7 +116,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		final News news = _newsService.createBean();
 		news.setCreateDate(new Date());
 		news.setUserId(pp.getLoginId());
-		news.setDomainId(pp.getLDomainId());
+		news.setDomainId(NewsUtils.getDomainId(pp));
 		return news;
 	}
 
@@ -373,11 +373,14 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		return 70;
 	}
 
+	private AbstractComponentBean categoryBean;
+
 	protected TreeNodes getCategoryDictTreenodes(final ComponentParameter cp, final TreeNode parent) {
-		final AbstractComponentBean categoryBean = AbstractMVCPage.get(NewsMgrPage.class)
-				.getCategoryBean();
 		if (categoryBean == null) {
-			return null;
+			categoryBean = get(NewsMgrPage.class).getCategoryBean();
+			if (categoryBean == null) {
+				categoryBean = get(NewsMgrTPage.class).getComponentBeanByName(cp, "NewsMgrTPage_tree");
+			}
 		}
 		final ComponentParameter nCP = ComponentParameter.get(cp, categoryBean);
 		final ICategoryHandler cHandle = (ICategoryHandler) nCP.getComponentHandler();
