@@ -31,6 +31,10 @@ public abstract class NewsUtils implements INewsContextAware {
 		return AbstractMVCPage.getPermissionOrg(pp).getId();
 	}
 
+	public static News getNews(final PageParameter pp) {
+		return AbstractTemplatePage.getCacheBean(pp, _newsService, "newsId");
+	}
+
 	static NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
 
 	public static LinkButton createAddNew(final PageParameter pp) {

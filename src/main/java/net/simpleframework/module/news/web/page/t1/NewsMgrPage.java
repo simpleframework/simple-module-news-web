@@ -19,7 +19,6 @@ import net.simpleframework.module.news.web.page.NewsListTbl;
 import net.simpleframework.module.news.web.page.NewsMgrActions;
 import net.simpleframework.module.news.web.page.NewsMgrActions.StatusDescPage;
 import net.simpleframework.module.news.web.page.NewsUtils;
-import net.simpleframework.module.news.web.page.NewsViewTPage;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageMapping;
 import net.simpleframework.mvc.PageParameter;
@@ -194,7 +193,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 		@Override
 		protected News getBean(final PageParameter pp) {
-			return NewsViewTPage.getNews(pp);
+			return NewsUtils.getNews(pp);
 		}
 
 		@Override

@@ -13,7 +13,7 @@ import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsVoteRef;
 import net.simpleframework.module.news.web.NewsVoteRef._VoteListHandler;
-import net.simpleframework.module.news.web.page.NewsViewTPage;
+import net.simpleframework.module.news.web.page.NewsUtils;
 import net.simpleframework.mvc.PageMapping;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ElementList;
@@ -57,7 +57,7 @@ public class NewsFormVotePage extends NewsFormBasePage {
 		public ElementList getLeftElements(final PageParameter pp) {
 			final IModuleRef ref = ((INewsWebContext) newsContext).getVoteRef();
 			if (ref != null) {
-				final News news = NewsViewTPage.getNews(pp);
+				final News news = NewsUtils.getNews(pp);
 				return ElementList.of(((NewsVoteRef) ref).toAddVoteElement(pp,
 						news != null ? news.getId() : null));
 			}
@@ -73,7 +73,7 @@ public class NewsFormVotePage extends NewsFormBasePage {
 			if (ref == null) {
 				return DataQueryUtils.nullQuery();
 			}
-			final News news = NewsViewTPage.getNews(cp);
+			final News news = NewsUtils.getNews(cp);
 			if (news != null) {
 				cp.addFormParameter("newsId", news.getId());
 			}

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
+import net.simpleframework.module.news.web.page.NewsUtils;
 import net.simpleframework.module.news.web.page.NewsViewTPage;
 import net.simpleframework.mvc.PageMapping;
 import net.simpleframework.mvc.PageParameter;
@@ -27,7 +28,7 @@ public class NewsViewPage extends T2TemplatePage implements INewsContextAware {
 
 	@Override
 	public String getTitle(final PageParameter pp) {
-		final News news = NewsViewTPage.getNews(pp);
+		final News news = NewsUtils.getNews(pp);
 		return news != null ? news.getTopic() : null;
 	}
 

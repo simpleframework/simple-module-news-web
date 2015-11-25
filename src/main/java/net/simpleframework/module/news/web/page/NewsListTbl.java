@@ -212,7 +212,7 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 
 		@Override
 		protected String getRedirectUrl(final PageParameter pp) {
-			final News news = NewsViewTPage.getNews(pp);
+			final News news = NewsUtils.getNews(pp);
 			return news == null ? PAGE404.getUrl() : ((INewsWebContext) newsContext).getUrlsFactory()
 					.getUrl(pp, NewsViewPage.class, news, "preview=true");
 		}

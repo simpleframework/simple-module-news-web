@@ -35,7 +35,7 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 
 	public IForward doEdit(final ComponentParameter cp) {
 		final JavascriptForward js = new JavascriptForward();
-		final News news = _newsService.getBean(cp.getParameter("newsId"));
+		final News news = NewsUtils.getNews(cp);
 		final EContentStatus status = news.getStatus();
 		if (status == EContentStatus.edit) {
 			final NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();

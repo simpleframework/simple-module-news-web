@@ -77,7 +77,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		// PageletTab
 		addPageletTabAjaxRequest(pp);
 
-		final News news = getNews(pp);
+		final News news = NewsUtils.getNews(pp);
 		if (news.isAllowComments()) {
 			addCommentBean(pp, NewsCommentHandler.class).setRole(
 					newsContext.getModule().getManagerRole());
@@ -137,7 +137,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 	@Override
 	public String getTopic2(final PageParameter pp) {
 		final StringBuilder sb = new StringBuilder();
-		final News news = getNews(pp);
+		final News news = NewsUtils.getNews(pp);
 		final String author = news.getAuthor();
 		if (StringUtils.hasText(author)) {
 			sb.append($m("NewsViewTPage.0")).append(": ");
@@ -177,7 +177,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 
 	@Override
 	protected Pagelets getPagelets(final PageParameter pp) {
-		final News news = getNews(pp);
+		final News news = NewsUtils.getNews(pp);
 		final NewsPageletCreator creator = ((INewsWebContext) newsContext).getPageletCreator();
 
 		final Pagelets lets = Pagelets.of();
@@ -213,7 +213,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 	@Override
 	public NavigationButtons getNavigationBar(final PageParameter pp) {
 		final NavigationButtons btns = NavigationButtons.of();
-		final News news = getNews(pp);
+		final News news = NewsUtils.getNews(pp);
 		final ArrayList<NewsCategory> al = new ArrayList<NewsCategory>();
 		NewsCategory category = _newsCategoryService.getBean(news.getCategoryId());
 		while (category != null) {
@@ -230,7 +230,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 
 	@Override
 	protected Object getDataProperty(final PageParameter pp, final String key) {
-		final News news = getNews(pp);
+		final News news = NewsUtils.getNews(pp);
 		if (OP_DATE.equals(key)) {
 			return news.getCreateDate();
 		} else if (OP_CONTENT.equals(key)) {
@@ -254,12 +254,8 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		return BeanUtils.getProperty(news, key);
 	}
 
-	public static News getNews(final PageParameter pp) {
-		return getCacheBean(pp, _newsService, "newsId");
-	}
-
 	public static boolean _isPage404(final PageParameter pp) {
-		final News news = getNews(pp);
+		final News news = NewsUtils.getNews(pp);
 		return news == null
 				|| (news.getStatus() != EContentStatus.publish && !pp.getBoolParameter("preview"));
 	}

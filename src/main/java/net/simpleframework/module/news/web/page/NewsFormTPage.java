@@ -102,7 +102,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 	protected HtmlEditorBean addHtmlEditorBean(final PageParameter pp) {
 		String attachClick = "$Actions['NewsForm_upload']('" + OPT_VIEWER + "=' + $F('" + OPT_VIEWER
 				+ "')";
-		final News news = NewsViewTPage.getNews(pp);
+		final News news = NewsUtils.getNews(pp);
 		if (news != null) {
 			attachClick += " + '&newsId=" + news.getId() + "'";
 		}
@@ -243,7 +243,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		final InputElement ne_cname = new InputElement("ne_cname");
 
 		NewsCategory category = null;
-		final News news = NewsViewTPage.getNews(pp);
+		final News news = NewsUtils.getNews(pp);
 		if (news != null) {
 			ne_id.setText(news.getId());
 			ne_cname.setText(news.getCname());
@@ -318,7 +318,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		final Checkbox opt_removeStyle = new Checkbox(OPT_REMOVE_STYLE, $m("NewsFormTPage.18"));
 		final Checkbox opt_removeTagFont = new Checkbox(OPT_REMOVE_TAG_FONT, $m("NewsFormTPage.19"));
 
-		final News news = NewsViewTPage.getNews(pp);
+		final News news = NewsUtils.getNews(pp);
 		if (news != null) {
 			opt_allowComments.setChecked(news.isAllowComments());
 			opt_indexed.setChecked(news.isIndexed());
@@ -352,7 +352,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
-		final News news = NewsViewTPage.getNews(pp);
+		final News news = NewsUtils.getNews(pp);
 		final ElementList el = ElementList.of();
 		if (news != null) {
 			el.append(new ButtonElement($m("Button.Preview")).setOnclick(JS.loc(

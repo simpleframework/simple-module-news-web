@@ -12,7 +12,7 @@ import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsComment;
-import net.simpleframework.module.news.web.page.NewsViewTPage;
+import net.simpleframework.module.news.web.page.NewsUtils;
 import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
@@ -58,7 +58,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 	}
 
 	public IForward doAllowComments(final ComponentParameter cp) {
-		final News news = NewsViewTPage.getNews(cp);
+		final News news = NewsUtils.getNews(cp);
 		news.setAllowComments(cp.getBoolParameter("val"));
 		_newsService.update(new String[] { "allowComments" }, news);
 		return new JavascriptForward("$('nc_allowComments').checked=").append(news.isAllowComments())
@@ -74,12 +74,12 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 
 	@Override
 	public String getTitle(final PageParameter pp) {
-		return $m("NewsMgrPage.12") + "- " + NewsViewTPage.getNews(pp).getTopic();
+		return $m("NewsMgrPage.12") + "- " + NewsUtils.getNews(pp).getTopic();
 	}
 
 	@Override
 	public ElementList getLeftElements(final PageParameter pp) {
-		final News news = NewsViewTPage.getNews(pp);
+		final News news = NewsUtils.getNews(pp);
 		return ElementList.of(
 				LinkButton.closeBtn(),
 				SpanElement.SPACE,
@@ -100,7 +100,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 	public static class NewsCommentTbl extends AbstractDbTablePagerHandler {
 		@Override
 		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
-			final News news = NewsViewTPage.getNews(cp);
+			final News news = NewsUtils.getNews(cp);
 			cp.addFormParameter("newsId", news.getId());
 			return _newsCommentService.queryComments(news);
 		}
