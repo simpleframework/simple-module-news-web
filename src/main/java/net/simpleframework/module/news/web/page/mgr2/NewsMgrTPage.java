@@ -6,9 +6,11 @@ import java.io.IOException;
 import java.util.Map;
 
 import net.simpleframework.common.coll.KVMap;
+import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.common.web.page.AbstractMgrTPage;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
+import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.page.NewsCategoryHandle;
 import net.simpleframework.module.news.web.page.NewsFormTPage;
 import net.simpleframework.module.news.web.page.NewsListTbl;
@@ -26,6 +28,7 @@ import net.simpleframework.mvc.component.ui.pager.AbstractTablePagerSchema;
 import net.simpleframework.mvc.component.ui.pager.EPagerBarLayout;
 import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
+import net.simpleframework.mvc.component.ui.tree.TreeNode;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -94,6 +97,20 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 	}
 
 	public static class _NewsCategoryHandle extends NewsCategoryHandle {
+
+		@Override
+		protected void setJsClickCallback(final TreeNode tn, final NewsCategory category,
+				final EContentStatus status) {
+			String params = "categoryId=";
+			if (category != null) {
+				params += category.getId();
+			}
+			params += "&status=";
+			if (status != null) {
+				params += status.name();
+			}
+			tn.setJsClickCallback("$Actions['NewsMgrTPage_tbl']('" + params + "');");
+		}
 	}
 
 	public static class _NewsListTbl extends NewsListTbl {

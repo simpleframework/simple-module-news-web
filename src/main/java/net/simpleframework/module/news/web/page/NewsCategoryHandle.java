@@ -57,8 +57,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			nodes.add(tn);
 
 			tn = new TreeNode(treeBean, parent, $m("NewsCategoryHandle.1"));
-			tn.setJsClickCallback(CategoryTableLCTemplatePage.createTableRefresh(
-					"categoryId=&status=" + EContentStatus.delete.name()).toString());
+			setJsClickCallback(tn, null, EContentStatus.delete);
 			tn.setImage(imgBase + "recycle_bin.png");
 			tn.setContextMenu("none");
 			nodes.add(tn);
@@ -71,14 +70,26 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			final Object o = parent.getDataObject();
 			if (o instanceof NewsCategory) {
 				final NewsCategory category = (NewsCategory) o;
-				parent.setJsClickCallback(CategoryTableLCTemplatePage.createTableRefresh(
-						"status=&categoryId=" + category.getId()).toString());
+				setJsClickCallback(parent, category, null);
 				final String imgBase = getImgBase(cp, NewsFormTPage.class);
 				setCount(parent, getNums(cp, category));
 				parent.setImage(imgBase + "folder.png");
 			}
 			return super.getCategoryTreenodes(cp, treeBean, parent);
 		}
+	}
+
+	protected void setJsClickCallback(final TreeNode tn, final NewsCategory category,
+			final EContentStatus status) {
+		String params = "categoryId=";
+		if (category != null) {
+			params += category.getId();
+		}
+		params += "&status=";
+		if (status != null) {
+			params += status.name();
+		}
+		tn.setJsClickCallback(CategoryTableLCTemplatePage.createTableRefresh(params).toString());
 	}
 
 	private void setCount(final TreeNode tn, final int cc) {
