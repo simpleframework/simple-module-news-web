@@ -6,18 +6,26 @@ import java.util.Map;
 
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.ID;
+import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.KVMap;
+import net.simpleframework.ctx.permission.PermissionDept;
 import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.news.INewsCategoryService;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.NewsStat;
+import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.IPageHandler.PageSelector;
 import net.simpleframework.mvc.PageParameter;
+import net.simpleframework.mvc.common.element.EElementEvent;
 import net.simpleframework.mvc.component.AbstractComponentBean;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.category.ctx.CategoryBeanAwareHandler;
+import net.simpleframework.mvc.component.ext.deptselect.DeptSelectBean;
+import net.simpleframework.mvc.component.ui.propeditor.InputComp;
 import net.simpleframework.mvc.component.ui.propeditor.PropEditorBean;
+import net.simpleframework.mvc.component.ui.propeditor.PropField;
+import net.simpleframework.mvc.component.ui.propeditor.PropFields;
 import net.simpleframework.mvc.component.ui.tree.TreeBean;
 import net.simpleframework.mvc.component.ui.tree.TreeNode;
 import net.simpleframework.mvc.component.ui.tree.TreeNodes;
@@ -60,6 +68,10 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			setJsClickCallback(tn, null, EContentStatus.delete);
 			tn.setImage(imgBase + "recycle_bin.png");
 			tn.setContextMenu("none");
+			final int nums = getNums(cp, null);
+			if (nums > 0) {
+				tn.setPostfixText("(" + nums + ")");
+			}
 			nodes.add(tn);
 			return nodes;
 		} else {
@@ -71,9 +83,11 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			if (o instanceof NewsCategory) {
 				final NewsCategory category = (NewsCategory) o;
 				setJsClickCallback(parent, category, null);
-				final String imgBase = getImgBase(cp, NewsFormTPage.class);
-				setCount(parent, getNums(cp, category));
-				parent.setImage(imgBase + "folder.png");
+				final int nums = getNums(cp, category);
+				if (nums > 0) {
+					parent.setPostfixText("(" + nums + ")");
+				}
+				parent.setImage(NewsUtils.getIconPath(cp, category));
 			}
 			return super.getCategoryTreenodes(cp, treeBean, parent);
 		}
@@ -92,33 +106,32 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 		tn.setJsClickCallback(CategoryTableLCTemplatePage.createTableRefresh(params).toString());
 	}
 
-	private void setCount(final TreeNode tn, final int cc) {
-		if (cc > 0) {
-			tn.setPostfixText("(" + cc + ")");
-		}
-	}
-
 	private int getNums(final PageParameter pp, final NewsCategory category) {
-		final ID categoryId = category.getId();
-		NewsStat stat = _newsStatService.getNewsStat(categoryId, null);
-		int c = stat.getNums() - stat.getNums_delete();
-		final ID domainId = pp.getLDomainId();
-		if (domainId != null) {
-			stat = _newsStatService.getNewsStat(categoryId, domainId);
-			c += (stat.getNums() - stat.getNums_delete());
+		final ID domainId = NewsUtils.getDomainId(pp);
+		if (category == null) {
+			// 垃圾箱
+			return _newsStatService.getAllNums_delete(domainId);
+		} else {
+			final ID categoryId = category.getId();
+			if (domainId != null) {
+				NewsStat stat = _newsStatService.getNewsStat(categoryId, null);
+				int count = stat.getNums() - stat.getNums_delete();
+				stat = _newsStatService.getNewsStat(categoryId, domainId);
+				count += (stat.getNums() - stat.getNums_delete());
+				return count;
+			} else {
+				return _newsStatService.getAllNums(categoryId, "nums")
+						- _newsStatService.getAllNums(categoryId, "nums_delete");
+			}
 		}
-		return c;
 	}
 
 	@Override
 	public TreeNodes getCategoryDictTreenodes(final ComponentParameter cp, final TreeBean treeBean,
 			final TreeNode treeNode) {
-		if (treeNode != null) {
-			treeNode.setImage(getImgBase(cp, NewsFormTPage.class) + "folder.png");
-			final Object o = treeNode.getDataObject();
-			if (o instanceof NewsCategory) {
-				setCount(treeNode, getNums(cp, (NewsCategory) o));
-			}
+		final Object o;
+		if (treeNode != null && (o = treeNode.getDataObject()) instanceof NewsCategory) {
+			treeNode.setImage(NewsUtils.getIconPath(cp, (NewsCategory) o));
 		}
 		return super.getCategoryTreenodes(cp, treeBean, treeNode);
 	}
@@ -136,6 +149,11 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			category.setUserId(cp.getLoginId());
 			category.setDomainId(NewsUtils.getDomainId(cp));
 		}
+
+		if (cp.isLmanager()) {
+			final String domain_id = cp.getParameter("domain_id");
+			category.setDomainId(StringUtils.hasText(domain_id) ? ID.of(domain_id) : null);
+		}
 	}
 
 	@Override
@@ -145,8 +163,31 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 
 	@Override
 	protected AbstractComponentBean categoryEdit_createPropEditor(final ComponentParameter cp) {
+		final NewsCategory category = _newsCategoryService
+				.getBean(cp.getParameter(PARAM_CATEGORY_ID));
 		final PropEditorBean propEditor = (PropEditorBean) super.categoryEdit_createPropEditor(cp);
+		final PropFields fields = propEditor.getFormFields();
+		if (cp.isLmanager()) {
+			cp.addComponentBean("NewsCategoryHandle_deptSelect", DeptSelectBean.class).setOrg(true)
+					.setBindingId("domain_id").setBindingText("domain_text");
 
+			final InputComp domain_id = InputComp.hidden("domain_id");
+			final InputComp domain_text = InputComp.textButton("domain_text")
+					.setAttributes("readonly")
+					.addEvent(EElementEvent.click, "$Actions['NewsCategoryHandle_deptSelect']();");
+			PermissionDept org = null;
+			if (category != null) {
+				org = cp.getPermission().getDept(category.getDomainId());
+			} else {
+				org = AbstractMVCPage.getPermissionOrg(cp);
+			}
+			if (org != null) {
+				domain_id.setDefaultValue(org.getId());
+				domain_text.setDefaultValue(org.getText());
+			}
+			fields.add(2,
+					new PropField($m("NewsCategoryHandle.2")).addComponents(domain_id, domain_text));
+		}
 		// propEditor.getFormFields().add(
 		// 1,
 		// new PropField($m("NewsCategoryHandle.1"))

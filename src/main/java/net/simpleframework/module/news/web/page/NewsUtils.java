@@ -13,6 +13,7 @@ import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.JS;
 import net.simpleframework.mvc.common.element.LinkButton;
+import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.template.AbstractTemplatePage;
 
 /**
@@ -33,6 +34,15 @@ public abstract class NewsUtils implements INewsContextAware {
 
 	public static News getNews(final PageParameter pp) {
 		return AbstractTemplatePage.getCacheBean(pp, _newsService, "newsId");
+	}
+
+	public static String getIconPath(final ComponentParameter cp, final NewsCategory category) {
+		final String imgBase = cp.getCssResourceHomePath(NewsFormTPage.class) + "/images/";
+		if (!cp.isLmanager() && category.getDomainId() == null) {
+			return imgBase + "folder_lock.png";
+		} else {
+			return imgBase + "folder.png";
+		}
 	}
 
 	static NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();

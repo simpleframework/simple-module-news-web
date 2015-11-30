@@ -5,6 +5,7 @@ import static net.simpleframework.common.I18n.$m;
 import java.util.Map;
 
 import net.simpleframework.ado.query.IDataQuery;
+import net.simpleframework.common.ID;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.module.common.content.EContentStatus;
@@ -41,6 +42,10 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 
 	@Override
 	public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
+		final ID orgId = NewsUtils.getDomainId(cp);
+		if (orgId != null) {
+			cp.addFormParameter("orgId", orgId);
+		}
 		final NewsCategory category = NewsUtils.getNewsCategory(cp);
 		if (category != null) {
 			cp.addFormParameter("categoryId", category.getId());
@@ -49,7 +54,7 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 		if (status != null) {
 			cp.addFormParameter("status", status.name());
 		}
-		return _newsService.queryBeans(category, status);
+		return _newsService.queryBeans(category, orgId, status, null, null);
 	}
 
 	@Override
@@ -76,6 +81,8 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 			final EContentStatus status = news.getStatus();
 			if (status == EContentStatus.publish) {
 				img = "status_publish.png";
+			} else if (status == EContentStatus.lock) {
+				img = "status_lock.png";
 			}
 		}
 		if (img != null) {

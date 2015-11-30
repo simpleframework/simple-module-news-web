@@ -142,20 +142,11 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 	@Override
 	public ElementList getLeftElements(final PageParameter pp) {
 		return ElementList.of(NavigationTitle.toElement(pp, NewsUtils.getNewsCategory(pp),
-				new NavigationTitleCallback<NewsCategory>() {
-					@Override
-					protected String getRootText() {
-						return $m("NewsCategoryHandle.0");
-					}
+				new NavigationTitleCallback<NewsCategory>($m("NewsCategoryHandle.0"), COMPONENT_TABLE) {
 
 					@Override
 					protected NewsCategory get(final Object id) {
 						return _newsCategoryService.getBean(id);
-					}
-
-					@Override
-					protected String getComponentTable() {
-						return COMPONENT_TABLE;
 					}
 
 					@Override
