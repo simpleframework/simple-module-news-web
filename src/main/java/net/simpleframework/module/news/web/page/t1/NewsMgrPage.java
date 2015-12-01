@@ -10,7 +10,6 @@ import net.simpleframework.module.common.web.content.page.AbstractRecommendation
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.INewsService;
 import net.simpleframework.module.news.News;
-import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsUpdateLogPage;
 import net.simpleframework.module.news.web.page.NewsCategoryHandle;
@@ -34,7 +33,6 @@ import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.base.ajaxrequest.AjaxRequestBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
 import net.simpleframework.mvc.component.ui.pager.db.NavigationTitle;
-import net.simpleframework.mvc.component.ui.pager.db.NavigationTitle.NavigationTitleCallback;
 import net.simpleframework.mvc.template.struct.NavigationButtons;
 import net.simpleframework.mvc.template.t1.ext.CategoryTableLCTemplatePage;
 
@@ -142,18 +140,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 	@Override
 	public ElementList getLeftElements(final PageParameter pp) {
 		return ElementList.of(NavigationTitle.toElement(pp, NewsUtils.getNewsCategory(pp),
-				new NavigationTitleCallback<NewsCategory>($m("NewsCategoryHandle.0"), COMPONENT_TABLE) {
-
-					@Override
-					protected NewsCategory get(final Object id) {
-						return _newsCategoryService.getBean(id);
-					}
-
-					@Override
-					protected String getText(final NewsCategory t) {
-						return t.toString() + SpanElement.shortText("(" + t.getName() + ")");
-					}
-				}));
+				NewsUtils.createNavigationTitleCallback(pp, COMPONENT_TABLE)));
 	}
 
 	@Override

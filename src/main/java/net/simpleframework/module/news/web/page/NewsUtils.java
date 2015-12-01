@@ -2,6 +2,7 @@ package net.simpleframework.module.news.web.page;
 
 import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.common.ID;
+import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
@@ -13,7 +14,9 @@ import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.JS;
 import net.simpleframework.mvc.common.element.LinkButton;
+import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.component.ComponentParameter;
+import net.simpleframework.mvc.component.ui.pager.db.NavigationTitle.NavigationTitleCallback;
 import net.simpleframework.mvc.template.AbstractTemplatePage;
 
 /**
@@ -43,6 +46,24 @@ public abstract class NewsUtils implements INewsContextAware {
 		} else {
 			return imgBase + "folder.png";
 		}
+	}
+
+	public static NavigationTitleCallback<NewsCategory> createNavigationTitleCallback(
+			final PageParameter pp, final String tblname) {
+		final EContentStatus status = pp.getEnumParameter(EContentStatus.class, "status");
+		return new NavigationTitleCallback<NewsCategory>(
+				status == EContentStatus.delete ? $m("NewsCategoryHandle.1")
+						: $m("NewsCategoryHandle.0"), tblname) {
+			@Override
+			protected NewsCategory get(final Object id) {
+				return _newsCategoryService.getBean(id);
+			}
+
+			@Override
+			protected String getText(final NewsCategory t) {
+				return t.toString() + SpanElement.shortText("(" + t.getName() + ")");
+			}
+		};
 	}
 
 	static NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();

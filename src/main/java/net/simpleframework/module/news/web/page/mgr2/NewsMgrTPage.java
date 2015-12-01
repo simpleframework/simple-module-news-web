@@ -28,6 +28,7 @@ import net.simpleframework.mvc.component.ui.pager.AbstractTablePagerSchema;
 import net.simpleframework.mvc.component.ui.pager.EPagerBarLayout;
 import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
+import net.simpleframework.mvc.component.ui.pager.db.NavigationTitle;
 import net.simpleframework.mvc.component.ui.tree.TreeNode;
 
 /**
@@ -49,9 +50,13 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 
 		// 表格
 		final TablePagerBean tablePager = (TablePagerBean) addComponentBean(pp, "NewsMgrTPage_tbl",
-				TablePagerBean.class).setShowLineNo(true).setPageItems(30)
-				.setPagerBarLayout(EPagerBarLayout.top).setContainerId("idNewsMgrTPage_tbl")
-				.setHandlerClass(_NewsListTbl.class);
+				TablePagerBean.class)
+				.setShowLineNo(true)
+				.setPageItems(30)
+				.setPagerBarLayout(EPagerBarLayout.bottom)
+				.setJsLoadedCallback(
+						"$('idNewsMgrTPage_tbl').previous().innerHTML = $('idNewsMgrTPage_nav').innerHTML;")
+				.setContainerId("idNewsMgrTPage_tbl").setHandlerClass(_NewsListTbl.class);
 		tablePager
 				.addColumn(TablePagerColumn.ICON())
 				.addColumn(new TablePagerColumn("topic", $m("NewsMgrPage.1")))
@@ -90,10 +95,17 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 		sb.append("<div class='NewsMgrTPage'>");
 		sb.append("	<table width='100%'><tr>");
 		sb.append("  <td valign='top' class='ltree'><div id='idNewsMgrTPage_category'></div></td>");
-		sb.append("  <td valign='top' class='rtbl'><div id='idNewsMgrTPage_tbl'></div></td>");
+		sb.append("  <td valign='top' class='rtbl'>");
+		sb.append("    <div class='rtb'></div>");
+		sb.append("    <div id='idNewsMgrTPage_tbl'></div></td>");
 		sb.append(" </tr></table>");
 		sb.append("</div>");
 		return sb.toString();
+	}
+
+	private static String toNavHTML(final PageParameter pp) {
+		return NavigationTitle.toElement(pp, NewsUtils.getNewsCategory(pp),
+				NewsUtils.createNavigationTitleCallback(pp, "NewsMgrTPage_tbl")).toString();
 	}
 
 	public static class _NewsCategoryHandle extends NewsCategoryHandle {
@@ -114,6 +126,17 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 	}
 
 	public static class _NewsListTbl extends NewsListTbl {
+
+		@Override
+		public String toTableHTML(final ComponentParameter cp) {
+			final StringBuilder sb = new StringBuilder();
+			sb.append("<div id='idNewsMgrTPage_nav' style='display: none;'>");
+			sb.append(toNavHTML(cp));
+			sb.append("</div>");
+			sb.append(super.toTableHTML(cp));
+			return sb.toString();
+		}
+
 		@Override
 		protected Map<String, Object> getRowData(final ComponentParameter cp, final Object dataObject) {
 			final News news = (News) dataObject;
