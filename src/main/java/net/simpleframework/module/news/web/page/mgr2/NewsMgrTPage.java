@@ -22,12 +22,15 @@ import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.AbstractElement;
 import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.ElementList;
+import net.simpleframework.mvc.common.element.LinkButton;
+import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.category.CategoryBean;
 import net.simpleframework.mvc.component.ui.pager.AbstractTablePagerSchema;
 import net.simpleframework.mvc.component.ui.pager.EPagerBarLayout;
 import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
+import net.simpleframework.mvc.component.ui.pager.TablePagerUtils;
 import net.simpleframework.mvc.component.ui.pager.db.NavigationTitle;
 import net.simpleframework.mvc.component.ui.tree.TreeNode;
 
@@ -51,7 +54,7 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 		// 表格
 		final TablePagerBean tablePager = (TablePagerBean) addComponentBean(pp, "NewsMgrTPage_tbl",
 				TablePagerBean.class)
-				.setShowLineNo(true)
+				.setResize(false)
 				.setPageItems(30)
 				.setPagerBarLayout(EPagerBarLayout.bottom)
 				.setJsLoadedCallback(
@@ -82,9 +85,20 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 				.setWidth(420).setHeight(240);
 	}
 
+	LinkButton createStatusButton(final EContentStatus status) {
+		return TablePagerUtils.act_btn("NewsMgrTPage_tbl", "NewsMgrPage_status", status.toString(),
+				"newsId", "op=" + status.name());
+	}
+
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
-		final ElementList btns = ElementList.of(NewsUtils.createAddNew(pp));
+		final ElementList btns = ElementList.of(NewsUtils.createAddNew(pp), SpanElement.SPACE);
+
+		final EContentStatus status = pp.getEnumParameter(EContentStatus.class, "status");
+		if (status != EContentStatus.delete) {
+			btns.append(createStatusButton(EContentStatus.publish))
+					.append(createStatusButton(EContentStatus.lock)).append(SpanElement.SPACE);
+		}
 		return btns;
 	}
 
@@ -101,11 +115,6 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 		sb.append(" </tr></table>");
 		sb.append("</div>");
 		return sb.toString();
-	}
-
-	private static String toNavHTML(final PageParameter pp) {
-		return NavigationTitle.toElement(pp, NewsUtils.getNewsCategory(pp),
-				NewsUtils.createNavigationTitleCallback(pp, "NewsMgrTPage_tbl")).toString();
 	}
 
 	public static class _NewsCategoryHandle extends NewsCategoryHandle {
@@ -131,7 +140,8 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 		public String toTableHTML(final ComponentParameter cp) {
 			final StringBuilder sb = new StringBuilder();
 			sb.append("<div id='idNewsMgrTPage_nav' style='display: none;'>");
-			sb.append(toNavHTML(cp));
+			sb.append(NavigationTitle.toElement(cp, NewsUtils.getNewsCategory(cp),
+					NewsUtils.createNavigationTitleCallback(cp, "NewsMgrTPage_tbl")));
 			sb.append("</div>");
 			sb.append(super.toTableHTML(cp));
 			return sb.toString();

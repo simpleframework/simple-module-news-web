@@ -18,6 +18,7 @@ import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.IPageHandler.PageSelector;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.EElementEvent;
+import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.component.AbstractComponentBean;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.category.ctx.CategoryBeanAwareHandler;
@@ -83,6 +84,15 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			if (o instanceof NewsCategory) {
 				final NewsCategory category = (NewsCategory) o;
 				setJsClickCallback(parent, category, null);
+
+				final ID domainId = NewsUtils.getDomainId(cp);
+				if (domainId == null) {
+					final PermissionDept dept = cp.getPermission().getDept(category.getDomainId());
+					if (dept.getId() != null) {
+						parent.setText("(" + SpanElement.color999(dept) + ") " + parent.getText());
+					}
+				}
+
 				final int nums = getNums(cp, category);
 				if (nums > 0) {
 					parent.setPostfixText("(" + nums + ")");

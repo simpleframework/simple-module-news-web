@@ -108,7 +108,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		return newsContext.getModule().getManagerRole();
 	}
 
-	private LinkButton createStatusButton(final EContentStatus status) {
+	LinkButton createStatusButton(final EContentStatus status) {
 		return act_btn("NewsMgrPage_status", status.toString(), "newsId", "op=" + status.name());
 	}
 
