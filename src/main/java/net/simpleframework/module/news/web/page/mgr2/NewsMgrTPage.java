@@ -22,6 +22,7 @@ import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.AbstractElement;
 import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.ElementList;
+import net.simpleframework.mvc.common.element.Icon;
 import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.component.ComponentParameter;
@@ -98,6 +99,14 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 		if (status != EContentStatus.delete) {
 			btns.append(createStatusButton(EContentStatus.publish))
 					.append(createStatusButton(EContentStatus.lock)).append(SpanElement.SPACE);
+		}
+		btns.append(createStatusButton(EContentStatus.delete).setIconClass(Icon.trash))
+				.append(SpanElement.SPACE)
+				.append(createStatusButton(EContentStatus.edit).setText($m("NewsMgrPage.7")));
+		// 预览
+		final LinkButton preview = NewsUtils.createNewsPreview(pp);
+		if (preview != null) {
+			btns.append(SpanElement.SPACE).append(preview);
 		}
 		return btns;
 	}

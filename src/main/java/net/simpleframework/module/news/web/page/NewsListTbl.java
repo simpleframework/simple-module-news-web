@@ -86,8 +86,9 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 			}
 		}
 		if (img != null) {
-			final ImageElement ele = new ImageElement(cp.getCssResourceHomePath(NewsListTbl.class)
-					+ "/images/" + img).setVerticalAlign(EVerticalAlign.middle);
+			final ImageElement ele = ImageElement.img16(
+					cp.getCssResourceHomePath(NewsListTbl.class) + "/images/" + img).setVerticalAlign(
+					EVerticalAlign.middle);
 			final String desc = $m("NewsListTbl." + img.substring(0, img.length() - 4));
 			if (StringUtils.hasText(desc)) {
 				ele.setTitle(desc);
