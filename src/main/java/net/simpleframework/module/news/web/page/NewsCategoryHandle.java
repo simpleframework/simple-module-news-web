@@ -59,8 +59,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 			final TreeNodes nodes = TreeNodes.of();
 			TreeNode tn = createRoot(treeBean, $m("NewsCategoryHandle.0"));
 			tn.setAcceptdrop(true);
-			tn.setJsClickCallback(CategoryTableLCTemplatePage
-					.createTableRefresh("categoryId=&status=").toString());
+			setJsClickCallback(tn, null, null);
 			final String imgBase = getImgBase(cp, NewsFormTPage.class);
 			tn.setImage(imgBase + "news.png");
 			nodes.add(tn);

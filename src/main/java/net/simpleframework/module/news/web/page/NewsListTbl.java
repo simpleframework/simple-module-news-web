@@ -100,18 +100,21 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 
 	protected String toTopicHTML(final ComponentParameter cp, final News news) {
 		final EContentStatus status = cp.getEnumParameter(EContentStatus.class, "status");
-		if (status == EContentStatus.delete) {
-			final StringBuilder sb = new StringBuilder();
-			final NewsCategory category = _newsCategoryService.getBean(news.getCategoryId());
-			if (category != null) {
-				sb.append("[").append(category.getText()).append("] ");
+		final StringBuilder sb = new StringBuilder();
+		final NewsCategory category = NewsUtils.getNewsCategory(cp);
+		if (category == null) {
+			final NewsCategory category2 = _newsCategoryService.getBean(news.getCategoryId());
+			if (category2 != null) {
+				sb.append("[").append(category2.getText()).append("] ");
 			}
-			sb.append(news.getTopic());
-			return sb.toString();
-		} else {
-			return new LinkElement(news.getTopic()).setOnclick(
-					"$Actions['NewsMgrPage_edit']('newsId=" + news.getId() + "');").toString();
 		}
+		if (status == EContentStatus.delete) {
+			sb.append(news.getTopic());
+		} else {
+			sb.append(new LinkElement(news.getTopic())
+					.setOnclick("$Actions['NewsMgrPage_edit']('newsId=" + news.getId() + "');"));
+		}
+		return sb.toString();
 	}
 
 	protected String toCommentsHTML(final ComponentParameter cp, final News news) {

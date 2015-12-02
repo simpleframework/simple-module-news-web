@@ -69,12 +69,9 @@ public abstract class NewsUtils implements INewsContextAware {
 	static NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
 
 	public static LinkButton createAddNew(final PageParameter pp) {
-		String url = uFactory.getUrl(pp, NewsFormBasePage.class, (News) null);
-		final NewsCategory category = getNewsCategory(pp);
-		if (category != null) {
-			url += "?categoryId=" + category.getId();
-		}
-		return new LinkButton($m("NewsMgrPage.6")).setOnclick(JS.loc(url));
+		final String url = uFactory.getUrl(pp, NewsFormBasePage.class, (News) null, "categoryId=");
+		return new LinkButton($m("NewsMgrPage.6")).setOnclick("$Actions.loc('" + url
+				+ "' + $F('#idNewsMgrTPage_tbl #categoryId'));");
 	}
 
 	public static LinkButton createNewsPreview(final PageParameter pp) {
