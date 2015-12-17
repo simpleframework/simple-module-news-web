@@ -63,7 +63,7 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 				.setContainerId("idNewsMgrTPage_tbl").setHandlerClass(_NewsListTbl.class);
 		tablePager
 				.addColumn(TablePagerColumn.ICON())
-				.addColumn(new TablePagerColumn("topic", $m("NewsMgrPage.1")))
+				.addColumn(new TablePagerColumn("topic", $m("NewsMgrPage.1")).setSort(false))
 				.addColumn(
 						new TablePagerColumn("stat", $m("NewsMgrPage.2") + "/" + $m("NewsMgrPage.3"), 90)
 								.setTextAlign(ETextAlign.center).setFilterSort(false))
