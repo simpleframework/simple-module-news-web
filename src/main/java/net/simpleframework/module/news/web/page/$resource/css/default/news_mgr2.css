@@ -15,15 +15,3 @@
 #idNewsMgrTPage_category {
   min-height: 500px;
 }
-
-/**-------------Tabs_BlankPage-----------------**/
-.AbstractNewsMgrPage .Tabs_BlankPage .Tabs_cc {
-  border: 0;
-}
-
-.AbstractNewsMgrPage .Tabs_BlankPage .Tabs_tb {
-  background-color: #f9f9f9;
-  border: 0;
-  border-bottom: 1px solid #c22;
-  padding: 8px 10px;
-}
