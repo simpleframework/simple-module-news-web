@@ -1,8 +1,13 @@
 package net.simpleframework.module.news.web.page.mgr2;
 
 import static net.simpleframework.common.I18n.$m;
+
+import java.util.List;
+
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.module.news.INewsContextAware;
+import net.simpleframework.module.news.NewsCategory;
+import net.simpleframework.module.news.web.page.NewsUtils;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.component.ComponentParameter;
@@ -11,6 +16,8 @@ import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
 import net.simpleframework.mvc.component.ui.pager.db.AbstractDbTablePagerHandler;
 import net.simpleframework.mvc.template.lets.Category_ListPage;
+import net.simpleframework.mvc.template.struct.CategoryItem;
+import net.simpleframework.mvc.template.struct.CategoryItems;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -25,6 +32,28 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 		super.onForward(pp);
 
 		addTablePagerBean(pp);
+	}
+
+	protected abstract List<NewsCategory> getNewsCategoryList(PageParameter pp);
+
+	@Override
+	protected CategoryItems getCategoryList(final PageParameter pp) {
+		final CategoryItems items = CategoryItems.of();
+		final List<NewsCategory> list = getNewsCategoryList(pp);
+		if (list != null && list.size() > 0) {
+			final NewsCategory _category = NewsUtils.getNewsCategory(pp);
+			for (final NewsCategory category : list) {
+				final CategoryItem item = new CategoryItem(category.getText());
+				if (_category != null && _category.getId().equals(category.getId())) {
+					item.setSelected(true);
+				}
+				items.add(item);
+			}
+			if (_category == null) {
+				items.get(0).setSelected(true);
+			}
+		}
+		return items;
 	}
 
 	protected TablePagerBean addTablePagerBean(final PageParameter pp) {
