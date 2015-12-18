@@ -3,18 +3,22 @@ package net.simpleframework.module.news.web.page.mgr2;
 import static net.simpleframework.common.I18n.$m;
 
 import java.util.List;
+import java.util.Map;
 
-import net.simpleframework.ado.query.IDataQuery;
+import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.module.news.INewsContextAware;
+import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
+import net.simpleframework.module.news.web.page.NewsListTbl;
 import net.simpleframework.module.news.web.page.NewsUtils;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ETextAlign;
+import net.simpleframework.mvc.common.element.ElementList;
+import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ui.pager.EPagerBarLayout;
 import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
-import net.simpleframework.mvc.component.ui.pager.db.AbstractDbTablePagerHandler;
 import net.simpleframework.mvc.template.lets.Category_ListPage;
 import net.simpleframework.mvc.template.struct.CategoryItem;
 import net.simpleframework.mvc.template.struct.CategoryItems;
@@ -34,6 +38,8 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 		addTablePagerBean(pp);
 	}
 
+	protected abstract boolean isManagerRole(PageParameter pp);
+
 	protected abstract List<NewsCategory> getNewsCategoryList(PageParameter pp);
 
 	@Override
@@ -44,6 +50,7 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 			final NewsCategory _category = NewsUtils.getNewsCategory(pp);
 			for (final NewsCategory category : list) {
 				final CategoryItem item = new CategoryItem(category.getText());
+				doInitCategoryItem(pp, item, category);
 				if (_category != null && _category.getId().equals(category.getId())) {
 					item.setSelected(true);
 				}
@@ -56,27 +63,45 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 		return items;
 	}
 
+	protected abstract void doInitCategoryItem(PageParameter pp, CategoryItem item,
+			NewsCategory category);
+
+	@Override
+	public ElementList getRightElements(final PageParameter pp) {
+		final ElementList btns = ElementList.of(NewsUtils.createAddNew(pp), SpanElement.SPACE);
+		return btns;
+	}
+
 	protected TablePagerBean addTablePagerBean(final PageParameter pp) {
 		final TablePagerBean tablePager = (TablePagerBean) addTablePagerBean(pp,
-				"AbstractNewsListTPage_tbl", NewsListTbl.class, false).setResize(false).setFilter(true)
-				.setShowHead(true).setShowCheckbox(true).setPageItems(30)
-				.setPagerBarLayout(EPagerBarLayout.bottom);
+				"AbstractNewsListTPage_tbl", NewsViewListTbl.class, false).setFilter(true)
+				.setShowLineNo(false).setShowHead(true).setShowCheckbox(isManagerRole(pp))
+				.setResize(false).setPageItems(30).setPagerBarLayout(EPagerBarLayout.bottom);
+		final boolean mgr = isManagerRole(pp);
+		if (mgr) {
+			tablePager.addColumn(TablePagerColumn.ICON());
+		}
 		tablePager
-				.addColumn(TablePagerColumn.ICON().setWidth(16))
 				.addColumn(new TablePagerColumn("topic", $m("NewsMgrPage.1")).setSort(false))
 				.addColumn(
 						new TablePagerColumn("stat", $m("NewsMgrPage.2") + "/" + $m("NewsMgrPage.3"), 90)
 								.setTextAlign(ETextAlign.center).setFilterSort(false))
-				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsMgrPage.4")))
-				.addColumn(TablePagerColumn.OPE(70));
+				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsMgrPage.4")));
+		if (mgr) {
+			tablePager.addColumn(TablePagerColumn.OPE(70));
+		}
 		return tablePager;
 	}
 
-	public static class NewsListTbl extends AbstractDbTablePagerHandler {
-
+	public static class NewsViewListTbl extends NewsListTbl {
 		@Override
-		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
-			return super.createDataObjectQuery(cp);
+		protected Map<String, Object> getRowData(final ComponentParameter cp, final Object dataObject) {
+			final News news = (News) dataObject;
+			final KVMap kv = new KVMap();
+			kv.add("topic", toTopicHTML(cp, news))
+					.add("stat", news.getViews() + "/" + news.getComments())
+					.add("createDate", news.getCreateDate());
+			return kv;
 		}
 	}
 }

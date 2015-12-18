@@ -60,7 +60,7 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 				.setPagerBarLayout(EPagerBarLayout.bottom)
 				.setJsLoadedCallback(
 						"$('idNewsMgrTPage_tbl').previous().innerHTML = $('idNewsMgrTPage_nav').innerHTML;")
-				.setContainerId("idNewsMgrTPage_tbl").setHandlerClass(_NewsListTbl.class);
+				.setContainerId("idNewsMgrTPage_tbl").setHandlerClass(NewsMgrListTbl.class);
 		tablePager
 				.addColumn(TablePagerColumn.ICON())
 				.addColumn(new TablePagerColumn("topic", $m("NewsMgrPage.1")).setSort(false))
@@ -86,6 +86,10 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 				.setWidth(420).setHeight(240);
 	}
 
+	static void addComponentsBean(final PageParameter pp) throws Exception {
+
+	}
+
 	LinkButton createStatusButton(final EContentStatus status) {
 		return TablePagerUtils.act_btn("NewsMgrTPage_tbl", "NewsMgrPage_status", status.toString(),
 				"newsId", "op=" + status.name());
@@ -94,7 +98,6 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
 		final ElementList btns = ElementList.of(NewsUtils.createAddNew(pp), SpanElement.SPACE);
-
 		final EContentStatus status = pp.getEnumParameter(EContentStatus.class, "status");
 		if (status != EContentStatus.delete) {
 			btns.append(createStatusButton(EContentStatus.publish))
@@ -143,7 +146,7 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 		}
 	}
 
-	public static class _NewsListTbl extends NewsListTbl {
+	public static class NewsMgrListTbl extends NewsListTbl {
 
 		@Override
 		public String toTableHTML(final ComponentParameter cp) {

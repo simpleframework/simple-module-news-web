@@ -19,7 +19,6 @@ import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
 import net.simpleframework.module.common.content.Attachment;
 import net.simpleframework.module.common.content.ContentException;
-import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.module.common.web.content.ContentUtils;
 import net.simpleframework.module.news.INewsContextAware;
@@ -255,8 +254,6 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 	}
 
 	public static boolean _isPage404(final PageParameter pp) {
-		final News news = NewsUtils.getNews(pp);
-		return news == null
-				|| (news.getStatus() != EContentStatus.publish && !pp.getBoolParameter("preview"));
+		return NewsUtils.getNews(pp) == null;
 	}
 }

@@ -2,6 +2,8 @@ package net.simpleframework.module.news.web.page;
 
 import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.common.ID;
+import net.simpleframework.common.StringUtils;
+import net.simpleframework.common.object.ObjectEx.CacheV;
 import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
@@ -28,15 +30,27 @@ import net.simpleframework.mvc.template.AbstractTemplatePage;
 public abstract class NewsUtils implements INewsContextAware {
 
 	public static NewsCategory getNewsCategory(final PageParameter pp) {
-		return AbstractTemplatePage.getCacheBean(pp, _newsCategoryService, "categoryId");
-	}
-
-	public static ID getDomainId(final PageParameter pp) {
-		return AbstractMVCPage.getPermissionOrg(pp).getId();
+		return pp.getRequestCache("_news_category", new CacheV<NewsCategory>() {
+			@Override
+			public NewsCategory get() {
+				NewsCategory bean = _newsCategoryService.getBean(pp.getParameter("categoryId"));
+				if (bean == null) {
+					final String category = pp.getParameter("category");
+					if (StringUtils.hasText(category)) {
+						bean = _newsCategoryService.getBeanByName(category);
+					}
+				}
+				return bean;
+			}
+		});
 	}
 
 	public static News getNews(final PageParameter pp) {
 		return AbstractTemplatePage.getCacheBean(pp, _newsService, "newsId");
+	}
+
+	public static ID getDomainId(final PageParameter pp) {
+		return AbstractMVCPage.getPermissionOrg(pp).getId();
 	}
 
 	public static String getIconPath(final ComponentParameter cp, final NewsCategory category) {

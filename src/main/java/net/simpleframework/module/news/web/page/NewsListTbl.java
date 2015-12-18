@@ -14,13 +14,10 @@ import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.page.t2.NewsViewPage;
-import net.simpleframework.mvc.AbstractMVCPage;
-import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.AbstractElement;
 import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.EVerticalAlign;
 import net.simpleframework.mvc.common.element.ImageElement;
-import net.simpleframework.mvc.common.element.JS;
 import net.simpleframework.mvc.common.element.LinkElement;
 import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.component.ComponentParameter;
@@ -29,7 +26,6 @@ import net.simpleframework.mvc.component.ui.menu.MenuItem;
 import net.simpleframework.mvc.component.ui.menu.MenuItems;
 import net.simpleframework.mvc.component.ui.pager.AbstractTablePagerSchema;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
-import net.simpleframework.mvc.template.AbstractTemplatePage;
 import net.simpleframework.mvc.template.t1.ext.LCTemplateTablePagerHandler;
 
 /**
@@ -111,8 +107,9 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 		if (status == EContentStatus.delete) {
 			sb.append(news.getTopic());
 		} else {
-			sb.append(new LinkElement(news.getTopic())
-					.setOnclick("$Actions['NewsMgrPage_edit']('newsId=" + news.getId() + "');"));
+			sb.append(new LinkElement(news.getTopic()).setHref(
+					((INewsWebContext) newsContext).getUrlsFactory()
+							.getUrl(cp, NewsViewPage.class, news)).setTarget("_target"));
 		}
 		return sb.toString();
 	}
@@ -133,8 +130,8 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 			return new ButtonElement(EContentStatus.publish).setHighlight(true).setOnclick(
 					"$Actions['NewsMgrPage_status']('op=publish&newsId=" + id + "');");
 		} else {
-			return new ButtonElement($m("Button.Preview")).setOnclick(JS.loc(
-					AbstractMVCPage.url(ViewControlPage.class, "newsId=" + id), true));
+			return new ButtonElement($m("Edit")).setOnclick("$Actions['NewsMgrPage_edit']('newsId="
+					+ id + "');");
 		}
 	}
 
@@ -194,11 +191,6 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 				items.append(MenuItem.itemEdit().setOnclick_act("NewsMgrPage_edit", "newsId"))
 						.append(MenuItem.sep())
 						.append(
-								MenuItem.of($m("Button.Preview"), null,
-										"$Actions.loc('" + AbstractMVCPage.url(ViewControlPage.class)
-												+ "?newsId=' + $pager_action(item).rowId(), true);"))
-						.append(MenuItem.sep())
-						.append(
 								MenuItem.of($m("AbstractContentBean.2")).setOnclick_act(
 										"NewsMgrPage_recommendation", "newsId")).append(MenuItem.sep())
 						.append(createMenuItem(EContentStatus.publish))
@@ -217,15 +209,5 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 	@Override
 	public Object getRowBeanById(final ComponentParameter cp, final Object id) {
 		return _newsService.getBean(id);
-	}
-
-	public static class ViewControlPage extends AbstractTemplatePage {
-
-		@Override
-		protected String getRedirectUrl(final PageParameter pp) {
-			final News news = NewsUtils.getNews(pp);
-			return news == null ? PAGE404.getUrl() : ((INewsWebContext) newsContext).getUrlsFactory()
-					.getUrl(pp, NewsViewPage.class, news, "preview=true");
-		}
 	}
 }
