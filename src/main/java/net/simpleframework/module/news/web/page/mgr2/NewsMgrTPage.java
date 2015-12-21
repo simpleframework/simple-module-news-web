@@ -86,10 +86,6 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 				.setWidth(420).setHeight(240);
 	}
 
-	static void addComponentsBean(final PageParameter pp) throws Exception {
-
-	}
-
 	LinkButton createStatusButton(final EContentStatus status) {
 		return TablePagerUtils.act_btn("NewsMgrTPage_tbl", "NewsMgrPage_status", status.toString(),
 				"newsId", "op=" + status.name());

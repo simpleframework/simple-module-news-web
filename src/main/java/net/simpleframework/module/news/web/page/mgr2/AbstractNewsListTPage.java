@@ -38,8 +38,6 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 		addTablePagerBean(pp);
 	}
 
-	protected abstract boolean isManagerRole(PageParameter pp);
-
 	protected abstract List<NewsCategory> getNewsCategoryList(PageParameter pp);
 
 	@Override
@@ -68,16 +66,19 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
-		final ElementList btns = ElementList.of(NewsUtils.createAddNew(pp), SpanElement.SPACE);
-		return btns;
+		if (isPageManagerRole(pp)) {
+			final ElementList btns = ElementList.of(NewsUtils.createAddNew(pp), SpanElement.SPACE);
+			return btns;
+		}
+		return super.getRightElements(pp);
 	}
 
 	protected TablePagerBean addTablePagerBean(final PageParameter pp) {
+		final boolean mgr = isPageManagerRole(pp);
 		final TablePagerBean tablePager = (TablePagerBean) addTablePagerBean(pp,
 				"AbstractNewsListTPage_tbl", NewsViewListTbl.class, false).setFilter(true)
-				.setShowLineNo(false).setShowHead(true).setShowCheckbox(isManagerRole(pp))
-				.setResize(false).setPageItems(30).setPagerBarLayout(EPagerBarLayout.bottom);
-		final boolean mgr = isManagerRole(pp);
+				.setShowLineNo(false).setShowHead(true).setShowCheckbox(mgr).setResize(false)
+				.setPageItems(30).setPagerBarLayout(EPagerBarLayout.bottom);
 		if (mgr) {
 			tablePager.addColumn(TablePagerColumn.ICON());
 		}
