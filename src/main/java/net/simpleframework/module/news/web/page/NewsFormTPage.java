@@ -82,7 +82,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 
 		// 类目字典
 		addComponentBean(pp, "NewsForm_dict_tree", TreeBean.class).setHandlerClass(
-				CategorySelectedTree.class);
+				getCategoryDictClass(pp));
 		addComponentBean(pp, "NewsForm_dict", DictionaryBean.class).setBindingId("ne_categoryId")
 				.setBindingText("ne_categoryText").addTreeRef(pp, "NewsForm_dict_tree")
 				.setTitle($m("NewsFormTPage.1")).setHeight(320);
@@ -95,8 +95,8 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 				.setHeight(480).setWidth(400);
 	}
 
-	protected boolean isHtmlEditorCodeEnabled() {
-		return false;
+	protected Class<? extends DictionaryTreeHandler> getCategoryDictClass(final PageParameter pp) {
+		return CategorySelectedTree.class;
 	}
 
 	protected HtmlEditorBean addHtmlEditorBean(final PageParameter pp) {
@@ -110,6 +110,14 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		return (HtmlEditorBean) addHtmlEditorBean(pp, "NewsForm_editor", isHtmlEditorCodeEnabled())
 				.setAttachAction(attachClick).setToolbar(ContentUtils.HTML_TOOLBAR_BASE)
 				.setHeight("340");
+	}
+
+	protected boolean isHtmlEditorCodeEnabled() {
+		return false;
+	}
+
+	protected boolean isCategoryReadonly(final PageParameter pp) {
+		return false;
 	}
 
 	protected News createNews(final PageParameter pp) {
@@ -229,8 +237,8 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		final InputElement ne_id = InputElement.hidden("ne_id");
 		final InputElement ne_topic = new InputElement("ne_topic");
 		final InputElement ne_categoryId = InputElement.hidden("ne_categoryId");
-		final TextButton ne_categoryText = new TextButton("ne_categoryText")
-				.setOnclick("$Actions['NewsForm_dict']()");
+		final TextButton ne_categoryText = new TextButton("ne_categoryText").setReadonly(
+				isCategoryReadonly(pp)).setOnclick("$Actions['NewsForm_dict']()");
 
 		final InputElement ne_keyWords = new InputElement("ne_keyWords");
 		final InputElement ne_source = new InputElement("ne_source");

@@ -9,13 +9,17 @@ import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
+import net.simpleframework.module.news.web.page.NewsFormTPage;
 import net.simpleframework.module.news.web.page.NewsListTbl;
 import net.simpleframework.module.news.web.page.NewsUtils;
+import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
+import net.simpleframework.mvc.PageMapping;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.component.ComponentParameter;
+import net.simpleframework.mvc.component.ui.dictionary.DictionaryTreeHandler;
 import net.simpleframework.mvc.component.ui.pager.EPagerBarLayout;
 import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
@@ -67,7 +71,8 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
 		if (isPageManagerRole(pp)) {
-			final ElementList btns = ElementList.of(NewsUtils.createAddNew(pp), SpanElement.SPACE);
+			final ElementList btns = ElementList.of(
+					NewsUtils.createAddNew(pp, _NewsFormBasePage.class), SpanElement.SPACE);
 			return btns;
 		}
 		return super.getRightElements(pp);
@@ -104,5 +109,23 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 					.add("createDate", news.getCreateDate());
 			return kv;
 		}
+	}
+
+	@PageMapping(url = "/news/form2")
+	public static class _NewsFormBasePage extends NewsFormBasePage {
+		@Override
+		protected String includeForm(final PageParameter pp) {
+			return pp.includeUrl(_NewsFormTPage.class);
+		}
+	}
+
+	public static class _NewsFormTPage extends NewsFormTPage {
+		@Override
+		protected Class<? extends DictionaryTreeHandler> getCategoryDictClass(final PageParameter pp) {
+			return _CategorySelectedTree.class;
+		}
+	}
+
+	public static class _CategorySelectedTree extends DictionaryTreeHandler {
 	}
 }

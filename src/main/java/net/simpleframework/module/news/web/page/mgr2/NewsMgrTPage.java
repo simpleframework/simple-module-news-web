@@ -17,6 +17,7 @@ import net.simpleframework.module.news.web.page.NewsListTbl;
 import net.simpleframework.module.news.web.page.NewsMgrActions;
 import net.simpleframework.module.news.web.page.NewsMgrActions.StatusDescPage;
 import net.simpleframework.module.news.web.page.NewsUtils;
+import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.AbstractElement;
@@ -93,7 +94,8 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
-		final ElementList btns = ElementList.of(NewsUtils.createAddNew(pp), SpanElement.SPACE);
+		final ElementList btns = ElementList.of(NewsUtils.createAddNew(pp, NewsFormBasePage.class),
+				SpanElement.SPACE);
 		final EContentStatus status = pp.getEnumParameter(EContentStatus.class, "status");
 		if (status != EContentStatus.delete) {
 			btns.append(createStatusButton(EContentStatus.publish))
