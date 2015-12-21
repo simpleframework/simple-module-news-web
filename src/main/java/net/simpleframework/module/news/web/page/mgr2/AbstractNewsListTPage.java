@@ -15,6 +15,7 @@ import net.simpleframework.module.news.web.page.NewsUtils;
 import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
 import net.simpleframework.mvc.PageMapping;
 import net.simpleframework.mvc.PageParameter;
+import net.simpleframework.mvc.SessionCache;
 import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.SpanElement;
@@ -23,6 +24,9 @@ import net.simpleframework.mvc.component.ui.dictionary.DictionaryTreeHandler;
 import net.simpleframework.mvc.component.ui.pager.EPagerBarLayout;
 import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
+import net.simpleframework.mvc.component.ui.tree.TreeBean;
+import net.simpleframework.mvc.component.ui.tree.TreeNode;
+import net.simpleframework.mvc.component.ui.tree.TreeNodes;
 import net.simpleframework.mvc.template.lets.Category_ListPage;
 import net.simpleframework.mvc.template.struct.CategoryItem;
 import net.simpleframework.mvc.template.struct.CategoryItems;
@@ -49,6 +53,7 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 		final CategoryItems items = CategoryItems.of();
 		final List<NewsCategory> list = getNewsCategoryList(pp);
 		if (list != null && list.size() > 0) {
+			SessionCache.lput("_CATEGORY_LIST", list);
 			final NewsCategory _category = NewsUtils.getNewsCategory(pp);
 			for (final NewsCategory category : list) {
 				final CategoryItem item = new CategoryItem(category.getText());
@@ -127,5 +132,22 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 	}
 
 	public static class _CategorySelectedTree extends DictionaryTreeHandler {
+		@SuppressWarnings("unchecked")
+		@Override
+		public TreeNodes getTreenodes(final ComponentParameter cp, final TreeNode parent) {
+			if (parent == null) {
+				final List<NewsCategory> list = (List<NewsCategory>) SessionCache
+						.lget("_CATEGORY_LIST");
+				if (list != null) {
+					final TreeNodes nodes = TreeNodes.of();
+					for (final NewsCategory category : list) {
+						final TreeNode tn = new TreeNode((TreeBean) cp.componentBean, parent, category);
+						nodes.add(tn);
+					}
+					return nodes;
+				}
+			}
+			return super.getTreenodes(cp, parent);
+		}
 	}
 }
