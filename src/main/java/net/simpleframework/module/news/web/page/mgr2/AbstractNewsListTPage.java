@@ -5,6 +5,8 @@ import static net.simpleframework.common.I18n.$m;
 import java.util.Collection;
 import java.util.Map;
 
+import net.simpleframework.ado.query.DataQueryUtils;
+import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.common.web.HttpUtils;
 import net.simpleframework.module.news.INewsContextAware;
@@ -12,6 +14,7 @@ import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.page.NewsListTbl;
 import net.simpleframework.module.news.web.page.NewsUtils;
+import net.simpleframework.module.news.web.page.mgr2.NewsMgrTPage._NewsMgrActions;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.SessionCache;
 import net.simpleframework.mvc.common.element.ETextAlign;
@@ -38,6 +41,12 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 		super.onForward(pp);
 
 		addTablePagerBean(pp);
+
+		if (isPageManagerRole(pp)) {
+			// edit
+			addAjaxRequest(pp, "NewsMgrPage_edit").setHandlerMethod("doEdit").setHandlerClass(
+					_NewsMgrActions.class);
+		}
 	}
 
 	protected abstract Collection<NewsCategory> getNewsCategoryList(PageParameter pp);
@@ -77,9 +86,9 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 	protected TablePagerBean addTablePagerBean(final PageParameter pp) {
 		final boolean mgr = isPageManagerRole(pp);
 		final TablePagerBean tablePager = (TablePagerBean) addTablePagerBean(pp,
-				"AbstractNewsListTPage_tbl", NewsViewListTbl.class, false).setFilter(true)
-				.setShowLineNo(false).setShowHead(true).setShowCheckbox(mgr).setResize(false)
-				.setPageItems(30).setPagerBarLayout(EPagerBarLayout.bottom);
+				"AbstractNewsListTPage_tbl", mgr ? _NewsListMgr2Tbl.class : NewsListViewTbl.class,
+				false).setFilter(true).setShowLineNo(false).setShowHead(true).setShowCheckbox(mgr)
+				.setResize(false).setPageItems(30).setPagerBarLayout(EPagerBarLayout.bottom);
 		if (mgr) {
 			tablePager.addColumn(TablePagerColumn.ICON());
 		}
@@ -95,7 +104,19 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 		return tablePager;
 	}
 
-	public static class NewsViewListTbl extends NewsListTbl {
+	public static class _NewsListMgr2Tbl extends NewsListMgr2Tbl {
+	}
+
+	public static class NewsListViewTbl extends NewsListTbl {
+		@Override
+		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
+			final NewsCategory category = NewsUtils.getNewsCategory(cp);
+			if (category == null) {
+				return DataQueryUtils.nullQuery();
+			}
+			return super.createDataObjectQuery(cp);
+		}
+
 		@Override
 		protected Map<String, Object> getRowData(final ComponentParameter cp, final Object dataObject) {
 			final News news = (News) dataObject;
