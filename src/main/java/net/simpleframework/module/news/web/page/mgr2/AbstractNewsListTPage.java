@@ -2,6 +2,7 @@ package net.simpleframework.module.news.web.page.mgr2;
 
 import static net.simpleframework.common.I18n.$m;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -46,12 +47,12 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 		addTablePagerBean(pp);
 	}
 
-	protected abstract List<NewsCategory> getNewsCategoryList(PageParameter pp);
+	protected abstract Collection<NewsCategory> getNewsCategoryList(PageParameter pp);
 
 	@Override
 	protected CategoryItems getCategoryList(final PageParameter pp) {
 		final CategoryItems items = CategoryItems.of();
-		final List<NewsCategory> list = getNewsCategoryList(pp);
+		final Collection<NewsCategory> list = getNewsCategoryList(pp);
 		if (list != null && list.size() > 0) {
 			SessionCache.lput("_CATEGORY_LIST", list);
 			final NewsCategory _category = NewsUtils.getNewsCategory(pp);
