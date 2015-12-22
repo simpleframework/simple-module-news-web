@@ -69,7 +69,8 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 			backBtn.setHref(url);
 		} else {
 			String referer = pp.getRequestHeader("Referer");
-			if (StringUtils.hasText(referer) && (referer.contains("/news/"))) {
+			if (StringUtils.hasText(referer) && referer.contains("/news/")
+					&& !referer.contains("/news/form")) {
 				backBtn.setHref(referer);
 				pp.setSessionAttr("_Referer", referer);
 			} else {

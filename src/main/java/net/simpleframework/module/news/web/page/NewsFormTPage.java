@@ -365,7 +365,8 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		if (news != null) {
 			el.append(new ButtonElement($m("Button.Preview")).setOnclick(JS.loc(
 					((INewsWebContext) newsContext).getUrlsFactory().getUrl(pp, NewsViewPage.class,
-							news, "preview=true"), true)), SpanElement.SPACE);
+							news, "preview=true"), true)));
+			el.append(SpanElement.SPACE);
 		}
 		el.append(SAVE_BTN());
 		return el;
