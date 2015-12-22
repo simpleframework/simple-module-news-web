@@ -3,7 +3,6 @@ package net.simpleframework.module.news.web;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
-import net.simpleframework.module.news.web.page.mgr2.AbstractNewsListTPage._NewsFormBasePage;
 import net.simpleframework.module.news.web.page.t1.NewsFormAttachPage;
 import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
 import net.simpleframework.module.news.web.page.t1.NewsFormVotePage;
@@ -27,11 +26,10 @@ public class NewsUrlsFactory extends UrlsCache {
 
 		put(NewsListPage.class);
 		put(NewsViewPage.class);
+
 		put(NewsFormBasePage.class);
 		put(NewsFormAttachPage.class);
 		put(NewsFormVotePage.class);
-
-		put(_NewsFormBasePage.class);
 	}
 
 	public String getUrl(final PageParameter pp, final Class<? extends AbstractMVCPage> mClass,

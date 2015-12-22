@@ -114,8 +114,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
-		final ElementList btns = ElementList.of(NewsUtils.createAddNew(pp, NewsFormBasePage.class))
-				.append(SpanElement.SPACE);
+		final ElementList btns = ElementList.of(NewsUtils.createAddNew(pp)).append(SpanElement.SPACE);
 		final EContentStatus status = pp.getEnumParameter(EContentStatus.class, "status");
 		if (status != EContentStatus.delete) {
 			btns.append(createStatusButton(EContentStatus.publish))

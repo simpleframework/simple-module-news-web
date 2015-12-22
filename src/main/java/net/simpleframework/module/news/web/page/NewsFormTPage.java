@@ -33,6 +33,7 @@ import net.simpleframework.module.news.web.page.t1.NewsMgrPage;
 import net.simpleframework.module.news.web.page.t2.NewsViewPage;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
+import net.simpleframework.mvc.SessionCache;
 import net.simpleframework.mvc.common.element.BlockElement;
 import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.Checkbox;
@@ -82,7 +83,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 
 		// 类目字典
 		addComponentBean(pp, "NewsForm_dict_tree", TreeBean.class).setHandlerClass(
-				getCategoryDictClass(pp));
+				CategorySelectedTree.class);
 		addComponentBean(pp, "NewsForm_dict", DictionaryBean.class).setBindingId("ne_categoryId")
 				.setBindingText("ne_categoryText").addTreeRef(pp, "NewsForm_dict_tree")
 				.setTitle($m("NewsFormTPage.1")).setHeight(320);
@@ -93,10 +94,6 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		addComponentBean(pp, "NewsForm_upload", WindowBean.class)
 				.setContentRef("NewsForm_upload_page").setTitle($m("NewsFormTPage.10")).setPopup(true)
 				.setHeight(480).setWidth(400);
-	}
-
-	protected Class<? extends DictionaryTreeHandler> getCategoryDictClass(final PageParameter pp) {
-		return CategorySelectedTree.class;
 	}
 
 	protected HtmlEditorBean addHtmlEditorBean(final PageParameter pp) {
@@ -384,16 +381,33 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 
 	private AbstractComponentBean categoryBean;
 
+	@SuppressWarnings("unchecked")
 	protected TreeNodes getCategoryDictTreenodes(final ComponentParameter cp, final TreeNode parent) {
-		if (categoryBean == null) {
-			categoryBean = get(NewsMgrPage.class).getCategoryBean();
-			if (categoryBean == null) {
-				categoryBean = get(NewsMgrTPage.class).getComponentBeanByName(cp, "NewsMgrTPage_tree");
+		final List<NewsCategory> list = (List<NewsCategory>) SessionCache.lget("_CATEGORY_LIST");
+		// 自定义
+		if (list != null) {
+			if (parent == null) {
+				final TreeNodes nodes = TreeNodes.of();
+				for (final NewsCategory category : list) {
+					final TreeNode tn = new TreeNode((TreeBean) cp.componentBean, parent, category);
+					nodes.add(tn);
+				}
+				return nodes;
 			}
+			// 仅显示第一级
+			return null;
+		} else {
+			if (categoryBean == null) {
+				categoryBean = get(NewsMgrPage.class).getCategoryBean();
+				if (categoryBean == null) {
+					categoryBean = get(NewsMgrTPage.class).getComponentBeanByName(cp,
+							"NewsMgrTPage_tree");
+				}
+			}
+			final ComponentParameter nCP = ComponentParameter.get(cp, categoryBean);
+			final ICategoryHandler cHandle = (ICategoryHandler) nCP.getComponentHandler();
+			return cHandle.getCategoryDictTreenodes(nCP, (TreeBean) cp.componentBean, parent);
 		}
-		final ComponentParameter nCP = ComponentParameter.get(cp, categoryBean);
-		final ICategoryHandler cHandle = (ICategoryHandler) nCP.getComponentHandler();
-		return cHandle.getCategoryDictTreenodes(nCP, (TreeBean) cp.componentBean, parent);
 	}
 
 	public static class CategorySelectedTree extends DictionaryTreeHandler {

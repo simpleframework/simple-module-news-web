@@ -63,7 +63,6 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 
 	@Override
 	public ElementList getLeftElements(final PageParameter pp) {
-		final NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
 		final LinkButton backBtn = LinkButton.backBtn();
 		final String url = pp.getParameter("url");
 		if (StringUtils.hasText(url)) {
@@ -80,7 +79,8 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 					backBtn.setHref(referer);
 				} else {
 					backBtn.setOnclick("$Actions.loc('"
-							+ uFactory.getUrl(pp, NewsMgrPage.class, (NewsCategory) null)
+							+ (((INewsWebContext) newsContext).getUrlsFactory()).getUrl(pp,
+									NewsMgrPage.class, (NewsCategory) null)
 							+ "?categoryId=' + $F('ne_categoryId'));");
 				}
 			}
