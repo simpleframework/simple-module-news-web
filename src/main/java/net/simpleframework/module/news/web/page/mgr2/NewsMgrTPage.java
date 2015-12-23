@@ -8,24 +8,28 @@ import java.util.Map;
 import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.common.web.page.AbstractMgrTPage;
 import net.simpleframework.module.news.INewsContextAware;
+import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.page.NewsCategoryHandle;
 import net.simpleframework.module.news.web.page.NewsFormTPage;
+import net.simpleframework.module.news.web.page.NewsListTbl;
 import net.simpleframework.module.news.web.page.NewsMgrActions;
 import net.simpleframework.module.news.web.page.NewsMgrActions.StatusDescPage;
 import net.simpleframework.module.news.web.page.NewsUtils;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
-import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.Icon;
 import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.common.element.SpanElement;
+import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.category.CategoryBean;
+import net.simpleframework.mvc.component.ui.pager.AbstractTablePagerSchema;
 import net.simpleframework.mvc.component.ui.pager.EPagerBarLayout;
 import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
 import net.simpleframework.mvc.component.ui.pager.TablePagerUtils;
+import net.simpleframework.mvc.component.ui.pager.db.NavigationTitle;
 import net.simpleframework.mvc.component.ui.tree.TreeNode;
 
 /**
@@ -54,14 +58,9 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 				.setJsLoadedCallback(
 						"$('idNewsMgrTPage_tbl').previous().innerHTML = $('idNewsMgrTPage_nav').innerHTML;")
 				.setContainerId("idNewsMgrTPage_tbl").setHandlerClass(NewsListMgr2Tbl.class);
-		tablePager
-				.addColumn(TablePagerColumn.ICON())
-				.addColumn(new TablePagerColumn("topic", $m("NewsMgrPage.1")).setSort(false))
-				.addColumn(
-						new TablePagerColumn("stat", $m("NewsMgrPage.2") + "/" + $m("NewsMgrPage.3"), 90)
-								.setTextAlign(ETextAlign.center).setFilterSort(false))
-				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsMgrPage.4")))
-				.addColumn(TablePagerColumn.OPE(70));
+		tablePager.addColumn(TablePagerColumn.ICON()).addColumn(NewsListTbl.TC_TOPIC())
+				.addColumn(NewsListTbl.TC_VIEWS()).addColumn(NewsListTbl.TC_COMMENTS())
+				.addColumn(NewsListTbl.TC_CREATEDATE()).addColumn(TablePagerColumn.OPE(70));
 
 		// edit/delete/status
 		NewsMgrActions.addMgrComponentBean(pp, _NewsMgrActions.class, _StatusDescPage.class);
@@ -125,6 +124,27 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 				params += status.name();
 			}
 			tn.setJsClickCallback("$Actions['NewsMgrTPage_tbl']('" + params + "');");
+		}
+	}
+
+	public static class NewsListMgr2Tbl extends NewsListTbl {
+		@Override
+		public String toTableHTML(final ComponentParameter cp) {
+			final StringBuilder sb = new StringBuilder();
+			sb.append("<div id='idNewsMgrTPage_nav' style='display: none;'>");
+			sb.append(NavigationTitle.toElement(cp, NewsUtils.getNewsCategory(cp),
+					NewsUtils.createNavigationTitleCallback(cp, "NewsMgrTPage_tbl")));
+			sb.append("</div>");
+			sb.append(super.toTableHTML(cp));
+			return sb.toString();
+		}
+
+		@Override
+		protected String toOpeHTML(final ComponentParameter cp, final News news) {
+			final StringBuilder sb = new StringBuilder();
+			sb.append(createPublishBtn(cp, news));
+			sb.append(AbstractTablePagerSchema.IMG_DOWNMENU);
+			return sb.toString();
 		}
 	}
 

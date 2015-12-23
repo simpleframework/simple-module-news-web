@@ -18,7 +18,6 @@ import net.simpleframework.module.news.web.page.NewsUtils;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageMapping;
 import net.simpleframework.mvc.PageParameter;
-import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.Icon;
 import net.simpleframework.mvc.common.element.LabelElement;
@@ -50,16 +49,9 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 		addCategoryBean(pp, NewsCategoryHandle.class);
 
-		addTablePagerBean(pp, NewsListTbl.class)
-				.addColumn(TablePagerColumn.ICON())
-				.addColumn(new TablePagerColumn("topic", $m("NewsMgrPage.1")))
-				.addColumn(
-						new TablePagerColumn("views", $m("NewsMgrPage.2"), 70)
-								.setPropertyClass(Float.class))
-				.addColumn(
-						new TablePagerColumn("comments", $m("NewsMgrPage.3"), 70)
-								.setTextAlign(ETextAlign.center))
-				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsMgrPage.4")))
+		addTablePagerBean(pp, NewsListTbl.class).addColumn(TablePagerColumn.ICON())
+				.addColumn(NewsListTbl.TC_TOPIC()).addColumn(NewsListTbl.TC_VIEWS())
+				.addColumn(NewsListTbl.TC_COMMENTS()).addColumn(NewsListTbl.TC_CREATEDATE())
 				.addColumn(TablePagerColumn.OPE(120));
 
 		// edit/delete/status

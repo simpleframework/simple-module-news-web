@@ -1,25 +1,20 @@
 package net.simpleframework.module.news.web.page.mgr2;
 
-import static net.simpleframework.common.I18n.$m;
-
 import java.util.Collection;
-import java.util.Map;
 
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
-import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.common.web.HttpUtils;
 import net.simpleframework.module.news.INewsContextAware;
-import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.page.NewsListTbl;
 import net.simpleframework.module.news.web.page.NewsMgrActions;
 import net.simpleframework.module.news.web.page.NewsUtils;
+import net.simpleframework.module.news.web.page.mgr2.NewsMgrTPage.NewsListMgr2Tbl;
 import net.simpleframework.module.news.web.page.mgr2.NewsMgrTPage._NewsMgrActions;
 import net.simpleframework.module.news.web.page.mgr2.NewsMgrTPage._StatusDescPage;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.SessionCache;
-import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.component.ComponentParameter;
@@ -93,12 +88,8 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 		if (mgr) {
 			tablePager.addColumn(TablePagerColumn.ICON());
 		}
-		tablePager
-				.addColumn(new TablePagerColumn("topic", $m("NewsMgrPage.1")).setSort(false))
-				.addColumn(
-						new TablePagerColumn("stat", $m("NewsMgrPage.2") + "/" + $m("NewsMgrPage.3"), 90)
-								.setTextAlign(ETextAlign.center).setFilterSort(false))
-				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsMgrPage.4")));
+		tablePager.addColumn(NewsListTbl.TC_TOPIC()).addColumn(NewsListTbl.TC_VIEWS())
+				.addColumn(NewsListTbl.TC_COMMENTS()).addColumn(NewsListTbl.TC_CREATEDATE());
 		if (mgr) {
 			tablePager.addColumn(TablePagerColumn.OPE(70));
 		}
@@ -124,16 +115,6 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 				return DataQueryUtils.nullQuery();
 			}
 			return super.createDataObjectQuery(cp);
-		}
-
-		@Override
-		protected Map<String, Object> getRowData(final ComponentParameter cp, final Object dataObject) {
-			final News news = (News) dataObject;
-			final KVMap kv = new KVMap();
-			kv.add("topic", toTopicHTML(cp, news))
-					.add("stat", news.getViews() + "/" + news.getComments())
-					.add("createDate", news.getCreateDate());
-			return kv;
 		}
 	}
 }

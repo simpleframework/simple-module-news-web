@@ -16,6 +16,7 @@ import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.page.t2.NewsViewPage;
 import net.simpleframework.mvc.common.element.AbstractElement;
 import net.simpleframework.mvc.common.element.ButtonElement;
+import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.EVerticalAlign;
 import net.simpleframework.mvc.common.element.ImageElement;
 import net.simpleframework.mvc.common.element.LinkElement;
@@ -214,5 +215,22 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 	@Override
 	public Object getRowBeanById(final ComponentParameter cp, final Object id) {
 		return _newsService.getBean(id);
+	}
+
+	public static final TablePagerColumn TC_TOPIC() {
+		return new TablePagerColumn("topic", $m("NewsMgrPage.1")).setSort(false);
+	}
+
+	public static final TablePagerColumn TC_VIEWS() {
+		return new TablePagerColumn("views", $m("NewsMgrPage.2"), 70).setPropertyClass(Float.class);
+	}
+
+	public static final TablePagerColumn TC_COMMENTS() {
+		return new TablePagerColumn("comments", $m("NewsMgrPage.3"), 70)
+				.setTextAlign(ETextAlign.center);
+	}
+
+	public static final TablePagerColumn TC_CREATEDATE() {
+		return TablePagerColumn.DATE("createDate", $m("NewsMgrPage.4"));
 	}
 }
