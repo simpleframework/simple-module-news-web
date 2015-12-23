@@ -6,6 +6,7 @@ import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.web.HttpUtils;
 import net.simpleframework.module.news.INewsContextAware;
+import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.page.NewsListTbl;
 import net.simpleframework.module.news.web.page.NewsMgrActions;
@@ -115,6 +116,11 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 				return DataQueryUtils.nullQuery();
 			}
 			return super.createDataObjectQuery(cp);
+		}
+
+		@Override
+		protected String toCommentsHTML(final ComponentParameter cp, final News news) {
+			return String.valueOf(news.getComments());
 		}
 	}
 }

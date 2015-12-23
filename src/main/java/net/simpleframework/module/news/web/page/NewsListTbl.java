@@ -125,8 +125,9 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 		if (status == EContentStatus.delete) {
 			return String.valueOf(news.getComments());
 		} else {
-			return new ButtonElement(news.getComments()).setOnclick(
-					"$Actions['NewsMgrPage_commentWindow']('newsId=" + news.getId() + "');").toString();
+			return LinkElement.style2(news.getComments())
+					.setOnclick("$Actions['NewsMgrPage_commentWindow']('newsId=" + news.getId() + "');")
+					.toString();
 		}
 	}
 
@@ -226,7 +227,7 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 	}
 
 	public static final TablePagerColumn TC_COMMENTS() {
-		return new TablePagerColumn("comments", $m("NewsMgrPage.3"), 70)
+		return new TablePagerColumn("comments", $m("NewsMgrPage.3"), 50)
 				.setTextAlign(ETextAlign.center);
 	}
 
