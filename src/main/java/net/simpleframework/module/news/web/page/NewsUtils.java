@@ -14,6 +14,7 @@ import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
 import net.simpleframework.module.news.web.page.t2.NewsListPage;
 import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.PageParameter;
+import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.JS;
 import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.common.element.SpanElement;
@@ -88,12 +89,16 @@ public abstract class NewsUtils implements INewsContextAware {
 				+ "' + $F('.parameters #categoryId'));");
 	}
 
+	public static ButtonElement createStatusAct(final PageParameter pp, final EContentStatus status,
+			final News news) {
+		return new ButtonElement(status).setHighlight(status == EContentStatus.publish).setOnclick(
+				"$Actions['NewsMgrPage_status']('op=" + status.name() + "&newsId=" + news.getId()
+						+ "');");
+	}
+
 	public static LinkButton createNewsPreview(final PageParameter pp) {
 		final NewsCategory category = getNewsCategory(pp);
-		if (category != null) {
-			return new LinkButton($m("Button.Preview")).setOnclick(JS.loc(
-					uFactory.getUrl(pp, NewsListPage.class, category), true));
-		}
-		return null;
+		return category == null ? null : new LinkButton($m("Button.Preview")).setOnclick(JS.loc(
+				uFactory.getUrl(pp, NewsListPage.class, category), true));
 	}
 }

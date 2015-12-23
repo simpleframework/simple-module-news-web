@@ -143,12 +143,6 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 			}
 
 			final JavascriptForward js = super.onSave(cp);
-			if (arr.length == 1 && op == EContentStatus.edit) {
-				// final NewsUrlsFactory uFactory = ((INewsWebContext)
-				// newsContext).getUrlsFactory();
-				// js.append(JS.loc(uFactory.getUrl(cp, NewsFormBasePage.class,
-				// news)));
-			}
 			return js.append(createTableRefresh().toString());
 		}
 

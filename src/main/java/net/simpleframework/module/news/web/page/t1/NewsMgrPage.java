@@ -52,7 +52,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		addTablePagerBean(pp, NewsListTbl.class).addColumn(TablePagerColumn.ICON())
 				.addColumn(NewsListTbl.TC_TOPIC()).addColumn(NewsListTbl.TC_VIEWS())
 				.addColumn(NewsListTbl.TC_COMMENTS()).addColumn(NewsListTbl.TC_CREATEDATE())
-				.addColumn(TablePagerColumn.OPE(120));
+				.addColumn(TablePagerColumn.OPE(70));
 
 		// edit/delete/status
 		NewsMgrActions.addMgrComponentBean(pp, NewsMgrActions.class, StatusDescPage.class);
@@ -74,33 +74,27 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		return newsContext.getModule().getManagerRole();
 	}
 
-	LinkButton createStatusButton(final EContentStatus status) {
-		return act_btn("NewsMgrPage_status", status.toString(), "newsId", "op=" + status.name());
-	}
-
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
-		final ElementList btns = ElementList.of(NewsUtils.createAddNew(pp)).append(SpanElement.SPACE);
-		final EContentStatus status = pp.getEnumParameter(EContentStatus.class, "status");
-		if (status != EContentStatus.delete) {
-			btns.append(createStatusButton(EContentStatus.publish))
-					.append(createStatusButton(EContentStatus.lock)).append(SpanElement.SPACE);
-		}
-		btns.append(createStatusButton(EContentStatus.delete).setIconClass(Icon.trash))
+		final ElementList btns = ElementList
+				.of(NewsUtils.createAddNew(pp))
 				.append(SpanElement.SPACE)
-				.append(createStatusButton(EContentStatus.edit).setText($m("NewsMgrPage.7")));
-
-		if (pp.isLmember(newsContext.getModule().getManagerRole())) {
-			btns.append(SpanElement.SPACE).append(
-					new LinkButton($m("NewsMgrPage.13"))
-							.setOnclick("$Actions['NewsMgrPage_advWindow']();"));
-		}
-
+				.append(createStatusButton(EContentStatus.publish))
+				.append(SpanElement.SPACE)
+				.append(createStatusButton(EContentStatus.delete).setIconClass(Icon.trash))
+				.append(SpanElement.SPACE)
+				.append(
+						new LinkButton($m("NewsMgrPage.13"))
+								.setOnclick("$Actions['NewsMgrPage_advWindow']();"));
 		final LinkButton preview = NewsUtils.createNewsPreview(pp);
 		if (preview != null) {
 			btns.append(SpanElement.SPACE).append(preview);
 		}
 		return btns;
+	}
+
+	private LinkButton createStatusButton(final EContentStatus status) {
+		return act_btn("NewsMgrPage_status", status.toString(), "newsId", "op=" + status.name());
 	}
 
 	@Override

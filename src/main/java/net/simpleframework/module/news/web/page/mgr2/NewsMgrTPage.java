@@ -8,7 +8,6 @@ import java.util.Map;
 import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.common.web.page.AbstractMgrTPage;
 import net.simpleframework.module.news.INewsContextAware;
-import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.page.NewsCategoryHandle;
 import net.simpleframework.module.news.web.page.NewsFormTPage;
@@ -24,7 +23,6 @@ import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.category.CategoryBean;
-import net.simpleframework.mvc.component.ui.pager.AbstractTablePagerSchema;
 import net.simpleframework.mvc.component.ui.pager.EPagerBarLayout;
 import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
@@ -71,28 +69,28 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 		return newsContext.getModule().getManagerRole();
 	}
 
-	LinkButton createStatusButton(final EContentStatus status) {
-		return TablePagerUtils.act_btn("NewsMgrTPage_tbl", "NewsMgrPage_status", status.toString(),
-				"newsId", "op=" + status.name());
-	}
-
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
-		final ElementList btns = ElementList.of(NewsUtils.createAddNew(pp), SpanElement.SPACE);
-		final EContentStatus status = pp.getEnumParameter(EContentStatus.class, "status");
-		if (status != EContentStatus.delete) {
-			btns.append(createStatusButton(EContentStatus.publish))
-					.append(createStatusButton(EContentStatus.lock)).append(SpanElement.SPACE);
-		}
-		btns.append(createStatusButton(EContentStatus.delete).setIconClass(Icon.trash))
+		final ElementList btns = ElementList
+				.of(NewsUtils.createAddNew(pp))
 				.append(SpanElement.SPACE)
-				.append(createStatusButton(EContentStatus.edit).setText($m("NewsMgrPage.7")));
-		// 预览
+				.append(createStatusButton(EContentStatus.publish))
+				.append(SpanElement.SPACE)
+				.append(createStatusButton(EContentStatus.delete).setIconClass(Icon.trash))
+				.append(SpanElement.SPACE)
+				.append(
+						new LinkButton($m("NewsMgrPage.13"))
+								.setOnclick("$Actions['NewsMgrPage_advWindow']();"));
 		final LinkButton preview = NewsUtils.createNewsPreview(pp);
 		if (preview != null) {
 			btns.append(SpanElement.SPACE).append(preview);
 		}
 		return btns;
+	}
+
+	private LinkButton createStatusButton(final EContentStatus status) {
+		return TablePagerUtils.act_btn("NewsMgrTPage_tbl", "NewsMgrPage_status", status.toString(),
+				"newsId", "op=" + status.name());
 	}
 
 	@Override
@@ -136,14 +134,6 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 					NewsUtils.createNavigationTitleCallback(cp, "NewsMgrTPage_tbl")));
 			sb.append("</div>");
 			sb.append(super.toTableHTML(cp));
-			return sb.toString();
-		}
-
-		@Override
-		protected String toOpeHTML(final ComponentParameter cp, final News news) {
-			final StringBuilder sb = new StringBuilder();
-			sb.append(createPublishBtn(cp, news));
-			sb.append(AbstractTablePagerSchema.IMG_DOWNMENU);
 			return sb.toString();
 		}
 	}

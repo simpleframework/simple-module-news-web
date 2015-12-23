@@ -20,7 +20,6 @@ import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.EVerticalAlign;
 import net.simpleframework.mvc.common.element.ImageElement;
 import net.simpleframework.mvc.common.element.LinkElement;
-import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ui.menu.MenuBean;
 import net.simpleframework.mvc.component.ui.menu.MenuItem;
@@ -67,6 +66,11 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 				.add("comments", toCommentsHTML(cp, news)).add("createDate", news.getCreateDate())
 				.add(TablePagerColumn.OPE, toOpeHTML(cp, news));
 		return kv;
+	}
+
+	@Override
+	public Object getRowBeanById(final ComponentParameter cp, final Object id) {
+		return _newsService.getBean(id);
 	}
 
 	protected AbstractElement<?> createImageMark(final ComponentParameter cp, final News news) {
@@ -132,90 +136,43 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 	}
 
 	protected AbstractElement<?> createPublishBtn(final ComponentParameter cp, final News news) {
-		final Object id = news.getId();
 		if (news.getStatus() == EContentStatus.edit) {
-			return new ButtonElement(EContentStatus.publish).setHighlight(true).setOnclick(
-					"$Actions['NewsMgrPage_status']('op=publish&newsId=" + id + "');");
+			return NewsUtils.createStatusAct(cp, EContentStatus.publish, news);
 		} else {
 			return new ButtonElement($m("Edit")).setOnclick("$Actions['NewsMgrPage_edit']('newsId="
-					+ id + "');");
+					+ news.getId() + "');");
 		}
-	}
-
-	protected AbstractElement<?> createLogBtn(final ComponentParameter cp, final News news) {
-		return ButtonElement.logBtn()
-				.setDisabled(((INewsWebContext) newsContext).getLogRef() == null)
-				.setOnclick("$Actions['NewsMgrPage_update_log']('newsId=" + news.getId() + "');");
 	}
 
 	protected String toOpeHTML(final ComponentParameter cp, final News news) {
 		final StringBuilder sb = new StringBuilder();
-		sb.append(createPublishBtn(cp, news));
-		sb.append(SpanElement.SPACE);
-		sb.append(createLogBtn(cp, news));
-		sb.append(AbstractTablePagerSchema.IMG_DOWNMENU);
+		final EContentStatus status = cp.getEnumParameter(EContentStatus.class, "status");
+		if (status != EContentStatus.delete) {
+			sb.append(createPublishBtn(cp, news));
+			sb.append(AbstractTablePagerSchema.IMG_DOWNMENU);
+		} else {
+			sb.append(NewsUtils.createStatusAct(cp, EContentStatus.edit, news).setText(
+					$m("NewsListTbl.0")));
+		}
 		return sb.toString();
-	}
-
-	@Override
-	protected Map<String, Object> getRowAttributes(final ComponentParameter cp,
-			final Object dataObject) {
-		final News news = (News) dataObject;
-		final KVMap kv = new KVMap();
-		final StringBuilder sb = new StringBuilder();
-		final EContentStatus s = news.getStatus();
-		if (s == EContentStatus.edit) {
-			// 菜单索引
-			sb.append(";5");
-		}
-		if (s == EContentStatus.publish) {
-			sb.append(";3");
-		}
-		if (s == EContentStatus.lock) {
-			sb.append(";4");
-		}
-		if (((INewsWebContext) newsContext).getLogRef() == null) {
-			sb.append(";7");
-		}
-		if (sb.length() > 0) {
-			kv.put(AbstractTablePagerSchema.MENU_DISABLED, sb.substring(1));
-		}
-		return kv;
-	}
-
-	private MenuItem createMenuItem(final EContentStatus status) {
-		return MenuItem.of(status.toString()).setOnclick_act("NewsMgrPage_status", "newsId",
-				"op=" + status.name());
 	}
 
 	@Override
 	public MenuItems getContextMenu(final ComponentParameter cp, final MenuBean menuBean,
 			final MenuItem menuItem) {
 		if (menuItem == null) {
-			final MenuItems items = MenuItems.of();
-			final EContentStatus status = cp.getEnumParameter(EContentStatus.class, "status");
-			if (status != EContentStatus.delete) {
-				items.append(MenuItem.itemEdit().setOnclick_act("NewsMgrPage_edit", "newsId"))
-						.append(MenuItem.sep())
-						.append(
-								MenuItem.of($m("AbstractContentBean.2")).setOnclick_act(
-										"NewsMgrPage_recommendation", "newsId")).append(MenuItem.sep())
-						.append(createMenuItem(EContentStatus.publish))
-						.append(createMenuItem(EContentStatus.lock)).append(MenuItem.sep());
-			}
-			items.append(createMenuItem(EContentStatus.edit).setTitle($m("NewsMgrPage.7")))
+			final MenuItems items = MenuItems
+					.of(MenuItem.of($m("AbstractContentBean.2")).setOnclick_act(
+							"NewsMgrPage_recommendation", "newsId"))
 					.append(MenuItem.sep())
-					.append(createMenuItem(EContentStatus.delete).setIconClass(MenuItem.ICON_DELETE))
-					.append(MenuItem.sep())
+					.append(MenuItem.itemEdit().setOnclick_act("NewsMgrPage_edit", "newsId"))
+					.append(
+							MenuItem.itemDelete().setOnclick_act("NewsMgrPage_status", "newsId",
+									"op=" + EContentStatus.delete.name())).append(MenuItem.sep())
 					.append(MenuItem.itemLog().setOnclick_act("NewsMgrPage_update_log", "newsId"));
 			return items;
 		}
 		return null;
-	}
-
-	@Override
-	public Object getRowBeanById(final ComponentParameter cp, final Object id) {
-		return _newsService.getBean(id);
 	}
 
 	public static final TablePagerColumn TC_TOPIC() {
