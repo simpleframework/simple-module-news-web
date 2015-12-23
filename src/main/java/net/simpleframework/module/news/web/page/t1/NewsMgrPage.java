@@ -71,10 +71,6 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		addWindowBean(pp, "NewsMgrPage_recommendation", ajaxRequest).setHeight(240).setWidth(450)
 				.setTitle($m("AbstractContentBean.2"));
 
-		// comment window
-		ajaxRequest = addAjaxRequest(pp, "NewsMgrPage_commentPage", NewsCommentPage.class);
-		addWindowBean(pp, "NewsMgrPage_commentWindow", ajaxRequest).setHeight(540).setWidth(864);
-
 		// adv window
 		ajaxRequest = addAjaxRequest(pp, "NewsMgrPage_advPage", NewsAdvPage.class);
 		addWindowBean(pp, "NewsMgrPage_advWindow", ajaxRequest).setTitle($m("NewsMgrPage.13"))

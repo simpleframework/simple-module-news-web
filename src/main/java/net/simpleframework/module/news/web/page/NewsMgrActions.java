@@ -17,6 +17,7 @@ import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsUpdateLogPage;
 import net.simpleframework.module.news.web.NewsUrlsFactory;
+import net.simpleframework.module.news.web.page.t1.NewsCommentPage;
 import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
 import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.IForward;
@@ -57,6 +58,12 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 				AbstractMVCPage.url(statusDescClass));
 		pp.addComponentBean("NewsMgrPage_statusWindow", WindowBean.class)
 				.setContentRef("NewsMgrPage_statusPage").setWidth(420).setHeight(240);
+
+		// comment window
+		pp.addComponentBean("NewsMgrPage_commentPage", AjaxRequestBean.class).setUrlForward(
+				AbstractMVCPage.url(NewsCommentPage.class));
+		pp.addComponentBean("NewsMgrPage_commentWindow", WindowBean.class)
+				.setContentRef("NewsMgrPage_commentPage").setHeight(540).setWidth(864);
 
 		// log window
 		final IModuleRef ref = ((INewsWebContext) newsContext).getLogRef();
