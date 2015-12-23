@@ -5,6 +5,7 @@ import java.util.Collection;
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.web.HttpUtils;
+import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
@@ -16,6 +17,7 @@ import net.simpleframework.module.news.web.page.mgr2.NewsMgrTPage._NewsMgrAction
 import net.simpleframework.module.news.web.page.mgr2.NewsMgrTPage._StatusDescPage;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.SessionCache;
+import net.simpleframework.mvc.common.element.AbstractElement;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.component.ComponentParameter;
@@ -86,11 +88,13 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 				mgr ? _NewsListMgr2Tbl.class : NewsListViewTbl.class, false).setFilter(true)
 				.setShowLineNo(false).setShowHead(true).setShowCheckbox(mgr).setResize(false)
 				.setPageItems(30).setPagerBarLayout(EPagerBarLayout.bottom);
-		if (mgr) {
-			tablePager.addColumn(TablePagerColumn.ICON());
+		final TablePagerColumn TC_CREATEDATE = NewsListTbl.TC_CREATEDATE();
+		if (!mgr) {
+			TC_CREATEDATE.setWidth(125);
 		}
-		tablePager.addColumn(NewsListTbl.TC_TOPIC()).addColumn(NewsListTbl.TC_VIEWS())
-				.addColumn(NewsListTbl.TC_COMMENTS()).addColumn(NewsListTbl.TC_CREATEDATE());
+		tablePager.addColumn(TablePagerColumn.ICON()).addColumn(NewsListTbl.TC_TOPIC())
+				.addColumn(NewsListTbl.TC_VIEWS()).addColumn(NewsListTbl.TC_COMMENTS())
+				.addColumn(TC_CREATEDATE);
 		if (mgr) {
 			tablePager.addColumn(TablePagerColumn.OPE(70));
 		}
@@ -115,7 +119,14 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 			if (category == null) {
 				return DataQueryUtils.nullQuery();
 			}
+			// 仅显示已发布的
+			cp.putParameter("status", EContentStatus.publish.name());
 			return super.createDataObjectQuery(cp);
+		}
+
+		@Override
+		protected AbstractElement<?> createImageMark(final ComponentParameter cp, final News news) {
+			return null;
 		}
 
 		@Override

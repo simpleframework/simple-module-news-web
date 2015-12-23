@@ -18,6 +18,7 @@ import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.Checkbox;
+import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.common.element.SpanElement;
@@ -39,14 +40,15 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 	protected void onForward(final PageParameter pp) throws Exception {
 		super.onForward(pp);
 
-		final TablePagerBean tablePager = addTablePagerBean(pp, "NewsCommentPage_tbl",
-				NewsCommentTbl.class);
+		final TablePagerBean tablePager = (TablePagerBean) addTablePagerBean(pp,
+				"NewsCommentPage_tbl", NewsCommentTbl.class).setResize(false).setPageItems(30);
 		tablePager
 				.addColumn(
-						new TablePagerColumn("content", $m("NewsCommentPage.0")).setNowrap(false)
-								.setSort(false))
+						new TablePagerColumn("content", $m("NewsCommentPage.0")).setSort(false)
+								.setNowrap(false))
 				.addColumn(
-						new TablePagerColumn("userId", $m("NewsCommentPage.1"), 100).setFilter(false))
+						new TablePagerColumn("userId", $m("NewsCommentPage.1"), 100).setFilterSort(false)
+								.setTextAlign(ETextAlign.center))
 				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsCommentPage.2")))
 				.addColumn(TablePagerColumn.OPE(80));
 
