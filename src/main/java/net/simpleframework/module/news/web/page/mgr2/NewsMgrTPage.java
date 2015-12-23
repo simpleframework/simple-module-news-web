@@ -115,15 +115,15 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 		@Override
 		protected void setJsClickCallback(final TreeNode tn, final NewsCategory category,
 				final EContentStatus status) {
-			String params = "categoryId=";
+			final StringBuilder sb = new StringBuilder("$Actions['NewsMgrTPage_tbl']('categoryId=");
 			if (category != null) {
-				params += category.getId();
+				sb.append(category.getId());
 			}
-			params += "&status=";
+			sb.append("&status=");
 			if (status != null) {
-				params += status.name();
+				sb.append(status.name());
 			}
-			tn.setJsClickCallback("$Actions['NewsMgrTPage_tbl']('" + params + "');");
+			tn.setJsClickCallback(sb.append("');").toString());
 		}
 	}
 
