@@ -67,6 +67,11 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 		NewsMgrActions.addMgrComponentBean(pp, _NewsMgrActions.class, _StatusDescPage.class);
 	}
 
+	@Override
+	public String getPageRole(final PageParameter pp) {
+		return newsContext.getModule().getManagerRole();
+	}
+
 	LinkButton createStatusButton(final EContentStatus status) {
 		return TablePagerUtils.act_btn("NewsMgrTPage_tbl", "NewsMgrPage_status", status.toString(),
 				"newsId", "op=" + status.name());

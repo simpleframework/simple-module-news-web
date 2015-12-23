@@ -4,14 +4,11 @@ import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.ado.FilterItem;
 import net.simpleframework.ado.FilterItems;
 import net.simpleframework.common.TimePeriod;
-import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.common.web.content.page.AbstractRecommendationPage;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.INewsService;
 import net.simpleframework.module.news.News;
-import net.simpleframework.module.news.web.INewsWebContext;
-import net.simpleframework.module.news.web.NewsLogRef.NewsUpdateLogPage;
 import net.simpleframework.module.news.web.page.NewsCategoryHandle;
 import net.simpleframework.module.news.web.page.NewsFormTPage;
 import net.simpleframework.module.news.web.page.NewsListTbl;
@@ -73,13 +70,6 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 				RecommendationPage.class);
 		addWindowBean(pp, "NewsMgrPage_recommendation", ajaxRequest).setHeight(240).setWidth(450)
 				.setTitle($m("AbstractContentBean.2"));
-
-		// log window
-		final IModuleRef ref = ((INewsWebContext) newsContext).getLogRef();
-		if (ref != null) {
-			ajaxRequest = addAjaxRequest(pp, "NewsMgrPage_update_logPage", NewsUpdateLogPage.class);
-			addWindowBean(pp, "NewsMgrPage_update_log", ajaxRequest).setHeight(540).setWidth(864);
-		}
 
 		// comment window
 		ajaxRequest = addAjaxRequest(pp, "NewsMgrPage_commentPage", NewsCommentPage.class);

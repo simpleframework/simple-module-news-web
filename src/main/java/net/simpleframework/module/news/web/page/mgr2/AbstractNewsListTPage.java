@@ -86,10 +86,10 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 
 	protected TablePagerBean addTablePagerBean(final PageParameter pp) {
 		final boolean mgr = isPageManagerRole(pp);
-		final TablePagerBean tablePager = (TablePagerBean) addTablePagerBean(pp,
-				"AbstractNewsListTPage_tbl", mgr ? _NewsListMgr2Tbl.class : NewsListViewTbl.class,
-				false).setFilter(true).setShowLineNo(false).setShowHead(true).setShowCheckbox(mgr)
-				.setResize(false).setPageItems(30).setPagerBarLayout(EPagerBarLayout.bottom);
+		final TablePagerBean tablePager = (TablePagerBean) addTablePagerBean(pp, "NewsMgrTPage_tbl",
+				mgr ? _NewsListMgr2Tbl.class : NewsListViewTbl.class, false).setFilter(true)
+				.setShowLineNo(false).setShowHead(true).setShowCheckbox(mgr).setResize(false)
+				.setPageItems(30).setPagerBarLayout(EPagerBarLayout.bottom);
 		if (mgr) {
 			tablePager.addColumn(TablePagerColumn.ICON());
 		}
@@ -106,6 +106,14 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 	}
 
 	public static class _NewsListMgr2Tbl extends NewsListMgr2Tbl {
+		@Override
+		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
+			final NewsCategory category = NewsUtils.getNewsCategory(cp);
+			if (category == null) {
+				return DataQueryUtils.nullQuery();
+			}
+			return super.createDataObjectQuery(cp);
+		}
 	}
 
 	public static class NewsListViewTbl extends NewsListTbl {

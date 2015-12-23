@@ -7,6 +7,7 @@ import java.util.Date;
 
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.StringUtils;
+import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.trans.Transaction;
 import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.common.web.page.AbstractDescPage;
@@ -14,6 +15,7 @@ import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.web.INewsWebContext;
+import net.simpleframework.module.news.web.NewsLogRef.NewsUpdateLogPage;
 import net.simpleframework.module.news.web.NewsUrlsFactory;
 import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
 import net.simpleframework.mvc.AbstractMVCPage;
@@ -55,6 +57,15 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 				AbstractMVCPage.url(statusDescClass));
 		pp.addComponentBean("NewsMgrPage_statusWindow", WindowBean.class)
 				.setContentRef("NewsMgrPage_statusPage").setWidth(420).setHeight(240);
+
+		// log window
+		final IModuleRef ref = ((INewsWebContext) newsContext).getLogRef();
+		if (ref != null) {
+			pp.addComponentBean("NewsMgrPage_update_logPage", AjaxRequestBean.class).setUrlForward(
+					AbstractMVCPage.url(NewsUpdateLogPage.class));
+			pp.addComponentBean("NewsMgrPage_update_log", WindowBean.class)
+					.setContentRef("NewsMgrPage_update_logPage").setHeight(540).setWidth(864);
+		}
 	}
 
 	public IForward doEdit(final ComponentParameter cp) {
@@ -116,13 +127,22 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 		@Transaction(context = INewsContext.class)
 		public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
 			final EContentStatus op = cp.getEnumParameter(EContentStatus.class, "op");
-			for (final String id : StringUtils.split(cp.getParameter("newsId"), ";")) {
+			final String[] arr = StringUtils.split(cp.getParameter("newsId"), ";");
+			for (final String id : arr) {
 				final News news = _newsService.getBean(id);
 				setLogDescription(cp, news);
 				news.setStatus(op);
 				_newsService.update(new String[] { "status" }, news);
 			}
-			return super.onSave(cp).append(createTableRefresh().toString());
+
+			final JavascriptForward js = super.onSave(cp);
+			if (arr.length == 1 && op == EContentStatus.edit) {
+				// final NewsUrlsFactory uFactory = ((INewsWebContext)
+				// newsContext).getUrlsFactory();
+				// js.append(JS.loc(uFactory.getUrl(cp, NewsFormBasePage.class,
+				// news)));
+			}
+			return js.append(createTableRefresh().toString());
 		}
 
 		protected JavascriptForward createTableRefresh() {
