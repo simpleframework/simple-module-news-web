@@ -16,13 +16,16 @@ import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsUrlsFactory;
 import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
+import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.InputElement;
 import net.simpleframework.mvc.common.element.JS;
 import net.simpleframework.mvc.component.ComponentParameter;
+import net.simpleframework.mvc.component.base.ajaxrequest.AjaxRequestBean;
 import net.simpleframework.mvc.component.base.ajaxrequest.DefaultAjaxRequestHandler;
+import net.simpleframework.mvc.component.ui.window.WindowBean;
 import net.simpleframework.mvc.template.t1.ext.CategoryTableLCTemplatePage;
 
 /**
@@ -32,6 +35,27 @@ import net.simpleframework.mvc.template.t1.ext.CategoryTableLCTemplatePage;
  *         http://www.simpleframework.net
  */
 public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsContextAware {
+
+	public static void addMgrComponentBean(final PageParameter pp,
+			final Class<? extends NewsMgrActions> mgrActionsClass,
+			final Class<? extends StatusDescPage> statusDescClass) {
+		// edit
+		pp.addComponentBean("NewsMgrPage_edit", AjaxRequestBean.class).setHandlerMethod("doEdit")
+				.setHandlerClass(mgrActionsClass);
+		// delete
+		pp.addComponentBean("NewsMgrPage_delete", AjaxRequestBean.class)
+				.setConfirmMessage($m("NewsMgrPage.11")).setHandlerMethod("doDelete")
+				.setHandlerClass(mgrActionsClass);
+		// status
+		pp.addComponentBean("NewsMgrPage_status", AjaxRequestBean.class).setHandlerMethod("doStatus")
+				.setHandlerClass(mgrActionsClass);
+
+		// status window
+		pp.addComponentBean("NewsMgrPage_statusPage", AjaxRequestBean.class).setUrlForward(
+				AbstractMVCPage.url(statusDescClass));
+		pp.addComponentBean("NewsMgrPage_statusWindow", WindowBean.class)
+				.setContentRef("NewsMgrPage_statusPage").setWidth(420).setHeight(240);
+	}
 
 	public IForward doEdit(final ComponentParameter cp) {
 		final JavascriptForward js = new JavascriptForward();

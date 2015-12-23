@@ -65,20 +65,8 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsMgrPage.4")))
 				.addColumn(TablePagerColumn.OPE(120));
 
-		// edit
-		addAjaxRequest(pp, "NewsMgrPage_edit").setHandlerMethod("doEdit").setHandlerClass(
-				NewsMgrActions.class);
-		// delete
-		addAjaxRequest(pp, "NewsMgrPage_delete").setConfirmMessage($m("NewsMgrPage.11"))
-				.setHandlerMethod("doDelete").setHandlerClass(NewsMgrActions.class);
-		// status
-		addAjaxRequest(pp, "NewsMgrPage_status").setHandlerMethod("doStatus").setHandlerClass(
-				NewsMgrActions.class);
-
-		// status window
-		addAjaxRequest(pp, "NewsMgrPage_statusPage", StatusDescPage.class);
-		addWindowBean(pp, "NewsMgrPage_statusWindow").setContentRef("NewsMgrPage_statusPage")
-				.setWidth(420).setHeight(240);
+		// edit/delete/status
+		NewsMgrActions.addMgrComponentBean(pp, NewsMgrActions.class, StatusDescPage.class);
 
 		// 推荐
 		AjaxRequestBean ajaxRequest = addAjaxRequest(pp, "NewsMgrPage_recommendationPage",

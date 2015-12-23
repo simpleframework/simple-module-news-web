@@ -13,8 +13,10 @@ import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.page.NewsListTbl;
+import net.simpleframework.module.news.web.page.NewsMgrActions;
 import net.simpleframework.module.news.web.page.NewsUtils;
 import net.simpleframework.module.news.web.page.mgr2.NewsMgrTPage._NewsMgrActions;
+import net.simpleframework.module.news.web.page.mgr2.NewsMgrTPage._StatusDescPage;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.SessionCache;
 import net.simpleframework.mvc.common.element.ETextAlign;
@@ -43,9 +45,8 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 		addTablePagerBean(pp);
 
 		if (isPageManagerRole(pp)) {
-			// edit
-			addAjaxRequest(pp, "NewsMgrPage_edit").setHandlerMethod("doEdit").setHandlerClass(
-					_NewsMgrActions.class);
+			// edit/delete/status
+			NewsMgrActions.addMgrComponentBean(pp, _NewsMgrActions.class, _StatusDescPage.class);
 		}
 	}
 

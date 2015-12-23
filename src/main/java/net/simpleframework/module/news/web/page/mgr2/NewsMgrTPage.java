@@ -63,20 +63,8 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsMgrPage.4")))
 				.addColumn(TablePagerColumn.OPE(70));
 
-		// edit
-		addAjaxRequest(pp, "NewsMgrPage_edit").setHandlerMethod("doEdit").setHandlerClass(
-				_NewsMgrActions.class);
-		// delete
-		addAjaxRequest(pp, "NewsMgrPage_delete").setConfirmMessage($m("NewsMgrPage.11"))
-				.setHandlerMethod("doDelete").setHandlerClass(_NewsMgrActions.class);
-		// status
-		addAjaxRequest(pp, "NewsMgrPage_status").setHandlerMethod("doStatus").setHandlerClass(
-				_NewsMgrActions.class);
-
-		// status window
-		addAjaxRequest(pp, "NewsMgrPage_statusPage", _StatusDescPage.class);
-		addWindowBean(pp, "NewsMgrPage_statusWindow").setContentRef("NewsMgrPage_statusPage")
-				.setWidth(420).setHeight(240);
+		// edit/delete/status
+		NewsMgrActions.addMgrComponentBean(pp, _NewsMgrActions.class, _StatusDescPage.class);
 	}
 
 	LinkButton createStatusButton(final EContentStatus status) {
