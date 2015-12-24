@@ -41,7 +41,7 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 	@Override
 	protected void onForward(final PageParameter pp) throws Exception {
 		super.onForward(pp);
-		pp.addImportCSS(NewsFormTPage.class, "/news_mgr2.css");
+		pp.addImportCSS(NewsFormTPage.class, "/news.css");
 
 		// 导航树
 		addComponentBean(pp, "NewsMgrTPage_tree", CategoryBean.class).setDraggable(pp.isLmanager())

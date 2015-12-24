@@ -2,11 +2,14 @@ package net.simpleframework.module.news.web.page;
 
 import static net.simpleframework.common.I18n.$m;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.StringUtils;
+import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.trans.Transaction;
 import net.simpleframework.module.common.content.EContentStatus;
@@ -25,10 +28,12 @@ import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.InputElement;
 import net.simpleframework.mvc.common.element.JS;
+import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.base.ajaxrequest.AjaxRequestBean;
 import net.simpleframework.mvc.component.base.ajaxrequest.DefaultAjaxRequestHandler;
 import net.simpleframework.mvc.component.ui.window.WindowBean;
+import net.simpleframework.mvc.template.AbstractTemplatePage;
 import net.simpleframework.mvc.template.t1.ext.CategoryTableLCTemplatePage;
 
 /**
@@ -64,6 +69,13 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 				AbstractMVCPage.url(NewsCommentPage.class));
 		pp.addComponentBean("NewsMgrPage_commentWindow", WindowBean.class)
 				.setContentRef("NewsMgrPage_commentPage").setHeight(540).setWidth(864);
+
+		// adv window
+		pp.addComponentBean("NewsMgrPage_advPage", AjaxRequestBean.class).setUrlForward(
+				AbstractMVCPage.url(NewsAdvPage.class));
+		pp.addComponentBean("NewsMgrPage_advWindow", WindowBean.class)
+				.setContentRef("NewsMgrPage_advPage").setTitle($m("NewsMgrPage.13")).setHeight(280)
+				.setWidth(420);
 
 		// log window
 		final IModuleRef ref = ((INewsWebContext) newsContext).getLogRef();
@@ -164,6 +176,43 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 					$m("StatusDescLogPage.1",
 							op == EContentStatus.edit ? $m("NewsMgrPage.7") : Convert.toString(op),
 							Convert.toDateString(new Date()), pp.getLogin()));
+		}
+	}
+
+	public static class NewsAdvPage extends AbstractTemplatePage implements INewsContextAware {
+
+		@Override
+		protected void onForward(final PageParameter pp) throws Exception {
+			super.onForward(pp);
+
+			addAjaxRequest(pp, "NewsAdvPage_reIndex").setConfirmMessage($m("NewsAdvPage.2"))
+					.setHandlerMethod("doIndex");
+		}
+
+		@Override
+		public Map<String, Object> createVariables(final PageParameter pp) {
+			return ((KVMap) super.createVariables(pp)).add("LinkButton", LinkButton.class);
+		}
+
+		public IForward doIndex(final ComponentParameter cp) {
+			_newsService.getLuceneService().rebuildIndex();
+			return new JavascriptForward("alert('").append($m("NewsAdvPage.3")).append("');");
+		}
+
+		@Override
+		protected String toHtml(final PageParameter pp, final Map<String, Object> variables,
+				final String currentVariable) throws IOException {
+			final StringBuilder sb = new StringBuilder();
+			sb.append("<div class='NewsAdvPage'>");
+			sb.append(" <div class='cc1'><p>#(NewsAdvPage.1)</p>");
+			sb.append("  <div>").append(
+					LinkButton.corner($m("NewsAdvPage.0")).setOnclick(
+							"$Actions['NewsAdvPage_reIndex']();"));
+			sb.append("  </div>");
+			sb.append(" </div>");
+			sb.append(" <div class='bc'>").append(LinkButton.closeBtn().corner()).append("</div>");
+			sb.append("</div>");
+			return sb.toString();
 		}
 	}
 }
