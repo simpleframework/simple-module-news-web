@@ -19,6 +19,7 @@ import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.SessionCache;
 import net.simpleframework.mvc.common.element.AbstractElement;
 import net.simpleframework.mvc.common.element.ElementList;
+import net.simpleframework.mvc.common.element.Icon;
 import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ui.pager.EPagerBarLayout;
@@ -76,8 +77,14 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
 		if (isPageManagerRole(pp)) {
-			final ElementList btns = ElementList.of(NewsUtils.createAddNew(pp), SpanElement.SPACE);
-			return btns;
+			return ElementList
+					.of(NewsUtils.createAddNew(pp))
+					.append(SpanElement.SPACE)
+					.append(NewsMgrTPage.createStatusButton(EContentStatus.publish))
+					.append(SpanElement.SPACE)
+					.append(
+							NewsMgrTPage.createStatusButton(EContentStatus.delete)
+									.setIconClass(Icon.trash));
 		}
 		return super.getRightElements(pp);
 	}

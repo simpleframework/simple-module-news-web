@@ -88,7 +88,7 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 		return btns;
 	}
 
-	private LinkButton createStatusButton(final EContentStatus status) {
+	static LinkButton createStatusButton(final EContentStatus status) {
 		return TablePagerUtils.act_btn("NewsMgrTPage_tbl", "NewsMgrPage_status", status.toString(),
 				"newsId", "op=" + status.name());
 	}
