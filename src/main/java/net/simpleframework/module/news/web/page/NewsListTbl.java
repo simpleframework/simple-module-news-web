@@ -82,8 +82,6 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 			final EContentStatus status = news.getStatus();
 			if (status == EContentStatus.publish) {
 				img = "status_publish.png";
-			} else if (status == EContentStatus.lock) {
-				img = "status_lock.png";
 			}
 		}
 		if (img != null) {
