@@ -9,6 +9,7 @@ import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
+import net.simpleframework.module.news.NewsStat;
 import net.simpleframework.module.news.web.page.NewsListTbl;
 import net.simpleframework.module.news.web.page.NewsMgrActions;
 import net.simpleframework.module.news.web.page.NewsUtils;
@@ -21,6 +22,7 @@ import net.simpleframework.mvc.common.element.AbstractElement;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.Icon;
 import net.simpleframework.mvc.common.element.SpanElement;
+import net.simpleframework.mvc.common.element.SupElement;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ui.pager.EPagerBarLayout;
 import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
@@ -59,7 +61,17 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 			SessionCache.lput("_CATEGORY_LIST", list);
 			final NewsCategory _category = NewsUtils.getNewsCategory(pp);
 			for (final NewsCategory category : list) {
+				final NewsStat stat = _newsStatService.getNewsStat(category.getId(), pp.getLDomainId());
 				final CategoryItem item = new CategoryItem(category.getText());
+				int nums;
+				if (isPageManagerRole(pp)) {
+					nums = stat.getNums() - stat.getNums_delete();
+				} else {
+					nums = stat.getNums_publish();
+				}
+				if (nums > 0) {
+					item.setNum(new SupElement(nums));
+				}
 				item.setHref(HttpUtils.addParameters(pp.getParameter("_referer"), "category="
 						+ category.getName()));
 				if (_category != null && _category.getId().equals(category.getId())) {
