@@ -59,31 +59,31 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 				.setHandlerClass(mgrActionsClass);
 
 		// status window
-		pp.addComponentBean("NewsMgrPage_statusPage", AjaxRequestBean.class).setUrlForward(
-				AbstractMVCPage.url(statusDescClass));
+		AjaxRequestBean ajaxRequest = pp.addComponentBean("NewsMgrPage_statusPage",
+				AjaxRequestBean.class).setUrlForward(AbstractMVCPage.url(statusDescClass));
 		pp.addComponentBean("NewsMgrPage_statusWindow", WindowBean.class)
-				.setContentRef("NewsMgrPage_statusPage").setWidth(420).setHeight(240);
+				.setContentRef(ajaxRequest.getName()).setWidth(420).setHeight(240);
 
 		// comment window
-		pp.addComponentBean("NewsMgrPage_commentPage", AjaxRequestBean.class).setUrlForward(
-				AbstractMVCPage.url(NewsCommentPage.class));
+		ajaxRequest = pp.addComponentBean("NewsMgrPage_commentPage", AjaxRequestBean.class)
+				.setUrlForward(AbstractMVCPage.url(NewsCommentPage.class));
 		pp.addComponentBean("NewsMgrPage_commentWindow", WindowBean.class)
-				.setContentRef("NewsMgrPage_commentPage").setHeight(540).setWidth(864);
+				.setContentRef(ajaxRequest.getName()).setHeight(540).setWidth(864);
 
 		// adv window
-		pp.addComponentBean("NewsMgrPage_advPage", AjaxRequestBean.class).setUrlForward(
-				AbstractMVCPage.url(NewsAdvPage.class));
+		ajaxRequest = pp.addComponentBean("NewsMgrPage_advPage", AjaxRequestBean.class)
+				.setUrlForward(AbstractMVCPage.url(NewsAdvPage.class));
 		pp.addComponentBean("NewsMgrPage_advWindow", WindowBean.class)
-				.setContentRef("NewsMgrPage_advPage").setTitle($m("NewsMgrPage.13")).setHeight(280)
+				.setContentRef(ajaxRequest.getName()).setTitle($m("NewsMgrPage.13")).setHeight(280)
 				.setWidth(420);
 
 		// log window
 		final IModuleRef ref = ((INewsWebContext) newsContext).getLogRef();
 		if (ref != null) {
-			pp.addComponentBean("NewsMgrPage_update_logPage", AjaxRequestBean.class).setUrlForward(
-					AbstractMVCPage.url(NewsUpdateLogPage.class));
+			ajaxRequest = pp.addComponentBean("NewsMgrPage_update_logPage", AjaxRequestBean.class)
+					.setUrlForward(AbstractMVCPage.url(NewsUpdateLogPage.class));
 			pp.addComponentBean("NewsMgrPage_update_log", WindowBean.class)
-					.setContentRef("NewsMgrPage_update_logPage").setHeight(540).setWidth(864);
+					.setContentRef(ajaxRequest.getName()).setHeight(540).setWidth(864);
 		}
 	}
 
