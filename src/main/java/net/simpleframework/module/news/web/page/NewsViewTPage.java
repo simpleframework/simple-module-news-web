@@ -252,8 +252,4 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		}
 		return BeanUtils.getProperty(news, key);
 	}
-
-	public static boolean _isPage404(final PageParameter pp) {
-		return NewsUtils.getNews(pp) == null;
-	}
 }

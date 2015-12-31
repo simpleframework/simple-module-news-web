@@ -112,14 +112,16 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 		} else {
 			final LinkElement le = new LinkElement(news.getTopic());
 			if (news.getStatus() == EContentStatus.publish) {
-				sb.append(le.setHref(
-						((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp, NewsViewPage.class,
-								news)).setTarget("_blank"));
+				sb.append(le.setHref(getTopicHref(cp, news)).setTarget("_blank"));
 			} else {
 				sb.append(le.setOnclick("$Actions['NewsMgrPage_edit']('newsId=" + news.getId() + "');"));
 			}
 		}
 		return sb.toString();
+	}
+
+	protected String getTopicHref(final ComponentParameter cp, final News news) {
+		return ((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp, NewsViewPage.class, news);
 	}
 
 	protected String toCommentsHTML(final ComponentParameter cp, final News news) {

@@ -23,7 +23,7 @@ public class NewsViewPage extends T2TemplatePage implements INewsContextAware {
 
 	@Override
 	protected boolean isPage404(final PageParameter pp) {
-		return NewsViewTPage._isPage404(pp);
+		return NewsUtils.getNews(pp) == null;
 	}
 
 	@Override
