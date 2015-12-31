@@ -47,8 +47,8 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 		pp.addImportCSS(NewsFormTPage.class, "/news.css");
 
 		final TablePagerBean tablePager = (TablePagerBean) addTablePagerBean(pp,
-				"NewsCommentMgrPage_tbl").setPageItems(30).setPagerBarLayout(EPagerBarLayout.bottom)
-				.setContainerId("tbl_" + hashId).setHandlerClass(NewsCommentMgrTbl.class);
+				"NewsCommentMgrPage_tbl", NewsCommentMgrTbl.class).setPagerBarLayout(
+				EPagerBarLayout.bottom).setContainerId("tbl_" + hashId);
 		tablePager
 				.addColumn(
 						new TablePagerColumn("content", $m("NewsCommentPage.0")).setNowrap(false)
