@@ -104,7 +104,7 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 	protected TablePagerBean addTablePagerBean(final PageParameter pp) {
 		final boolean mgr = isPageManagerRole(pp);
 		final TablePagerBean tablePager = (TablePagerBean) addTablePagerBean(pp, "NewsMgrTPage_tbl",
-				mgr ? _NewsListMgr2Tbl.class : NewsListViewTbl.class, false).setFilter(true)
+				mgr ? NewsListMgr2Tbl2.class : NewsListTbl2.class, false).setFilter(true)
 				.setShowLineNo(false).setShowHead(true).setShowCheckbox(mgr).setResize(false)
 				.setPageItems(30).setPagerBarLayout(EPagerBarLayout.bottom);
 		final TablePagerColumn TC_CREATEDATE = NewsListTbl.TC_CREATEDATE();
@@ -120,7 +120,7 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 		return tablePager;
 	}
 
-	public static class _NewsListMgr2Tbl extends NewsListMgr2Tbl {
+	public static class NewsListMgr2Tbl2 extends NewsListMgr2Tbl {
 		@Override
 		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
 			final NewsCategory category = NewsUtils.getNewsCategory(cp);
@@ -131,7 +131,7 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 		}
 	}
 
-	public static class NewsListViewTbl extends NewsListTbl {
+	public static class NewsListTbl2 extends NewsListTbl {
 		@Override
 		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
 			final NewsCategory category = NewsUtils.getNewsCategory(cp);
