@@ -75,7 +75,9 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 
 	protected AbstractElement<?> createImageMark(final ComponentParameter cp, final News news) {
 		String img = null;
-		if (news.isImageMark()) {
+		if (news.isVideoMark()) {
+			img = "mark_video.png";
+		} else if (news.isImageMark()) {
 			img = "mark_image.png";
 		} else if (news.getRecommendation() > 0) {
 		} else {

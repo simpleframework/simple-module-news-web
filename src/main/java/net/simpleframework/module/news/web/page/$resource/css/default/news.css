@@ -40,6 +40,7 @@
 .NewsMgrTPage .ltree {
   padding: 10px 4px;
   width: 195px;
+  background: linear-gradient(45deg, #fff 0px, #def 100%) repeat scroll 0 0;
   background-color: #def;
 }
 

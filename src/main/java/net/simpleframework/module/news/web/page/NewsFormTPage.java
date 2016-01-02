@@ -159,6 +159,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		news.setAllowComments(cp.getBoolParameter(OPT_ALLOWCOMMENTS));
 		news.setIndexed(cp.getBoolParameter(OPT_INDEXED));
 		news.setImageMark(cp.getBoolParameter(OPT_IMAGEMARK));
+		news.setVideoMark(cp.getBoolParameter(OPT_VIDEOMARK));
 
 		final News news2 = news;
 		final ComponentParameter nCP = ComponentParameter.get(cp,
@@ -295,7 +296,8 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 
 	public static final String OPT_INDEXED = "opt_indexed";
 
-	public static final String OPT_IMAGEMARK = "opt_imageMark"; // 图片新闻
+	public static final String OPT_IMAGEMARK = "opt_imageMark"; // 图片标识
+	public static final String OPT_VIDEOMARK = "opt_videoMark"; // 视频标识
 
 	//
 	public static final String OPT_VIEWER = "opt_viewer";
@@ -313,6 +315,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		final Checkbox opt_allowComments = new Checkbox(OPT_ALLOWCOMMENTS, $m("NewsFormTPage.8"));
 		final Checkbox opt_indexed = new Checkbox(OPT_INDEXED, $m("NewsFormTPage.14"));
 		final Checkbox opt_imageMark = new Checkbox(OPT_IMAGEMARK, $m("NewsFormTPage.11"));
+		final Checkbox opt_videoMark = new Checkbox(OPT_VIDEOMARK, $m("NewsFormTPage.20"));
 
 		final Checkbox opt_viewer = new Checkbox(OPT_VIEWER, $m("NewsFormTPage.12")).setChecked(true);
 
@@ -323,22 +326,21 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		final Checkbox opt_removeStyle = new Checkbox(OPT_REMOVE_STYLE, $m("NewsFormTPage.18"));
 		final Checkbox opt_removeTagFont = new Checkbox(OPT_REMOVE_TAG_FONT, $m("NewsFormTPage.19"));
 
-		final News news = NewsUtils.getNews(pp);
-		if (news != null) {
-			opt_allowComments.setChecked(news.isAllowComments());
-			opt_indexed.setChecked(news.isIndexed());
-			opt_imageMark.setChecked(news.isImageMark());
-		} else {
-			final News _news = new News();
-			opt_allowComments.setChecked(_news.isAllowComments());
-			opt_indexed.setChecked(_news.isIndexed());
-			opt_imageMark.setChecked(_news.isImageMark());
+		News news = NewsUtils.getNews(pp);
+		if (news == null) {
+			news = new News();
 		}
+		opt_allowComments.setChecked(news.isAllowComments());
+		opt_indexed.setChecked(news.isIndexed());
+		opt_imageMark.setChecked(news.isImageMark());
+		opt_videoMark.setChecked(news.isVideoMark());
 
 		final ElementList el = ElementList.of();
 		el.append(opt_allowComments)
 				.append(SpanElement.SPACE)
 				.append(opt_imageMark)
+				.append(SpanElement.SPACE)
+				.append(opt_videoMark)
 				.append(SpanElement.SPACE)
 				.append(opt_indexed)
 				.append(SpanElement.SPACE)
