@@ -28,11 +28,12 @@ public class NewsPageletCreator extends PageletCreator<News> implements INewsCon
 	}
 
 	@Override
-	protected ListRowHandler<News> getDefaultListRowHandler() {
-		return DEFAULT_HANDLER;
+	protected ListRowHandler<News> getListRowHandler() {
+		if (lrowHandler == null) {
+			lrowHandler = new NewsListRowHandler();
+		}
+		return lrowHandler;
 	}
-
-	private final NewsListRowHandler DEFAULT_HANDLER = new NewsListRowHandler();
 
 	public static class NewsListRowHandler extends ListRowHandler<News> {
 		@Override
