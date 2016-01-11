@@ -18,9 +18,9 @@ import net.simpleframework.module.news.web.page.mgr2.NewsMgrTPage._NewsMgrAction
 import net.simpleframework.module.news.web.page.mgr2.NewsMgrTPage._StatusDescPage;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.SessionCache;
-import net.simpleframework.mvc.common.element.AbstractElement;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.Icon;
+import net.simpleframework.mvc.common.element.ImageElement;
 import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.common.element.SupElement;
 import net.simpleframework.mvc.component.ComponentParameter;
@@ -144,7 +144,7 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 		}
 
 		@Override
-		protected AbstractElement<?> createImageMark(final ComponentParameter cp, final News news) {
+		protected ImageElement createImageMark(final ComponentParameter cp, final News news) {
 			return null;
 		}
 

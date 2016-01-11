@@ -58,7 +58,7 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 		final News news = (News) dataObject;
 		final KVMap kv = new KVMap();
 
-		final AbstractElement<?> img = createImageMark(cp, news);
+		final ImageElement img = createImageMark(cp, news);
 		if (img != null) {
 			kv.add(TablePagerColumn.ICON, img);
 		}
@@ -73,7 +73,7 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 		return _newsService.getBean(id);
 	}
 
-	protected AbstractElement<?> createImageMark(final ComponentParameter cp, final News news) {
+	protected ImageElement createImageMark(final ComponentParameter cp, final News news) {
 		String img = null;
 		if (news.isVideoMark()) {
 			img = "mark_video.png";
