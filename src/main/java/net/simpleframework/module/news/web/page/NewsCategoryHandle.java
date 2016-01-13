@@ -87,7 +87,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 				final ID domainId = NewsUtils.getDomainId(cp);
 				if (domainId == null) {
 					final PermissionDept dept = cp.getPermission().getDept(category.getDomainId());
-					if (dept.getId() != null) {
+					if (dept.exists()) {
 						parent.setText("(" + SpanElement.color999(dept) + ") " + parent.getText());
 					}
 				}
