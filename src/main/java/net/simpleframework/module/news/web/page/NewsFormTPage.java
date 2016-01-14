@@ -377,8 +377,8 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 	}
 
 	@Override
-	public int getLabelWidth(final PageParameter pp) {
-		return 70;
+	public String getLabelWidth(final PageParameter pp) {
+		return "70px";
 	}
 
 	private AbstractComponentBean categoryBean;
