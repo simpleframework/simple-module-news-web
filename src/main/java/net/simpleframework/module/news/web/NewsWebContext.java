@@ -33,6 +33,11 @@ public class NewsWebContext extends NewsContext implements INewsWebContext {
 	}
 
 	@Override
+	public String getAttachmentMaxSize() {
+		return null;
+	}
+
+	@Override
 	public IModuleRef getFavoriteRef() {
 		return getRef("net.simpleframework.module.news.web.NewsFavoriteRef");
 	}

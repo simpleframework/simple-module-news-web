@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import net.simpleframework.common.Convert;
+import net.simpleframework.common.StringUtils;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
 import net.simpleframework.module.common.content.Attachment;
@@ -85,7 +86,10 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 		@Override
 		public void setSwfUploadBean(final ComponentParameter cp, final SwfUploadBean swfUpload) {
 			super.setSwfUploadBean(cp, swfUpload);
-			swfUpload.setFileSizeLimit("50MB");
+			final String attachmentMaxSize = ((INewsWebContext) newsContext).getAttachmentMaxSize();
+			if (StringUtils.hasText(attachmentMaxSize)) {
+				swfUpload.setFileSizeLimit(attachmentMaxSize);
+			}
 		}
 
 		@Override

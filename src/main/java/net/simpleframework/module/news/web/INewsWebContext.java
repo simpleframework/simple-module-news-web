@@ -23,6 +23,8 @@ public interface INewsWebContext extends INewsContext, IContentRefAware {
 	 */
 	NewsPageletCreator getPageletCreator();
 
+	String getAttachmentMaxSize();
+
 	NewsUrlsFactory getUrlsFactory();
 
 	/**
