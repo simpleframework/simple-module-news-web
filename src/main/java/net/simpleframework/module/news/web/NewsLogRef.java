@@ -21,6 +21,7 @@ import net.simpleframework.mvc.common.element.AbstractElement;
 import net.simpleframework.mvc.common.element.ImageElement;
 import net.simpleframework.mvc.common.element.LinkElement;
 import net.simpleframework.mvc.component.ComponentParameter;
+import net.simpleframework.mvc.component.ui.swfupload.SwfUploadBean;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -79,6 +80,12 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 		@Override
 		protected String getOwnerIdParameterKey() {
 			return "newsId";
+		}
+
+		@Override
+		public void setSwfUploadBean(final ComponentParameter cp, final SwfUploadBean swfUpload) {
+			super.setSwfUploadBean(cp, swfUpload);
+			swfUpload.setFileSizeLimit("50MB");
 		}
 
 		@Override

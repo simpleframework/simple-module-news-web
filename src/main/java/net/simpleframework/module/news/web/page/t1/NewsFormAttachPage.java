@@ -119,7 +119,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 				kv.put(
 						"topic",
 						new LinkElement(attachment.getTopic()).setOnclick(
-								JS.loc(DownloadUtils.getDownloadHref(af))).setTitle(
+								JS.loc(DownloadUtils.getDownloadHref(af), true)).setTitle(
 								attachment.getDescription()));
 			} catch (final IOException e) {
 				kv.put("topic", attachment.getTopic());
