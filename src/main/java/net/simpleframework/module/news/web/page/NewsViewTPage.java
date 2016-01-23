@@ -123,7 +123,8 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 			final IAttachmentService<Attachment> service = newsContext.getAttachmentService();
 			try {
 				final AttachmentFile af = service.createAttachmentFile(attachment);
-				js.append(JS.loc(DownloadUtils.getDownloadHref(af, AttachmentDownloadHandler.class)));
+				js.append(JS.loc(DownloadUtils.getDownloadHref(af, AttachmentDownloadHandler.class),
+						true));
 			} catch (final IOException e) {
 				throw ContentException.of(e);
 			}

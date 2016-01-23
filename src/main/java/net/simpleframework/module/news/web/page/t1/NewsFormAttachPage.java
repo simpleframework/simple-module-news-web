@@ -116,10 +116,10 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 			try {
 				final AttachmentFile af = newsContext.getAttachmentService().createAttachmentFile(
 						attachment);
+				final String dloc = JS.loc(DownloadUtils.getDownloadHref(af, null), true);
 				kv.put(
 						"topic",
-						new LinkElement(attachment.getTopic()).setOnclick(
-								JS.loc(DownloadUtils.getDownloadHref(af), true)).setTitle(
+						new LinkElement(attachment.getTopic()).setOnclick(dloc).setTitle(
 								attachment.getDescription()));
 			} catch (final IOException e) {
 				kv.put("topic", attachment.getTopic());
