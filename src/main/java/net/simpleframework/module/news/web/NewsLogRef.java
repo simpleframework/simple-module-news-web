@@ -7,7 +7,6 @@ import net.simpleframework.common.Convert;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
-import net.simpleframework.module.common.content.Attachment;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.module.log.LogRef;
 import net.simpleframework.module.log.web.hdl.AbstractAttachmentLogHandler;
@@ -16,6 +15,7 @@ import net.simpleframework.module.log.web.page.EntityUpdateLogPage;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.INewsService;
 import net.simpleframework.module.news.News;
+import net.simpleframework.module.news.NewsAttachment;
 import net.simpleframework.module.news.web.page.NewsFormTPage;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.AbstractElement;
@@ -37,8 +37,8 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 		super.logDownload(beanId, topic, oFile);
 
 		// 更新计数
-		final IAttachmentService<Attachment> service = newsContext.getAttachmentService();
-		final Attachment attachment = service.getBean(beanId);
+		final IAttachmentService<NewsAttachment> service = newsContext.getAttachmentService();
+		final NewsAttachment attachment = service.getBean(beanId);
 		if (attachment != null) {
 			attachment.setDownloads(getDownloadLogService().clog(beanId));
 			service.update(new String[] { "downloads" }, attachment);
@@ -66,10 +66,11 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 		}
 	}
 
-	public static class NewsAttachmentAction extends AbstractAttachmentLogHandler<Attachment, News> {
+	public static class NewsAttachmentAction extends
+			AbstractAttachmentLogHandler<NewsAttachment, News> {
 
 		@Override
-		protected IAttachmentService<Attachment> getAttachmentService() {
+		protected IAttachmentService<NewsAttachment> getAttachmentService() {
 			return newsContext.getAttachmentService();
 		}
 

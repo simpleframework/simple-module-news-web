@@ -16,6 +16,7 @@ import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.module.news.ENewsAttach;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.News;
+import net.simpleframework.module.news.NewsAttachment;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsDownloadLogPage;
 import net.simpleframework.mvc.IForward;
@@ -110,7 +111,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 
 		@Override
 		protected Map<String, Object> getRowData(final ComponentParameter cp, final Object dataObject) {
-			final Attachment attachment = (Attachment) dataObject;
+			final NewsAttachment attachment = (NewsAttachment) dataObject;
 			final KVMap kv = new KVMap();
 			final Object id = attachment.getId();
 			try {
@@ -149,8 +150,8 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		@Transaction(context = INewsContext.class)
 		@Override
 		public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
-			final IAttachmentService<Attachment> aService = newsContext.getAttachmentService();
-			final Attachment attachment = getCacheBean(cp, aService, "beanId");
+			final IAttachmentService<NewsAttachment> aService = newsContext.getAttachmentService();
+			final NewsAttachment attachment = getCacheBean(cp, aService, "beanId");
 			if (attachment != null) {
 				attachment.setTopic(cp.getParameter("ae_topic"));
 				attachment.setDescription(cp.getParameter("ae_description"));

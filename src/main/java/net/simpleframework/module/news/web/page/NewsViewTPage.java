@@ -17,12 +17,12 @@ import net.simpleframework.common.TimePeriod;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
-import net.simpleframework.module.common.content.Attachment;
 import net.simpleframework.module.common.content.ContentException;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.module.common.web.content.ContentUtils;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
+import net.simpleframework.module.news.NewsAttachment;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.INewsWebContext.AttachmentDownloadHandler;
@@ -116,11 +116,11 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 	}
 
 	public IForward doDownload(final ComponentParameter cp) {
-		final Attachment attachment = newsContext.getAttachmentService().getBean(
+		final NewsAttachment attachment = newsContext.getAttachmentService().getBean(
 				cp.getParameter("id"));
 		final JavascriptForward js = new JavascriptForward();
 		if (attachment != null) {
-			final IAttachmentService<Attachment> service = newsContext.getAttachmentService();
+			final IAttachmentService<NewsAttachment> service = newsContext.getAttachmentService();
 			try {
 				final AttachmentFile af = service.createAttachmentFile(attachment);
 				js.append(JS.loc(DownloadUtils.getDownloadHref(af, AttachmentDownloadHandler.class),

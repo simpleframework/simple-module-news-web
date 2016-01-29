@@ -6,10 +6,10 @@ import java.io.IOException;
 
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
-import net.simpleframework.module.common.content.Attachment;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.module.common.web.content.page.AbstractAttachmentTooltipPage;
 import net.simpleframework.module.news.INewsContextAware;
+import net.simpleframework.module.news.NewsAttachment;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsDownloadLogPage;
 import net.simpleframework.module.news.web.NewsPDFRef;
@@ -54,7 +54,7 @@ public class NewsAttachmentTooltipPage extends AbstractAttachmentTooltipPage imp
 
 	@Override
 	protected AttachmentFile getAttachment(final PageParameter pp) {
-		final IAttachmentService<Attachment> service = newsContext.getAttachmentService();
+		final IAttachmentService<NewsAttachment> service = newsContext.getAttachmentService();
 		try {
 			return service.createAttachmentFile(service.getBean(pp.getParameter("id")));
 		} catch (final IOException e) {

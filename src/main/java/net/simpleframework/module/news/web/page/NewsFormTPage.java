@@ -17,13 +17,13 @@ import net.simpleframework.common.web.html.HtmlUtils.IElementVisitor;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
 import net.simpleframework.ctx.trans.Transaction;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
-import net.simpleframework.module.common.content.Attachment;
 import net.simpleframework.module.common.content.ContentException;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.module.common.web.content.ContentUtils;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
+import net.simpleframework.module.news.NewsAttachment;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsAttachmentAction;
@@ -168,7 +168,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 			@Override
 			public void save(final Map<String, AttachmentFile> addQueue, final Set<String> deleteQueue)
 					throws IOException {
-				final IAttachmentService<Attachment> aService = newsContext.getAttachmentService();
+				final IAttachmentService<NewsAttachment> aService = newsContext.getAttachmentService();
 				if (insert) {
 					_newsService.insert(news2);
 				} else {
