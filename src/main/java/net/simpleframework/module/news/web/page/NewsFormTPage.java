@@ -30,7 +30,6 @@ import net.simpleframework.module.news.web.NewsLogRef.NewsAttachmentAction;
 import net.simpleframework.module.news.web.page.mgr2.NewsMgrTPage;
 import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
 import net.simpleframework.module.news.web.page.t1.NewsMgrPage;
-import net.simpleframework.module.news.web.page.t2.NewsViewPage;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.SessionCache;
@@ -363,7 +362,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		final ElementList el = ElementList.of();
 		if (news != null) {
 			el.append(new ButtonElement($m("Button.Preview")).setOnclick(JS.loc(
-					((INewsWebContext) newsContext).getUrlsFactory().getUrl(pp, NewsViewPage.class,
+					((INewsWebContext) newsContext).getUrlsFactory().getUrl(pp, NewsViewTPage.class,
 							news, "preview=true"), true)));
 			el.append(SpanElement.SPACE);
 		}

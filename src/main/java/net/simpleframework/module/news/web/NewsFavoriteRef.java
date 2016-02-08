@@ -10,7 +10,7 @@ import net.simpleframework.module.favorite.web.plugin.AbstractWebFavoritePlugin;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
-import net.simpleframework.module.news.web.page.t2.NewsViewPage;
+import net.simpleframework.module.news.web.page.NewsViewTPage;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.AbstractElement;
 
@@ -55,7 +55,7 @@ public class NewsFavoriteRef extends FavoriteRef implements INewsContextAware {
 				@Override
 				public String getUrl() {
 					return ((INewsWebContext) newsContext).getUrlsFactory().getUrl(pp,
-							NewsViewPage.class, news);
+							NewsViewTPage.class, news);
 				}
 			};
 		}

@@ -11,7 +11,6 @@ import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsUrlsFactory;
 import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
-import net.simpleframework.module.news.web.page.t2.NewsListPage;
 import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ButtonElement;
@@ -99,6 +98,6 @@ public abstract class NewsUtils implements INewsContextAware {
 	public static LinkButton createNewsPreview(final PageParameter pp) {
 		final NewsCategory category = getNewsCategory(pp);
 		return category == null ? null : new LinkButton($m("Button.Preview")).setOnclick(JS.loc(
-				uFactory.getUrl(pp, NewsListPage.class, category), true));
+				uFactory.getUrl(pp, NewsListTPage.class, category), true));
 	}
 }

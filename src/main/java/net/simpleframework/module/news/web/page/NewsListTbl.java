@@ -13,7 +13,6 @@ import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
-import net.simpleframework.module.news.web.page.t2.NewsViewPage;
 import net.simpleframework.mvc.common.element.AbstractElement;
 import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.ETextAlign;
@@ -123,7 +122,7 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 	}
 
 	protected String getTopicHref(final ComponentParameter cp, final News news) {
-		return ((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp, NewsViewPage.class, news);
+		return ((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp, NewsViewTPage.class, news);
 	}
 
 	protected String toCommentsHTML(final ComponentParameter cp, final News news) {

@@ -14,8 +14,8 @@ import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsComment;
 import net.simpleframework.module.news.web.NewsWebContext;
 import net.simpleframework.module.news.web.page.NewsFormTPage;
+import net.simpleframework.module.news.web.page.NewsViewTPage;
 import net.simpleframework.module.news.web.page.t1.NewsCommentPage.NewsCommentTbl;
-import net.simpleframework.module.news.web.page.t2.NewsViewPage;
 import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageMapping;
@@ -115,8 +115,8 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 			return news != null ? LinkElement
 					.BLANK(txt)
 					.setHref(
-							((NewsWebContext) newsContext).getUrlsFactory().getUrl(pp, NewsViewPage.class,
-									news)).toString() : txt;
+							((NewsWebContext) newsContext).getUrlsFactory().getUrl(pp,
+									NewsViewTPage.class, news)).toString() : txt;
 		}
 	}
 }
