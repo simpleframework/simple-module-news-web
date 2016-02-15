@@ -8,6 +8,7 @@ import java.util.Map;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.FileUtils;
 import net.simpleframework.common.StringUtils;
+import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
 import net.simpleframework.ctx.trans.Transaction;
@@ -19,14 +20,18 @@ import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsAttachment;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsDownloadLogPage;
+import net.simpleframework.module.news.web.page.NewsUtils;
 import net.simpleframework.mvc.IForward;
+import net.simpleframework.mvc.IMultipartFile;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageMapping;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.DownloadUtils;
 import net.simpleframework.mvc.common.element.ButtonElement;
+import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.InputElement;
 import net.simpleframework.mvc.common.element.JS;
+import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.common.element.LinkElement;
 import net.simpleframework.mvc.common.element.Option;
 import net.simpleframework.mvc.common.element.RowField;
@@ -39,6 +44,9 @@ import net.simpleframework.mvc.component.ui.pager.EPagerBarLayout;
 import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
 import net.simpleframework.mvc.component.ui.pager.db.AbstractDbTablePagerHandler;
+import net.simpleframework.mvc.component.ui.swfupload.AbstractSwfUploadHandler;
+import net.simpleframework.mvc.component.ui.swfupload.SwfUploadBean;
+import net.simpleframework.mvc.template.AbstractTemplatePage;
 import net.simpleframework.mvc.template.lets.FormTableRowTemplatePage;
 
 /**
@@ -54,16 +62,8 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 	protected void onForward(final PageParameter pp) throws Exception {
 		super.onForward(pp);
 
-		final TablePagerBean tablePager = (TablePagerBean) addComponentBean(pp,
-				"NewsTabAttachPage_tbl", TablePagerBean.class)
-				.setPagerBarLayout(EPagerBarLayout.bottom).setContainerId("tbl_" + hashId)
-				.setHandlerClass(NewsAttachmentTbl.class);
-		tablePager.addColumn(new TablePagerColumn("topic", $m("NewsFormAttachPage.0")))
-				.addColumn(new TablePagerColumn("attachsize", $m("NewsFormAttachPage.1"), 80))
-				.addColumn(new TablePagerColumn("downloads", $m("NewsFormAttachPage.2"), 80))
-				.addColumn(new TablePagerColumn("userId", $m("NewsFormAttachPage.3"), 100))
-				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsFormAttachPage.4")))
-				.addColumn(TablePagerColumn.OPE(120));
+		// 添加表格
+		addTablePagerBean(pp);
 
 		if (((INewsWebContext) newsContext).getLogRef() != null) {
 			// 下载日志
@@ -73,14 +73,45 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 					.setTitle($m("NewsFormAttachPage.5"));
 		}
 
+		// 上传
+		AjaxRequestBean ajaxRequest = addAjaxRequest(pp, "NewsFormAttachPage_uploadPage",
+				AttachmentUploadPage.class);
+		addWindowBean(pp, "NewsFormAttachPage_upload", ajaxRequest).setTitle($m("NewsFormTPage.10"))
+				.setPopup(true).setHeight(480).setWidth(400);
+
 		// 删除
 		addDeleteAjaxRequest(pp, "NewsFormAttachPage_delete");
 
 		// 编辑
-		final AjaxRequestBean ajaxRequest = addAjaxRequest(pp, "NewsFormAttachPage_editPage",
-				AttachmentEditPage.class);
+		ajaxRequest = addAjaxRequest(pp, "NewsFormAttachPage_editPage", AttachmentEditPage.class);
 		addWindowBean(pp, "NewsFormAttachPage_edit", ajaxRequest).setHeight(280).setWidth(420)
 				.setTitle($m("AttachmentEditPage.0"));
+	}
+
+	@Override
+	protected boolean isPage404(final PageParameter pp) {
+		return NewsUtils.getNews(pp) == null;
+	}
+
+	protected TablePagerBean addTablePagerBean(final PageParameter pp) {
+		final TablePagerBean tablePager = (TablePagerBean) super
+				.addTablePagerBean(pp, "NewsTabAttachPage_tbl", NewsAttachmentTbl.class)
+				.setPagerBarLayout(EPagerBarLayout.bottom).setContainerId("idNewsTabAttachPage_tbl");
+		tablePager
+				.addColumn(new TablePagerColumn("topic", $m("NewsFormAttachPage.0")).setSort(false))
+				.addColumn(
+						new TablePagerColumn("attachsize", $m("NewsFormAttachPage.1"), 80)
+								.setFilter(false))
+				.addColumn(
+						new TablePagerColumn("downloads", $m("NewsFormAttachPage.2"), 80).setTextAlign(
+								ETextAlign.center).setFilter(false))
+				.addColumn(
+						new TablePagerColumn("userId", $m("NewsFormAttachPage.3"), 100)
+								.setFilterSort(false))
+				.addColumn(
+						TablePagerColumn.DATE("createDate", $m("NewsFormAttachPage.4")).setFilter(false))
+				.addColumn(TablePagerColumn.OPE(120));
+		return tablePager;
 	}
 
 	@Transaction(context = INewsContext.class)
@@ -94,19 +125,23 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 	protected String toHtml(final PageParameter pp, final Map<String, Object> variables,
 			final String currentVariable) throws IOException {
 		final StringBuilder sb = new StringBuilder();
-		sb.append("<div class='NewsFormAttachPage' id='tbl_").append(hashId).append("'></div>");
+		sb.append("<div class='NewsFormAttachPage'>");
+		sb.append(" <div class='tbar'>");
+		final News news = NewsUtils.getNews(pp);
+		sb.append(LinkButton.corner($m("NewsFormAttachPage.6")).setOnclick(
+				"$Actions['NewsFormAttachPage_upload']('newsId=" + news.getId() + "');"));
+		sb.append(" </div>");
+		sb.append(" <div id='idNewsTabAttachPage_tbl'></div>");
+		sb.append("</div>");
 		return sb.toString();
 	}
 
 	public static class NewsAttachmentTbl extends AbstractDbTablePagerHandler {
 		@Override
 		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
-			final News news = _newsService.getBean(cp.getParameter("newsId"));
-			if (news != null) {
-				cp.addFormParameter("newsId", news.getId());
-				return newsContext.getAttachmentService().queryByContent(news);
-			}
-			return null;
+			final News news = NewsUtils.getNews(cp);
+			cp.addFormParameter("newsId", news.getId());
+			return newsContext.getAttachmentService().queryByContent(news);
 		}
 
 		@Override
@@ -187,6 +222,49 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 					new RowField($m("AttachmentEditPage.2"), InputElement.select("ae_attachtype")
 							.addElements(opts))), new TableRow(new RowField($m("Description"),
 					ae_description)));
+		}
+	}
+
+	public static class AttachmentUploadPage extends AbstractTemplatePage {
+		@Override
+		protected void onForward(final PageParameter pp) throws Exception {
+			super.onForward(pp);
+
+			// 上传
+			final SwfUploadBean swfUpload = (SwfUploadBean) addComponentBean(pp,
+					"AttachmentUploadPage_swf", SwfUploadBean.class).setMultiFileSelected(true)
+					.setJsCompleteCallback("$Actions['NewsTabAttachPage_tbl']();")
+					.setContainerId("idAttachmentUploadPage_swf")
+					.setHandlerClass(_SwfUploadHandler.class);
+			final String attachmentMaxSize = ((INewsWebContext) newsContext).getAttachmentMaxSize();
+			if (StringUtils.hasText(attachmentMaxSize)) {
+				swfUpload.setFileSizeLimit(attachmentMaxSize);
+			}
+		}
+
+		@Override
+		protected String toHtml(final PageParameter pp, final Map<String, Object> variables,
+				final String currentVariable) throws IOException {
+			final StringBuilder sb = new StringBuilder();
+			sb.append("<div id='idAttachmentUploadPage_swf'></div>");
+			return sb.toString();
+		}
+	}
+
+	public static class _SwfUploadHandler extends AbstractSwfUploadHandler {
+		@Override
+		public Map<String, Object> getFormParameters(final ComponentParameter cp) {
+			final News news = NewsUtils.getNews(cp);
+			return new KVMap().add("newsId", news.getId());
+		}
+
+		@Override
+		public void upload(final ComponentParameter cp, final IMultipartFile multipartFile,
+				final Map<String, Object> variables) throws Exception {
+			final News news = NewsUtils.getNews(cp);
+			final IAttachmentService<NewsAttachment> aService = newsContext.getAttachmentService();
+			aService.insert(news.getId(), cp.getLoginId(),
+					ArrayUtils.asList(new AttachmentFile(multipartFile.getFile())));
 		}
 	}
 }

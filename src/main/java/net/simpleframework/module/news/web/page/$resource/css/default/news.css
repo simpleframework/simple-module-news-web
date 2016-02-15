@@ -36,6 +36,19 @@
 	width: 85%;
 }
 
+/**------------------ NewsFormAttachPage ---------------------**/
+.NewsFormAttachPage .tbar {
+  background-color: #fcfcfc;
+  border: 1px solid #ccc;
+  text-align: left;
+  padding: 6px 8px;
+  margin-bottom: -1px;
+}
+
+#idAttachmentUploadPage_swf .swfupload .item {
+  padding: 6px;
+}
+
 /**------------------ NewsMgrTPage ---------------------**/
 .NewsMgrTPage .ltree {
   padding: 10px 4px;
