@@ -23,8 +23,6 @@ public interface INewsWebContext extends INewsContext, IContentRefAware {
 	 */
 	NewsPageletCreator getPageletCreator();
 
-	String getAttachmentMaxSize();
-
 	NewsUrlsFactory getUrlsFactory();
 
 	/**
@@ -35,6 +33,10 @@ public interface INewsWebContext extends INewsContext, IContentRefAware {
 	IModuleRef getTagRef();
 
 	IModuleRef getVoteRef();
+
+	String getAttachmentMaxSize();
+
+	Class<? extends Enum<?>> getAttachmentType();
 
 	public static class AttachmentDownloadHandler implements IDownloadHandler, INewsContextAware {
 

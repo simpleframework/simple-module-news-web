@@ -2,6 +2,7 @@ package net.simpleframework.module.news.web.page.t1;
 
 import static net.simpleframework.common.I18n.$m;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
@@ -12,9 +13,10 @@ import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
 import net.simpleframework.ctx.trans.Transaction;
+import net.simpleframework.lib.it.sauronsoftware.jave.Encoder;
+import net.simpleframework.lib.it.sauronsoftware.jave.MultimediaInfo;
 import net.simpleframework.module.common.content.Attachment;
 import net.simpleframework.module.common.content.IAttachmentService;
-import net.simpleframework.module.news.ENewsAttach;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsAttachment;
@@ -40,6 +42,8 @@ import net.simpleframework.mvc.common.element.TableRow;
 import net.simpleframework.mvc.common.element.TableRows;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.base.ajaxrequest.AjaxRequestBean;
+import net.simpleframework.mvc.component.base.validation.EValidatorMethod;
+import net.simpleframework.mvc.component.base.validation.Validator;
 import net.simpleframework.mvc.component.ui.pager.EPagerBarLayout;
 import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
@@ -52,7 +56,8 @@ import net.simpleframework.mvc.template.lets.FormTableRowTemplatePage;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 @PageMapping(url = "/news/form/attach")
@@ -84,7 +89,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 
 		// 编辑
 		ajaxRequest = addAjaxRequest(pp, "NewsFormAttachPage_editPage", AttachmentEditPage.class);
-		addWindowBean(pp, "NewsFormAttachPage_edit", ajaxRequest).setHeight(280).setWidth(420)
+		addWindowBean(pp, "NewsFormAttachPage_edit", ajaxRequest).setHeight(320).setWidth(420)
 				.setTitle($m("AttachmentEditPage.0"));
 	}
 
@@ -181,6 +186,13 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 	}
 
 	public static class AttachmentEditPage extends FormTableRowTemplatePage {
+		@Override
+		protected void onForward(final PageParameter pp) throws Exception {
+			super.onForward(pp);
+
+			addFormValidationBean(pp).addValidators(
+					new Validator(EValidatorMethod.digits, "#ae_videotime"));
+		}
 
 		@Transaction(context = INewsContext.class)
 		@Override
@@ -190,11 +202,10 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 			if (attachment != null) {
 				attachment.setTopic(cp.getParameter("ae_topic"));
 				attachment.setDescription(cp.getParameter("ae_description"));
-				final ENewsAttach attachtype = cp.getEnumParameter(ENewsAttach.class, "ae_attachtype");
-				if (attachtype != null) {
-					attachment.setAttachtype(attachtype.ordinal());
-				}
-				aService.update(new String[] { "topic", "attachtype", "description" }, attachment);
+				attachment.setAttachtype(cp.getIntParameter("ae_attachtype"));
+				attachment.setVideoTime(cp.getIntParameter("ae_videotime"));
+				aService.update(new String[] { "topic", "attachtype", "videotime", "description" },
+						attachment);
 			}
 			final JavascriptForward js = super.onSave(cp);
 			js.append("$Actions['NewsTabAttachPage_tbl']();");
@@ -205,23 +216,41 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		protected TableRows getTableRows(final PageParameter pp) {
 			final InputElement beanId = InputElement.hidden("beanId");
 			final InputElement ae_topic = new InputElement("ae_topic");
-
-			final Option[] opts = Option.from(ENewsAttach.values());
+			final InputElement ae_videotime = new InputElement("ae_videotime");
 			final InputElement ae_description = InputElement.textarea("ae_description").setRows(4);
+
+			final Class<? extends Enum<?>> eClass = ((INewsWebContext) newsContext)
+					.getAttachmentType();
+			Option[] opts = null;
+			if (eClass != null) {
+				final Enum<?>[] vals = eClass.getEnumConstants();
+				opts = new Option[vals.length];
+				for (int i = 0; i < opts.length; i++) {
+					opts[i] = new Option(vals[i].ordinal(), vals[i]);
+				}
+			}
 
 			final Attachment attachment = getCacheBean(pp, newsContext.getAttachmentService(),
 					"beanId");
 			if (attachment != null) {
 				beanId.setText(attachment.getId());
 				ae_topic.setText(attachment.getTopic());
-				opts[attachment.getAttachtype()].setSelected(true);
+				ae_videotime.setText(attachment.getVideoTime());
 				ae_description.setText(attachment.getDescription());
+				if (opts != null) {
+					opts[attachment.getAttachtype()].setSelected(true);
+				}
 			}
-			return TableRows.of(new TableRow(
-					new RowField($m("AttachmentEditPage.1"), beanId, ae_topic)), new TableRow(
-					new RowField($m("AttachmentEditPage.2"), InputElement.select("ae_attachtype")
-							.addElements(opts))), new TableRow(new RowField($m("Description"),
-					ae_description)));
+
+			final TableRows rows = TableRows.of(new TableRow(new RowField($m("AttachmentEditPage.1"),
+					beanId, ae_topic)));
+			if (opts != null) {
+				rows.append(new TableRow(new RowField($m("AttachmentEditPage.2"), InputElement.select(
+						"ae_attachtype").addElements(opts))));
+			}
+
+			return rows.append(new TableRow(new RowField($m("NewsFormAttachPage.7"), ae_videotime)),
+					new TableRow(new RowField($m("Description"), ae_description)));
 		}
 	}
 
@@ -263,8 +292,14 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 				final Map<String, Object> variables) throws Exception {
 			final News news = NewsUtils.getNews(cp);
 			final IAttachmentService<NewsAttachment> aService = newsContext.getAttachmentService();
-			aService.insert(news.getId(), cp.getLoginId(),
-					ArrayUtils.asList(new AttachmentFile(multipartFile.getFile())));
+			final File aFile = multipartFile.getFile();
+			final Encoder encoder = new Encoder();
+			final MultimediaInfo info = encoder.getInfo(aFile);
+			final int duration = (int) (info.getDuration() / 1000);
+			aService
+					.insert(news.getId(), cp.getLoginId(), ArrayUtils.asList(new AttachmentFile(aFile)),
+							new KVMap().add("videoTime", duration));
+
 		}
 	}
 }
