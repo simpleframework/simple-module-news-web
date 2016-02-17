@@ -60,8 +60,9 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 	}
 
 	protected TablePagerBean addTablePagerBean(final PageParameter pp) {
-		final TablePagerBean tablePager = super.addTablePagerBean(pp, "RecommendationPage_tbl",
-				RecommendTbl.class);
+		final TablePagerBean tablePager = super
+				.addTablePagerBean(pp, "RecommendationPage_tbl", RecommendTbl.class).setFilter(false)
+				.setSort(false).setShowCheckbox(false);
 		tablePager.addColumn(new TablePagerColumn("desc", $m("RecommendMgrPage.1")))
 				.addColumn(new TablePagerColumn("rlevel", $m("RecommendMgrPage.2"), 50))
 				.addColumn(TablePagerColumn.DATE("ddate", $m("RecommendMgrPage.3")))
@@ -96,7 +97,7 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 		protected Map<String, Object> getRowData(final ComponentParameter cp, final Object dataObject) {
 			final NewsRecommend r = (NewsRecommend) dataObject;
 			final KVMap row = new KVMap().add("desc", r.getDescription()).add("rlevel", r.getRlevel())
-					.add(TablePagerColumn.OPE, toOpeHTML(cp, r));
+					.add("status", r.getStatus()).add(TablePagerColumn.OPE, toOpeHTML(cp, r));
 			return row;
 		}
 
