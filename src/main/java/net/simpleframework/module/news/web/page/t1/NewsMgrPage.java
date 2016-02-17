@@ -50,14 +50,6 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 		// edit/delete/status
 		NewsMgrActions.addMgrComponentBean(pp, NewsMgrActions.class, StatusDescPage.class);
-
-		// 推荐
-		// final AjaxRequestBean ajaxRequest = addAjaxRequest(pp,
-		// "NewsMgrPage_recommendationPage",
-		// RecommendationPage.class);
-		// addWindowBean(pp, "NewsMgrPage_recommendation",
-		// ajaxRequest).setHeight(240).setWidth(450)
-		// .setTitle($m("AbstractContentBean.2"));
 	}
 
 	@Override
@@ -112,26 +104,4 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 				url(NewsMgrPage.class)), cTab);
 		return tabs;
 	}
-
-	// public static class RecommendationPage extends
-	// AbstractRecommendationPage<News> {
-	//
-	// @Override
-	// protected INewsService getBeanService() {
-	// return _newsService;
-	// }
-	//
-	// @Override
-	// protected News getBean(final PageParameter pp) {
-	// return NewsUtils.getNews(pp);
-	// }
-	//
-	// @Override
-	// public JavascriptForward onSave(final ComponentParameter cp) throws
-	// Exception {
-	// final JavascriptForward js = super.onSave(cp);
-	// js.append(createTableRefresh().toString());
-	// return js;
-	// }
-	// }
 }

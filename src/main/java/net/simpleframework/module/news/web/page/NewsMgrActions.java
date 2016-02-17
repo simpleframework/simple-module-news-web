@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
+import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.Convert;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.KVMap;
@@ -17,6 +18,7 @@ import net.simpleframework.module.common.web.page.AbstractDescPage;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
+import net.simpleframework.module.news.NewsRecommend;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsUpdateLogPage;
 import net.simpleframework.module.news.web.NewsUrlsFactory;
@@ -29,11 +31,16 @@ import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.InputElement;
 import net.simpleframework.mvc.common.element.JS;
 import net.simpleframework.mvc.common.element.LinkButton;
+import net.simpleframework.mvc.common.element.TableRows;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.base.ajaxrequest.AjaxRequestBean;
 import net.simpleframework.mvc.component.base.ajaxrequest.DefaultAjaxRequestHandler;
+import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
+import net.simpleframework.mvc.component.ui.pager.db.AbstractDbTablePagerHandler;
 import net.simpleframework.mvc.component.ui.window.WindowBean;
 import net.simpleframework.mvc.template.AbstractTemplatePage;
+import net.simpleframework.mvc.template.lets.FormTableRowTemplatePage;
+import net.simpleframework.mvc.template.lets.OneTableTemplatePage;
 import net.simpleframework.mvc.template.t1.ext.CategoryTableLCTemplatePage;
 
 /**
@@ -76,6 +83,13 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 		pp.addComponentBean("NewsMgrPage_advWindow", WindowBean.class)
 				.setContentRef(ajaxRequest.getName()).setTitle($m("NewsMgrPage.13")).setHeight(280)
 				.setWidth(420);
+
+		// 推荐
+		ajaxRequest = pp.addComponentBean("NewsMgrPage_recommendationPage", AjaxRequestBean.class)
+				.setUrlForward(AbstractMVCPage.url(RecommendPage.class));
+		pp.addComponentBean("NewsMgrPage_recommendation", WindowBean.class)
+				.setContentRef(ajaxRequest.getName()).setHeight(480).setWidth(640)
+				.setTitle($m("AbstractContentBean.2"));
 
 		// log window
 		final IModuleRef ref = ((INewsWebContext) newsContext).getLogRef();
@@ -213,6 +227,59 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 			sb.append(" <div class='bc'>").append(LinkButton.closeBtn().corner()).append("</div>");
 			sb.append("</div>");
 			return sb.toString();
+		}
+	}
+
+	public static class RecommendPage extends OneTableTemplatePage {
+
+		@Override
+		protected void onForward(final PageParameter pp) throws Exception {
+			super.onForward(pp);
+
+			addTablePagerBean(pp);
+		}
+
+		protected TablePagerBean addTablePagerBean(final PageParameter pp) {
+			final TablePagerBean tablePager = super.addTablePagerBean(pp, "RecommendationPage_tbl",
+					RecommendationTbl.class);
+			return tablePager;
+		}
+	}
+
+	public static class RecommendationTbl extends AbstractDbTablePagerHandler {
+		@Override
+		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
+			final News news = NewsUtils.getNews(cp);
+			if (news != null) {
+				cp.addFormParameter("newsId", news.getId());
+				return _newsRecommendService.queryRecommends(news);
+			}
+			return null;
+		}
+
+		@Override
+		protected Map<String, Object> getRowData(final ComponentParameter cp, final Object dataObject) {
+			final NewsRecommend r = (NewsRecommend) dataObject;
+			final KVMap row = new KVMap().add("rlevel", r.getRlevel());
+			return row;
+		}
+	}
+
+	public static class RecommendEditPage extends FormTableRowTemplatePage {
+		@Override
+		public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
+			final JavascriptForward js = super.onSave(cp);
+			return js;
+		}
+
+		@Override
+		protected TableRows getTableRows(final PageParameter pp) {
+			// final News news = NewsUtils.getNews(pp);
+			// final InputElement topicId = InputElement.hidden("topicId");
+			// final InputElement r_rlevel =
+			// InputElement.select("r_rlevel").addElements(
+			// al.toArray(new Option[al.size()]));
+			return super.getTableRows(pp);
 		}
 	}
 }
