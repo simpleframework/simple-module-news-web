@@ -28,6 +28,7 @@ import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
+import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.InputElement;
 import net.simpleframework.mvc.common.element.JS;
 import net.simpleframework.mvc.common.element.LinkButton;
@@ -36,6 +37,7 @@ import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.base.ajaxrequest.AjaxRequestBean;
 import net.simpleframework.mvc.component.base.ajaxrequest.DefaultAjaxRequestHandler;
 import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
+import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
 import net.simpleframework.mvc.component.ui.pager.db.AbstractDbTablePagerHandler;
 import net.simpleframework.mvc.component.ui.window.WindowBean;
 import net.simpleframework.mvc.template.AbstractTemplatePage;
@@ -237,12 +239,24 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 			super.onForward(pp);
 
 			addTablePagerBean(pp);
+
+			final AjaxRequestBean ajaxRequest = addAjaxRequest(pp, "RecommendPage_editPage",
+					RecommendPage.class);
+			addWindowBean(pp, "RecommendPage_edit", ajaxRequest).setHeight(280).setWidth(420)
+					.setTitle($m("NewsMgrActions.0"));
 		}
 
 		protected TablePagerBean addTablePagerBean(final PageParameter pp) {
 			final TablePagerBean tablePager = super.addTablePagerBean(pp, "RecommendationPage_tbl",
-					RecommendationTbl.class);
+					RecommendationTbl.class).setShowHead(false);
+			tablePager.addColumn(new TablePagerColumn("desc"))
+					.addColumn(new TablePagerColumn("status")).addColumn(TablePagerColumn.OPE(70));
 			return tablePager;
+		}
+
+		@Override
+		public ElementList getRightElements(final PageParameter pp) {
+			return ElementList.of(LinkButton.addBtn().setOnclick("$Actions['RecommendPage_edit']();"));
 		}
 	}
 
