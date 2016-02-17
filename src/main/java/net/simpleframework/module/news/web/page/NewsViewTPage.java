@@ -7,13 +7,11 @@ import java.util.ArrayList;
 
 import net.simpleframework.ado.bean.IIdBeanAware;
 import net.simpleframework.ado.lucene.ILuceneManager;
+import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.BeanUtils;
-import net.simpleframework.common.Convert;
-import net.simpleframework.common.ETimePeriod;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.StringUtils;
-import net.simpleframework.common.TimePeriod;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
@@ -166,10 +164,13 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 	public IForward doPageletTab(final ComponentParameter cp) {
 		final NewsPageletCreator creator = ((INewsWebContext) newsContext).getPageletCreator();
 
-		final ETimePeriod tp = Convert.toEnum(ETimePeriod.class, cp.getParameter("time"));
+		// final ETimePeriod tp = Convert.toEnum(ETimePeriod.class,
+		// cp.getParameter("time"));
 
-		final IDataQuery<?> dq = _newsService.queryRecommendationBeans(
-				_newsCategoryService.getBean(cp.getParameter("categoryId")), new TimePeriod(tp));
+		final IDataQuery<?> dq = DataQueryUtils.nullQuery();
+		// _newsService.queryRecommendationBeans(
+		// _newsCategoryService.getBean(cp.getParameter("categoryId")), new
+		// TimePeriod(tp));
 		return new TextForward(cp.wrapHTMLContextPath(creator.create(cp, dq)
 				.setDotIcon(EImageDot.numDot).toString()));
 	}
@@ -198,8 +199,9 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 
 		// 按推荐
 		final ID categoryId = news.getCategoryId();
-		final IDataQuery<?> dq = _newsService.queryRecommendationBeans(
-				_newsCategoryService.getBean(categoryId), TimePeriod.week);
+		final IDataQuery<?> dq = DataQueryUtils.nullQuery();
+		// _newsService.queryRecommendationBeans(
+		// _newsCategoryService.getBean(categoryId), TimePeriod.week);
 		lets.add(new Pagelet(new CategoryItem($m("NewsViewTPage.6")), creator.create(pp, dq)
 				.setDotIcon(EImageDot.numDot)).setTabs(creator.createTimePeriodTabs("categoryId="
 				+ categoryId)));

@@ -78,8 +78,10 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 			img = "mark_video.png";
 		} else if (news.isImageMark()) {
 			img = "mark_image.png";
-		} else if (news.getRecommendation() > 0) {
-		} else {
+		}
+		// else if (news.getRecommendation() > 0) {
+		// }
+		else {
 			final EContentStatus status = news.getStatus();
 			if (status == EContentStatus.publish) {
 				img = "status_publish.png";

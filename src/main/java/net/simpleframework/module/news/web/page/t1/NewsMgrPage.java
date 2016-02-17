@@ -5,17 +5,13 @@ import net.simpleframework.ado.FilterItem;
 import net.simpleframework.ado.FilterItems;
 import net.simpleframework.common.TimePeriod;
 import net.simpleframework.module.common.content.EContentStatus;
-import net.simpleframework.module.common.web.content.page.AbstractRecommendationPage;
 import net.simpleframework.module.news.INewsContextAware;
-import net.simpleframework.module.news.INewsService;
-import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.web.page.NewsCategoryHandle;
 import net.simpleframework.module.news.web.page.NewsFormTPage;
 import net.simpleframework.module.news.web.page.NewsListTbl;
 import net.simpleframework.module.news.web.page.NewsMgrActions;
 import net.simpleframework.module.news.web.page.NewsMgrActions.StatusDescPage;
 import net.simpleframework.module.news.web.page.NewsUtils;
-import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageMapping;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ElementList;
@@ -25,8 +21,6 @@ import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.common.element.TabButton;
 import net.simpleframework.mvc.common.element.TabButtons;
-import net.simpleframework.mvc.component.ComponentParameter;
-import net.simpleframework.mvc.component.base.ajaxrequest.AjaxRequestBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
 import net.simpleframework.mvc.component.ui.pager.db.NavigationTitle;
 import net.simpleframework.mvc.template.struct.NavigationButtons;
@@ -58,10 +52,12 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		NewsMgrActions.addMgrComponentBean(pp, NewsMgrActions.class, StatusDescPage.class);
 
 		// 推荐
-		final AjaxRequestBean ajaxRequest = addAjaxRequest(pp, "NewsMgrPage_recommendationPage",
-				RecommendationPage.class);
-		addWindowBean(pp, "NewsMgrPage_recommendation", ajaxRequest).setHeight(240).setWidth(450)
-				.setTitle($m("AbstractContentBean.2"));
+		// final AjaxRequestBean ajaxRequest = addAjaxRequest(pp,
+		// "NewsMgrPage_recommendationPage",
+		// RecommendationPage.class);
+		// addWindowBean(pp, "NewsMgrPage_recommendation",
+		// ajaxRequest).setHeight(240).setWidth(450)
+		// .setTitle($m("AbstractContentBean.2"));
 	}
 
 	@Override
@@ -117,23 +113,25 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		return tabs;
 	}
 
-	public static class RecommendationPage extends AbstractRecommendationPage<News> {
-
-		@Override
-		protected INewsService getBeanService() {
-			return _newsService;
-		}
-
-		@Override
-		protected News getBean(final PageParameter pp) {
-			return NewsUtils.getNews(pp);
-		}
-
-		@Override
-		public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
-			final JavascriptForward js = super.onSave(cp);
-			js.append(createTableRefresh().toString());
-			return js;
-		}
-	}
+	// public static class RecommendationPage extends
+	// AbstractRecommendationPage<News> {
+	//
+	// @Override
+	// protected INewsService getBeanService() {
+	// return _newsService;
+	// }
+	//
+	// @Override
+	// protected News getBean(final PageParameter pp) {
+	// return NewsUtils.getNews(pp);
+	// }
+	//
+	// @Override
+	// public JavascriptForward onSave(final ComponentParameter cp) throws
+	// Exception {
+	// final JavascriptForward js = super.onSave(cp);
+	// js.append(createTableRefresh().toString());
+	// return js;
+	// }
+	// }
 }
