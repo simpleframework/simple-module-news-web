@@ -6,10 +6,14 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import net.simpleframework.ado.query.IDataQuery;
+import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.KVMap;
+import net.simpleframework.ctx.trans.Transaction;
+import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsRecommend;
+import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ButtonElement;
@@ -45,10 +49,14 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 
 		addTablePagerBean(pp);
 
+		// 编辑
 		final AjaxRequestBean ajaxRequest = addAjaxRequest(pp, "RecommendPage_editPage",
 				RecommendEditPage.class);
 		addWindowBean(pp, "RecommendPage_edit", ajaxRequest).setHeight(300).setWidth(500)
 				.setTitle($m("RecommendMgrPage.0"));
+
+		// 删除
+		addDeleteAjaxRequest(pp, "RecommendMgrPage_del");
 	}
 
 	protected TablePagerBean addTablePagerBean(final PageParameter pp) {
@@ -60,6 +68,13 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 				.addColumn(new TablePagerColumn("status", $m("RecommendMgrPage.4"), 70))
 				.addColumn(TablePagerColumn.OPE(70));
 		return tablePager;
+	}
+
+	@Transaction(context = INewsContext.class)
+	public IForward doDelete(final ComponentParameter cp) {
+		final Object[] ids = StringUtils.split(cp.getParameter("id"));
+		_newsRecommendService.delete(ids);
+		return new JavascriptForward("$Actions['RecommendationPage_tbl']();");
 	}
 
 	@Override
@@ -87,7 +102,8 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 
 		protected String toOpeHTML(final ComponentParameter cp, final NewsRecommend r) {
 			final StringBuilder sb = new StringBuilder();
-			sb.append(ButtonElement.deleteBtn());
+			sb.append(ButtonElement.deleteBtn().setOnclick(
+					"$Actions['RecommendMgrPage_del']('id=" + r.getId() + "');"));
 			return sb.toString();
 		}
 	}
