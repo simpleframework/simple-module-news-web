@@ -118,6 +118,7 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 					"yyyy-MM-dd HH:mm");
 		}
 
+		@Transaction(context = INewsContext.class)
 		@Override
 		public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
 			NewsRecommend r = _newsRecommendService.getBean(cp.getParameter("r_id"));

@@ -149,8 +149,8 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 
 	public static class StatusDescPage extends AbstractDescPage {
 
-		@Override
 		@Transaction(context = INewsContext.class)
+		@Override
 		public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
 			final EContentStatus op = cp.getEnumParameter(EContentStatus.class, "op");
 			final String[] arr = StringUtils.split(cp.getParameter("newsId"), ";");
