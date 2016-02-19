@@ -85,6 +85,8 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 
 	@Transaction(context = INewsContext.class)
 	public IForward doAbort(final ComponentParameter cp) {
+		final NewsRecommend r = _newsRecommendService.getBean(cp.getParameter("id"));
+		_newsRecommendService.doAbort(r);
 		return new JavascriptForward("$Actions['RecommendationPage_tbl']();");
 	}
 
