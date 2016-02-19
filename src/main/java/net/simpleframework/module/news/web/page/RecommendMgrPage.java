@@ -66,7 +66,8 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 		addDeleteAjaxRequest(pp, "RecommendMgrPage_del");
 
 		// 放弃
-		addAjaxRequest(pp, "RecommendMgrPage_abort").setHandlerMethod("doAbort");
+		addAjaxRequest(pp, "RecommendMgrPage_abort").setHandlerMethod("doAbort").setConfirmMessage(
+				$m("RecommendMgrPage.8"));
 	}
 
 	protected TablePagerBean addTablePagerBean(final PageParameter pp) {
@@ -85,14 +86,14 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 
 	@Transaction(context = INewsContext.class)
 	public IForward doAbort(final ComponentParameter cp) {
-		final NewsRecommend r = _newsRecommendService.getBean(cp.getParameter("id"));
+		final NewsRecommend r = _newsRecommendService.getBean(cp.getParameter("rid"));
 		_newsRecommendService.doAbort(r);
 		return new JavascriptForward("$Actions['RecommendationPage_tbl']();");
 	}
 
 	@Transaction(context = INewsContext.class)
 	public IForward doDelete(final ComponentParameter cp) {
-		final Object[] ids = StringUtils.split(cp.getParameter("id"));
+		final Object[] ids = StringUtils.split(cp.getParameter("rid"));
 		_newsRecommendService.delete(ids);
 		return new JavascriptForward("$Actions['RecommendationPage_tbl']();");
 	}
@@ -159,8 +160,14 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 
 		protected String toOpeHTML(final ComponentParameter cp, final NewsRecommend r) {
 			final StringBuilder sb = new StringBuilder();
-			sb.append(ButtonElement.deleteBtn().setOnclick(
-					"$Actions['RecommendMgrPage_del']('id=" + r.getId() + "');"));
+			final ERecommendStatus status = r.getStatus();
+			if (status == ERecommendStatus.ready || status == ERecommendStatus.running) {
+				sb.append(new ButtonElement(ERecommendStatus.abort)
+						.setOnclick("$Actions['RecommendMgrPage_abort']('rid=" + r.getId() + "');"));
+			} else {
+				sb.append(ButtonElement.deleteBtn().setOnclick(
+						"$Actions['RecommendMgrPage_del']('rid=" + r.getId() + "');"));
+			}
 			return sb.toString();
 		}
 	}
@@ -239,6 +246,10 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 				r_dstartdate.setVal(r.getDstartDate());
 				r_denddate.setVal(r.getDendDate());
 				r_description.setVal(r.getDescription());
+				if (r.getStatus().ordinal() > ERecommendStatus.ready.ordinal()) {
+					r_dstartdate.setReadonly(true);
+					r_denddate.setReadonly(true);
+				}
 			} else {
 				newsId.setValue(pp);
 			}
