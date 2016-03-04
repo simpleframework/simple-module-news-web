@@ -4,7 +4,6 @@ import static net.simpleframework.common.I18n.$m;
 
 import java.io.IOException;
 
-import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.module.common.web.content.page.AbstractAttachmentTooltipPage;
@@ -12,7 +11,6 @@ import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.NewsAttachment;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsDownloadLogPage;
-import net.simpleframework.module.news.web.NewsPDFRef;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.common.element.LinkElement;
@@ -37,19 +35,6 @@ public class NewsAttachmentTooltipPage extends AbstractAttachmentTooltipPage imp
 			addWindowBean(pp, "AttachmentTooltipPage_logWin", ajaxRequest).setHeight(480)
 					.setWidth(800).setTitle($m("NewsFormAttachPage.5"));
 		}
-	}
-
-	@Override
-	protected LinkButton getPreviewButton(final PageParameter pp) {
-		final IModuleRef ref = ((INewsWebContext) newsContext).getPDFRef();
-		if (ref == null) {
-			return null;
-		}
-		final AttachmentFile attachment = _getAttachment(pp);
-		if (attachment == null) {
-			return null;
-		}
-		return createPreviewButton(pp).setHref(((NewsPDFRef) ref).getPreviewUrl(pp, attachment));
 	}
 
 	@Override

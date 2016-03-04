@@ -3,7 +3,7 @@ package net.simpleframework.module.news.web;
 import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
-import net.simpleframework.ctx.IModuleContext;
+import net.simpleframework.ctx.IContextBase;
 import net.simpleframework.module.common.plugin.ModulePluginFactory;
 import net.simpleframework.module.news.News;
 import net.simpleframework.module.vote.VoteRef;
@@ -19,13 +19,14 @@ import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public class NewsVoteRef extends VoteRef {
 
 	@Override
-	public void onInit(final IModuleContext context) throws Exception {
+	public void onInit(final IContextBase context) throws Exception {
 		super.onInit(context);
 
 		getModuleContext().getPluginRegistry().registPlugin(NewsWebVotePlugin.class);

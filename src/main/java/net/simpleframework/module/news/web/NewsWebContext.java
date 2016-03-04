@@ -5,6 +5,7 @@ import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.Module;
 import net.simpleframework.ctx.ModuleFunctions;
+import net.simpleframework.ctx.ModuleRefUtils;
 import net.simpleframework.module.news.impl.NewsContext;
 import net.simpleframework.module.news.web.page.t1.NewsMgrPage;
 import net.simpleframework.mvc.ctx.WebModuleFunction;
@@ -44,27 +45,22 @@ public class NewsWebContext extends NewsContext implements INewsWebContext {
 
 	@Override
 	public IModuleRef getFavoriteRef() {
-		return getRef("net.simpleframework.module.news.web.NewsFavoriteRef");
+		return ModuleRefUtils.getRef("net.simpleframework.module.news.web.NewsFavoriteRef");
 	}
 
 	@Override
 	public IModuleRef getLogRef() {
-		return getRef("net.simpleframework.module.news.web.NewsLogRef");
+		return ModuleRefUtils.getRef("net.simpleframework.module.news.web.NewsLogRef");
 	}
 
 	@Override
 	public IModuleRef getTagRef() {
-		return getRef("net.simpleframework.module.news.web.NewsTagRef");
+		return ModuleRefUtils.getRef("net.simpleframework.module.news.web.NewsTagRef");
 	}
 
 	@Override
 	public IModuleRef getVoteRef() {
-		return getRef("net.simpleframework.module.news.web.NewsVoteRef");
-	}
-
-	@Override
-	public IModuleRef getPDFRef() {
-		return getRef("net.simpleframework.module.news.web.NewsPDFRef");
+		return ModuleRefUtils.getRef("net.simpleframework.module.news.web.NewsVoteRef");
 	}
 
 	@Override
