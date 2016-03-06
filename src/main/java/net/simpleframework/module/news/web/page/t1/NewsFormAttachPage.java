@@ -8,6 +8,7 @@ import java.util.Map;
 
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.FileUtils;
+import net.simpleframework.common.MimeTypes;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.coll.KVMap;
@@ -292,14 +293,19 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 				final Map<String, Object> variables) throws Exception {
 			final News news = NewsUtils.getNews(cp);
 			final IAttachmentService<NewsAttachment> aService = newsContext.getAttachmentService();
-			final File aFile = multipartFile.getFile();
-			final Encoder encoder = new Encoder();
-			final MultimediaInfo info = encoder.getInfo(aFile);
-			final int duration = (int) (info.getDuration() / 1000);
-			aService
-					.insert(news.getId(), cp.getLoginId(), ArrayUtils.asList(new AttachmentFile(aFile)),
-							new KVMap().add("videoTime", duration));
 
+			final KVMap props = new KVMap();
+			final File aFile = multipartFile.getFile();
+			final String ext = FileUtils.getFilenameExtension(aFile.getName());
+			if (MimeTypes.getMimeType(ext).startsWith("video/")) {
+				final Encoder encoder = new Encoder();
+				final MultimediaInfo info = encoder.getInfo(aFile);
+				final int duration = (int) (info.getDuration() / 1000);
+				props.add("videoTime", duration);
+			}
+
+			aService.insert(news.getId(), cp.getLoginId(),
+					ArrayUtils.asList(new AttachmentFile(aFile)), props);
 		}
 	}
 }
