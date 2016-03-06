@@ -288,6 +288,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 			return new KVMap().add("newsId", news.getId());
 		}
 
+		@Transaction(context = INewsContext.class)
 		@Override
 		public void upload(final ComponentParameter cp, final IMultipartFile multipartFile,
 				final Map<String, Object> variables) throws Exception {
