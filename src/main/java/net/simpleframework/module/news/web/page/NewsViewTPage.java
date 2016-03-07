@@ -15,6 +15,7 @@ import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
+import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.module.common.content.ContentException;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.module.common.web.content.ContentUtils;
@@ -91,7 +92,8 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 	}
 
 	protected AjaxRequestBean addTooltipPage(final PageParameter pp) {
-		return addAjaxRequest(pp, "NewsViewTPage_TipPage", NewsAttachmentTooltipPage.class);
+		return addAjaxRequest(pp, "NewsViewTPage_TipPage", NewsAttachmentTooltipPage.class).setRole(
+				PermissionConst.ROLE_ANONYMOUS);
 	}
 
 	protected TooltipBean addTooltip(final PageParameter pp) {
