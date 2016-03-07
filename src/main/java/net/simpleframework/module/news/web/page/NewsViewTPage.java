@@ -15,7 +15,6 @@ import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
-import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.module.common.content.ContentException;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.module.common.web.content.ContentUtils;
@@ -85,11 +84,6 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		ContentUtils.updateViews(pp, news, _newsService);
 		// 记录到cookies
 		ContentUtils.addViewsCookie(pp, "news_views", news.getId());
-	}
-
-	@Override
-	public String getPageRole(final PageParameter pp) {
-		return PermissionConst.ROLE_ANONYMOUS;
 	}
 
 	protected AjaxRequestBean addAjaxRequest_Download(final PageParameter pp) {

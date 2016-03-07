@@ -45,9 +45,14 @@ import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.base.ajaxrequest.AjaxRequestBean;
 import net.simpleframework.mvc.component.base.validation.EValidatorMethod;
 import net.simpleframework.mvc.component.base.validation.Validator;
+import net.simpleframework.mvc.component.ui.menu.MenuBean;
+import net.simpleframework.mvc.component.ui.menu.MenuItem;
+import net.simpleframework.mvc.component.ui.menu.MenuItems;
+import net.simpleframework.mvc.component.ui.pager.AbstractTablePagerSchema;
 import net.simpleframework.mvc.component.ui.pager.EPagerBarLayout;
 import net.simpleframework.mvc.component.ui.pager.TablePagerBean;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
+import net.simpleframework.mvc.component.ui.pager.TablePagerUtils;
 import net.simpleframework.mvc.component.ui.pager.db.AbstractDbTablePagerHandler;
 import net.simpleframework.mvc.component.ui.swfupload.AbstractSwfUploadHandler;
 import net.simpleframework.mvc.component.ui.swfupload.SwfUploadBean;
@@ -87,6 +92,8 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 
 		// 删除
 		addDeleteAjaxRequest(pp, "NewsFormAttachPage_delete");
+		// 移动
+		addAjaxRequest(pp, "NewsFormAttachPage_move").setHandlerMethod("doMove");
 
 		// 编辑
 		ajaxRequest = addAjaxRequest(pp, "NewsFormAttachPage_editPage", AttachmentEditPage.class);
@@ -127,6 +134,13 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		return new JavascriptForward("$Actions['NewsTabAttachPage_tbl']();");
 	}
 
+	@Transaction(context = INewsContext.class)
+	public IForward doMove(final ComponentParameter cp) {
+		final IAttachmentService<NewsAttachment> attachService = newsContext.getAttachmentService();
+		attachService.exchange(TablePagerUtils.getExchangeBeans(cp, attachService));
+		return new JavascriptForward("$Actions['NewsTabAttachPage_tbl']();");
+	}
+
 	@Override
 	protected String toHtml(final PageParameter pp, final Map<String, Object> variables,
 			final String currentVariable) throws IOException {
@@ -136,6 +150,9 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		final News news = NewsUtils.getNews(pp);
 		sb.append(LinkButton.corner($m("NewsFormAttachPage.6")).setOnclick(
 				"$Actions['NewsFormAttachPage_upload']('newsId=" + news.getId() + "');"));
+		sb.append(SpanElement.SPACE);
+		sb.append(LinkButton.corner($m("Button.Refresh")).setOnclick(
+				"$Actions['NewsTabAttachPage_tbl']();"));
 		sb.append(" </div>");
 		sb.append(" <div id='idNewsTabAttachPage_tbl'></div>");
 		sb.append("</div>");
@@ -154,7 +171,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		protected Map<String, Object> getRowData(final ComponentParameter cp, final Object dataObject) {
 			final NewsAttachment attachment = (NewsAttachment) dataObject;
 			final KVMap kv = new KVMap();
-			final Object id = attachment.getId();
+
 			try {
 				final AttachmentFile af = newsContext.getAttachmentService().createAttachmentFile(
 						attachment);
@@ -169,20 +186,42 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 			kv.put("attachsize", FileUtils.toFileSize(attachment.getAttachsize()));
 			if (((INewsWebContext) newsContext).getLogRef() != null) {
 				kv.put("downloads", new ButtonElement(attachment.getDownloads())
-						.setOnclick("$Actions['NewsTabAttachPage_logWin']('beanId=" + id + "');"));
+						.setOnclick("$Actions['NewsTabAttachPage_logWin']('beanId=" + attachment.getId()
+								+ "');"));
 			} else {
 				kv.put("downloads", attachment.getDownloads());
 			}
 			kv.put("userId", cp.getUser(attachment.getUserId()));
 			kv.put("createDate", attachment.getCreateDate());
-			final StringBuilder ope = new StringBuilder();
-			ope.append(ButtonElement.editBtn().setOnclick(
-					"$Actions['NewsFormAttachPage_edit']('beanId=" + id + "');"));
-			ope.append(SpanElement.SPACE);
-			ope.append(ButtonElement.deleteBtn().setOnclick(
-					"$Actions['NewsFormAttachPage_delete']('id=" + id + "');"));
-			kv.add(TablePagerColumn.OPE, ope);
+
+			kv.add(TablePagerColumn.OPE, toOpeHTML(cp, attachment));
 			return kv;
+		}
+
+		protected String toOpeHTML(final ComponentParameter cp, final NewsAttachment attachment) {
+			final Object id = attachment.getId();
+			final StringBuilder sb = new StringBuilder();
+			sb.append(ButtonElement.editBtn().setOnclick(
+					"$Actions['NewsFormAttachPage_edit']('beanId=" + id + "');"));
+			sb.append(SpanElement.SPACE);
+			sb.append(ButtonElement.deleteBtn().setOnclick(
+					"$Actions['NewsFormAttachPage_delete']('id=" + id + "');"));
+			sb.append(AbstractTablePagerSchema.IMG_DOWNMENU);
+			return sb.toString();
+		}
+
+		@Override
+		public MenuItems getContextMenu(final ComponentParameter cp, final MenuBean menuBean,
+				final MenuItem menuItem) {
+			if (menuItem == null) {
+				final MenuItems items = MenuItems.of();
+				items.append(MenuItem.TBL_MOVE_UP("NewsFormAttachPage_move"));
+				items.append(MenuItem.TBL_MOVE_UP2("NewsFormAttachPage_move"));
+				items.append(MenuItem.TBL_MOVE_DOWN("NewsFormAttachPage_move"));
+				items.append(MenuItem.TBL_MOVE_DOWN2("NewsFormAttachPage_move"));
+				return items;
+			}
+			return null;
 		}
 	}
 

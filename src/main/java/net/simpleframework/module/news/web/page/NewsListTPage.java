@@ -17,7 +17,6 @@ import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.TimePeriod;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.common.web.HttpUtils;
-import net.simpleframework.ctx.permission.PermissionConst;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.common.web.content.ContentUtils;
@@ -79,11 +78,6 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 
 		// PageletTab
 		addPageletTabAjaxRequest(pp);
-	}
-
-	@Override
-	public String getPageRole(final PageParameter pp) {
-		return PermissionConst.ROLE_ANONYMOUS;
 	}
 
 	protected TablePagerBean addTablePagerBean(final PageParameter pp) {
