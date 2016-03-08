@@ -154,15 +154,21 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 		public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
 			final EContentStatus op = cp.getEnumParameter(EContentStatus.class, "op");
 			final String[] arr = StringUtils.split(cp.getParameter("newsId"), ";");
+			News news = null;
 			for (final String id : arr) {
-				final News news = _newsService.getBean(id);
+				news = _newsService.getBean(id);
 				setLogDescription(cp, news);
 				news.setStatus(op);
 				_newsService.update(new String[] { "status" }, news);
 			}
 
 			final JavascriptForward js = super.onSave(cp);
-			return js.append(createTableRefresh().toString());
+			if (op == EContentStatus.edit && arr.length == 1) {
+				final NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
+				return js.append(JS.loc(uFactory.getUrl(cp, NewsFormBasePage.class, news)));
+			} else {
+				return js.append(createTableRefresh().toString());
+			}
 		}
 
 		protected JavascriptForward createTableRefresh() {
