@@ -116,11 +116,14 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 						new TablePagerColumn("attachsize", $m("NewsFormAttachPage.1"), 80)
 								.setFilter(false))
 				.addColumn(
+						new TablePagerColumn("attachtype", $m("NewsFormAttachPage.8"), 80)
+								.setFilter(false))
+				.addColumn(
 						new TablePagerColumn("downloads", $m("NewsFormAttachPage.2"), 80).setTextAlign(
 								ETextAlign.center).setFilter(false))
 				.addColumn(
-						new TablePagerColumn("userId", $m("NewsFormAttachPage.3"), 100)
-								.setFilterSort(false))
+						new TablePagerColumn("userId", $m("NewsFormAttachPage.3"), 100).setFilterSort(
+								false).setTextAlign(ETextAlign.center))
 				.addColumn(
 						TablePagerColumn.DATE("createDate", $m("NewsFormAttachPage.4")).setFilter(false))
 				.addColumn(TablePagerColumn.OPE(120));
@@ -159,6 +162,9 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		return sb.toString();
 	}
 
+	static final Class<? extends Enum<?>> eClass = ((INewsWebContext) newsContext)
+			.getAttachmentTypeClass();
+
 	public static class NewsAttachmentTbl extends AbstractDbTablePagerHandler {
 		@Override
 		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
@@ -171,7 +177,6 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		protected Map<String, Object> getRowData(final ComponentParameter cp, final Object dataObject) {
 			final NewsAttachment attachment = (NewsAttachment) dataObject;
 			final KVMap kv = new KVMap();
-
 			try {
 				final AttachmentFile af = newsContext.getAttachmentService().createAttachmentFile(
 						attachment);
@@ -184,10 +189,16 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 				kv.put("topic", attachment.getTopic());
 			}
 			kv.put("attachsize", FileUtils.toFileSize(attachment.getAttachsize()));
+			if (eClass != null) {
+				kv.put("attachtype", eClass.getEnumConstants()[attachment.getAttachtype()]);
+			}
+
 			if (((INewsWebContext) newsContext).getLogRef() != null) {
-				kv.put("downloads", new ButtonElement(attachment.getDownloads())
-						.setOnclick("$Actions['NewsTabAttachPage_logWin']('beanId=" + attachment.getId()
-								+ "');"));
+				kv.put(
+						"downloads",
+						LinkElement.style2(attachment.getDownloads()).setOnclick(
+								"$Actions['NewsTabAttachPage_logWin']('beanId=" + attachment.getId()
+										+ "');"));
 			} else {
 				kv.put("downloads", attachment.getDownloads());
 			}
@@ -259,8 +270,6 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 			final InputElement ae_videotime = new InputElement("ae_videotime");
 			final InputElement ae_description = InputElement.textarea("ae_description").setRows(4);
 
-			final Class<? extends Enum<?>> eClass = ((INewsWebContext) newsContext)
-					.getAttachmentType();
 			Option[] opts = null;
 			if (eClass != null) {
 				final Enum<?>[] vals = eClass.getEnumConstants();
@@ -337,13 +346,15 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 			final KVMap props = new KVMap();
 			final File aFile = multipartFile.getFile();
 			final String ext = FileUtils.getFilenameExtension(aFile.getName());
-			if (MimeTypes.getMimeType(ext).startsWith("video/")) {
-				final Encoder encoder = new Encoder();
-				final MultimediaInfo info = encoder.getInfo(aFile);
-				final int duration = (int) (info.getDuration() / 1000);
-				props.add("videoTime", duration);
+			if (StringUtils.hasText(ext)) {
+				if (MimeTypes.getMimeType(ext).startsWith("video/")) {
+					final Encoder encoder = new Encoder();
+					final MultimediaInfo info = encoder.getInfo(aFile);
+					final int duration = (int) (info.getDuration() / 1000);
+					props.add("videoTime", duration);
+				}
+				props.put("attachtype", ((INewsWebContext) newsContext).getAttachmentType(ext));
 			}
-
 			aService.insert(news.getId(), cp.getLoginId(),
 					ArrayUtils.asList(new AttachmentFile(aFile)), props);
 		}

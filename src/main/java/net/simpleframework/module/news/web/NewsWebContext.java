@@ -39,8 +39,13 @@ public class NewsWebContext extends NewsContext implements INewsWebContext {
 	}
 
 	@Override
-	public Class<? extends Enum<?>> getAttachmentType() {
+	public Class<? extends Enum<?>> getAttachmentTypeClass() {
 		return null;
+	}
+
+	@Override
+	public int getAttachmentType(final String ext) {
+		return 0;
 	}
 
 	@Override
