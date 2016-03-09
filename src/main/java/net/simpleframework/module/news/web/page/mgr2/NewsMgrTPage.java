@@ -20,6 +20,7 @@ import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.Icon;
 import net.simpleframework.mvc.common.element.LinkButton;
+import net.simpleframework.mvc.common.element.LinkElement;
 import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.category.CategoryBean;
@@ -44,8 +45,9 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 		pp.addImportCSS(NewsFormTPage.class, "/news.css");
 
 		// 导航树
-		addComponentBean(pp, "NewsMgrTPage_tree", CategoryBean.class).setDraggable(pp.isLmanager())
-				.setContainerId("idNewsMgrTPage_category").setHandlerClass(_NewsCategoryHandle.class);
+		addComponentBean(pp, "NewsMgrTPage_tree", CategoryBean.class).setDynamicTree(true)
+				.setDraggable(pp.isLmanager()).setContainerId("idNewsMgrTPage_category")
+				.setHandlerClass(_NewsCategoryHandle.class);
 
 		// 表格
 		final TablePagerBean tablePager = (TablePagerBean) addComponentBean(pp, "NewsMgrTPage_tbl",
@@ -135,6 +137,12 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 			sb.append("</div>");
 			sb.append(super.toTableHTML(cp));
 			return sb.toString();
+		}
+
+		@Override
+		protected LinkElement createCategoryElement(final NewsCategory category) {
+			return new LinkElement(category.getText())
+					.setOnclick("$Actions['NewsMgrTPage_tbl']('categoryId=" + category.getId() + "');");
 		}
 	}
 

@@ -25,6 +25,7 @@ import net.simpleframework.mvc.component.ui.menu.MenuItem;
 import net.simpleframework.mvc.component.ui.menu.MenuItems;
 import net.simpleframework.mvc.component.ui.pager.AbstractTablePagerSchema;
 import net.simpleframework.mvc.component.ui.pager.TablePagerColumn;
+import net.simpleframework.mvc.template.t1.ext.CategoryTableLCTemplatePage;
 import net.simpleframework.mvc.template.t1.ext.LCTemplateTablePagerHandler;
 
 /**
@@ -103,7 +104,8 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 		if (category == null) {
 			final NewsCategory category2 = _newsCategoryService.getBean(news.getCategoryId());
 			if (category2 != null) {
-				sb.append("[").append(category2.getText()).append("] ");
+				final LinkElement le = createCategoryElement(category2);
+				sb.append("[").append(le != null ? le : category2.getText()).append("] ");
 			}
 		}
 		if (status == EContentStatus.delete) {
@@ -117,6 +119,11 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 			}
 		}
 		return sb.toString();
+	}
+
+	protected LinkElement createCategoryElement(final NewsCategory category) {
+		return new LinkElement(category.getText()).setOnclick(CategoryTableLCTemplatePage
+				.createTableRefresh("categoryId=" + category.getId()).toString());
 	}
 
 	protected String getTopicHref(final ComponentParameter cp, final News news) {

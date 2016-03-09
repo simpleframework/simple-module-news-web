@@ -21,6 +21,7 @@ import net.simpleframework.mvc.SessionCache;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.Icon;
 import net.simpleframework.mvc.common.element.ImageElement;
+import net.simpleframework.mvc.common.element.LinkElement;
 import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.common.element.SupElement;
 import net.simpleframework.mvc.component.ComponentParameter;
@@ -141,6 +142,11 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 			// 仅显示已发布的
 			cp.putParameter("status", EContentStatus.publish.name());
 			return super.createDataObjectQuery(cp);
+		}
+
+		@Override
+		protected LinkElement createCategoryElement(final NewsCategory category) {
+			return null;
 		}
 
 		@Override

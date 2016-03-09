@@ -41,7 +41,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 		pp.addImportCSS(NewsFormTPage.class, "/news.css");
 
-		addCategoryBean(pp, NewsCategoryHandle.class);
+		addCategoryBean(pp, NewsCategoryHandle.class).setDynamicTree(true);
 
 		addTablePagerBean(pp, NewsListTbl.class).addColumn(TablePagerColumn.ICON())
 				.addColumn(NewsListTbl.TC_TOPIC()).addColumn(NewsListTbl.TC_VIEWS())
