@@ -36,10 +36,6 @@ public interface INewsWebContext extends INewsContext, IContentRefAware {
 
 	String getAttachmentMaxSize();
 
-	Class<? extends Enum<?>> getAttachmentTypeClass();
-
-	int getAttachmentType(String ext);
-
 	public static class AttachmentDownloadHandler implements IDownloadHandler, INewsContextAware {
 
 		@Override

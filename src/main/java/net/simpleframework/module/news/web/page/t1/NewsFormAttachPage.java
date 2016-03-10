@@ -16,7 +16,6 @@ import net.simpleframework.ctx.common.bean.AttachmentFile;
 import net.simpleframework.ctx.trans.Transaction;
 import net.simpleframework.lib.it.sauronsoftware.jave.Encoder;
 import net.simpleframework.lib.it.sauronsoftware.jave.MultimediaInfo;
-import net.simpleframework.module.common.content.Attachment;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.News;
@@ -24,6 +23,7 @@ import net.simpleframework.module.news.NewsAttachment;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsDownloadLogPage;
 import net.simpleframework.module.news.web.page.NewsUtils;
+import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.IMultipartFile;
 import net.simpleframework.mvc.JavascriptForward;
@@ -56,6 +56,7 @@ import net.simpleframework.mvc.component.ui.pager.TablePagerUtils;
 import net.simpleframework.mvc.component.ui.pager.db.AbstractDbTablePagerHandler;
 import net.simpleframework.mvc.component.ui.swfupload.AbstractSwfUploadHandler;
 import net.simpleframework.mvc.component.ui.swfupload.SwfUploadBean;
+import net.simpleframework.mvc.component.ui.window.WindowBean;
 import net.simpleframework.mvc.template.AbstractTemplatePage;
 import net.simpleframework.mvc.template.lets.FormTableRowTemplatePage;
 
@@ -84,26 +85,44 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 					.setTitle($m("NewsFormAttachPage.5"));
 		}
 
-		// 上传
-		AjaxRequestBean ajaxRequest = addAjaxRequest(pp, "NewsFormAttachPage_uploadPage",
-				AttachmentUploadPage.class);
-		addWindowBean(pp, "NewsFormAttachPage_upload", ajaxRequest).setTitle($m("NewsFormTPage.10"))
-				.setPopup(true).setHeight(480).setWidth(400);
-
 		// 删除
 		addDeleteAjaxRequest(pp, "NewsFormAttachPage_delete");
 		// 移动
 		addAjaxRequest(pp, "NewsFormAttachPage_move").setHandlerMethod("doMove");
 
 		// 编辑
-		ajaxRequest = addAjaxRequest(pp, "NewsFormAttachPage_editPage", AttachmentEditPage.class);
-		addWindowBean(pp, "NewsFormAttachPage_edit", ajaxRequest).setHeight(320).setWidth(420)
-				.setTitle($m("AttachmentEditPage.0"));
+		addAttachmentEditWindow(pp);
+		// 上传
+		addAttachmentUploadWindow(pp);
 	}
 
 	@Override
 	protected boolean isPage404(final PageParameter pp) {
 		return NewsUtils.getNews(pp) == null;
+	}
+
+	protected WindowBean addAttachmentUploadWindow(final PageParameter pp) {
+		return addAttachmentUploadWindow(pp, AttachmentUploadPage.class);
+	}
+
+	protected WindowBean addAttachmentUploadWindow(final PageParameter pp,
+			final Class<? extends AbstractMVCPage> pageClass) {
+		final AjaxRequestBean ajaxRequest = addAjaxRequest(pp, "NewsFormAttachPage_uploadPage",
+				pageClass);
+		return addWindowBean(pp, "NewsFormAttachPage_upload", ajaxRequest)
+				.setTitle($m("NewsFormTPage.10")).setPopup(true).setHeight(480).setWidth(400);
+	}
+
+	protected WindowBean addAttachmentEditWindow(final PageParameter pp) {
+		return addAttachmentEditWindow(pp, AttachmentEditPage.class);
+	}
+
+	protected WindowBean addAttachmentEditWindow(final PageParameter pp,
+			final Class<? extends AbstractMVCPage> pageClass) {
+		final AjaxRequestBean ajaxRequest = addAjaxRequest(pp, "NewsFormAttachPage_editPage",
+				pageClass);
+		return addWindowBean(pp, "NewsFormAttachPage_edit", ajaxRequest).setHeight(320).setWidth(420)
+				.setTitle($m("AttachmentEditPage.0"));
 	}
 
 	protected TablePagerBean addTablePagerBean(final PageParameter pp) {
@@ -162,8 +181,9 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		return sb.toString();
 	}
 
-	static final Class<? extends Enum<?>> eClass = ((INewsWebContext) newsContext)
-			.getAttachmentTypeClass();
+	protected Class<? extends Enum<?>> getAttachmentTypeClass() {
+		return null;
+	}
 
 	public static class NewsAttachmentTbl extends AbstractDbTablePagerHandler {
 		@Override
@@ -189,6 +209,9 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 				kv.put("topic", attachment.getTopic());
 			}
 			kv.put("attachsize", FileUtils.toFileSize(attachment.getAttachsize()));
+
+			final Class<? extends Enum<?>> eClass = ((NewsFormAttachPage) get(cp))
+					.getAttachmentTypeClass();
 			if (eClass != null) {
 				kv.put("attachtype", eClass.getEnumConstants()[attachment.getAttachtype()]);
 			}
@@ -245,18 +268,25 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 					new Validator(EValidatorMethod.digits, "#ae_videotime"));
 		}
 
+		protected Class<? extends Enum<?>> getAttachmentTypeClass() {
+			return null;
+		}
+
+		protected NewsAttachment getAttachment(final PageParameter pp) {
+			return getCacheBean(pp, newsContext.getAttachmentService(), "beanId");
+		}
+
 		@Transaction(context = INewsContext.class)
 		@Override
 		public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
-			final IAttachmentService<NewsAttachment> aService = newsContext.getAttachmentService();
-			final NewsAttachment attachment = getCacheBean(cp, aService, "beanId");
+			final NewsAttachment attachment = getAttachment(cp);
 			if (attachment != null) {
 				attachment.setTopic(cp.getParameter("ae_topic"));
 				attachment.setDescription(cp.getParameter("ae_description"));
 				attachment.setAttachtype(cp.getIntParameter("ae_attachtype"));
 				attachment.setVideoTime(cp.getIntParameter("ae_videotime"));
-				aService.update(new String[] { "topic", "attachtype", "videotime", "description" },
-						attachment);
+				newsContext.getAttachmentService().update(
+						new String[] { "topic", "attachtype", "videotime", "description" }, attachment);
 			}
 			final JavascriptForward js = super.onSave(cp);
 			js.append("$Actions['NewsTabAttachPage_tbl']();");
@@ -271,6 +301,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 			final InputElement ae_description = InputElement.textarea("ae_description").setRows(4);
 
 			Option[] opts = null;
+			final Class<? extends Enum<?>> eClass = getAttachmentTypeClass();
 			if (eClass != null) {
 				final Enum<?>[] vals = eClass.getEnumConstants();
 				opts = new Option[vals.length];
@@ -279,8 +310,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 				}
 			}
 
-			final Attachment attachment = getCacheBean(pp, newsContext.getAttachmentService(),
-					"beanId");
+			final NewsAttachment attachment = getAttachment(pp);
 			if (attachment != null) {
 				beanId.setText(attachment.getId());
 				ae_topic.setText(attachment.getTopic());
@@ -327,6 +357,29 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 			sb.append("<div id='idAttachmentUploadPage_swf'></div>");
 			return sb.toString();
 		}
+
+		protected int getAttachmentType(final String ext) {
+			return 0;
+		}
+
+		protected void upload(final PageParameter pp, final File aFile,
+				final Map<String, Object> variables) throws Exception {
+			final KVMap props = new KVMap();
+			final String ext = FileUtils.getFilenameExtension(aFile.getName());
+			if (StringUtils.hasText(ext)) {
+				if (MimeTypes.getMimeType(ext).startsWith("video/")) {
+					final Encoder encoder = new Encoder();
+					final MultimediaInfo info = encoder.getInfo(aFile);
+					final int duration = (int) (info.getDuration() / 1000);
+					props.add("videoTime", duration);
+				}
+				props.put("attachtype", getAttachmentType(ext));
+			}
+
+			final News news = NewsUtils.getNews(pp);
+			newsContext.getAttachmentService().insert(news.getId(), pp.getLoginId(),
+					ArrayUtils.asList(new AttachmentFile(aFile)), props);
+		}
 	}
 
 	public static class _SwfUploadHandler extends AbstractSwfUploadHandler {
@@ -340,23 +393,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		@Override
 		public void upload(final ComponentParameter cp, final IMultipartFile multipartFile,
 				final Map<String, Object> variables) throws Exception {
-			final News news = NewsUtils.getNews(cp);
-			final IAttachmentService<NewsAttachment> aService = newsContext.getAttachmentService();
-
-			final KVMap props = new KVMap();
-			final File aFile = multipartFile.getFile();
-			final String ext = FileUtils.getFilenameExtension(aFile.getName());
-			if (StringUtils.hasText(ext)) {
-				if (MimeTypes.getMimeType(ext).startsWith("video/")) {
-					final Encoder encoder = new Encoder();
-					final MultimediaInfo info = encoder.getInfo(aFile);
-					final int duration = (int) (info.getDuration() / 1000);
-					props.add("videoTime", duration);
-				}
-				props.put("attachtype", ((INewsWebContext) newsContext).getAttachmentType(ext));
-			}
-			aService.insert(news.getId(), cp.getLoginId(),
-					ArrayUtils.asList(new AttachmentFile(aFile)), props);
+			((AttachmentUploadPage) get(cp)).upload(cp, multipartFile.getFile(), variables);
 		}
 	}
 }
