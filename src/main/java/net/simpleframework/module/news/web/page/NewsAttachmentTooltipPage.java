@@ -12,7 +12,6 @@ import net.simpleframework.module.news.NewsAttachment;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsDownloadLogPage;
 import net.simpleframework.mvc.PageParameter;
-import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.common.element.LinkElement;
 import net.simpleframework.mvc.component.base.ajaxrequest.AjaxRequestBean;
 
@@ -60,7 +59,7 @@ public class NewsAttachmentTooltipPage extends AbstractAttachmentTooltipPage imp
 			return 0;
 		}
 		if (((INewsWebContext) newsContext).getLogRef() != null) {
-			return LinkButton.corner(downloads).setOnclick(
+			return LinkElement.style2(downloads).setOnclick(
 					"$Actions['AttachmentTooltipPage_logWin']('beanId=" + attachment.getId() + "');");
 		} else {
 			return downloads;
