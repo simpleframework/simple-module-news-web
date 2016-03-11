@@ -1,7 +1,5 @@
 package net.simpleframework.module.news.web;
 
-import java.io.File;
-
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.module.common.web.content.IContentRefAware;
 import net.simpleframework.module.news.INewsContext;
@@ -39,11 +37,12 @@ public interface INewsWebContext extends INewsContext, IContentRefAware {
 	public static class AttachmentDownloadHandler implements IDownloadHandler, INewsContextAware {
 
 		@Override
-		public void onDownloaded(final Object beanId, final String topic, final File oFile) {
+		public void onDownloaded(final Object beanId, final long length, final String filetype,
+				final String topic) {
 			final IModuleRef ref = ((INewsWebContext) newsContext).getLogRef();
 			if (ref != null) {
 				// 记录下载日志
-				((NewsLogRef) ref).logDownload(beanId, topic, oFile);
+				((NewsLogRef) ref).logDownload(beanId, length, filetype, topic);
 			}
 		}
 	}

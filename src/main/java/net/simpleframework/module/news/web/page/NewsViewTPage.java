@@ -16,7 +16,6 @@ import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
 import net.simpleframework.ctx.permission.PermissionConst;
-import net.simpleframework.module.common.content.ContentException;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.module.common.web.content.ContentUtils;
 import net.simpleframework.module.news.INewsContextAware;
@@ -92,13 +91,13 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 	}
 
 	protected AjaxRequestBean addTooltipPage(final PageParameter pp) {
-		return addAjaxRequest(pp, "NewsViewTPage_TipPage", NewsAttachmentTooltipPage.class).setRole(
+		return addAjaxRequest(pp, "NewsViewTPage_tipPage", NewsAttachmentTooltipPage.class).setRole(
 				PermissionConst.ROLE_ANONYMOUS);
 	}
 
 	protected TooltipBean addTooltip(final PageParameter pp) {
 		addTooltipPage(pp);
-		final TooltipBean tooltip = addComponentBean(pp, "NewsViewTPage_Tip", TooltipBean.class);
+		final TooltipBean tooltip = addComponentBean(pp, "NewsViewTPage_tip", TooltipBean.class);
 		final StringBuilder js = new StringBuilder();
 		js.append("var s = element.readAttribute('onclick');");
 		js.append("if (s.startsWith('$Actions')) {");
@@ -107,7 +106,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		js.append("}");
 		tooltip.addTip(new TipBean(tooltip)
 				.setSelector(".View_PageletsPage a[onclick*='NewsViewTPage_download']")
-				.setContentRef("NewsViewTPage_TipPage").setCache(true).setTitle($m("NewsViewTPage.4"))
+				.setContentRef("NewsViewTPage_tipPage").setCache(true).setTitle($m("NewsViewTPage.4"))
 				.setStem(ETipPosition.leftTop)
 				.setHook(new Hook(ETipPosition.rightTop, ETipPosition.topLeft))
 				.setHideOn(new HideOn(ETipElement.closeButton, EElementEvent.click)).setWidth(400)
@@ -115,19 +114,13 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		return tooltip;
 	}
 
-	public IForward doDownload(final ComponentParameter cp) {
-		final NewsAttachment attachment = newsContext.getAttachmentService().getBean(
-				cp.getParameter("id"));
+	public IForward doDownload(final ComponentParameter cp) throws IOException {
+		final IAttachmentService<NewsAttachment> service = newsContext.getAttachmentService();
+		final NewsAttachment attachment = service.getBean(cp.getParameter("id"));
 		final JavascriptForward js = new JavascriptForward();
 		if (attachment != null) {
-			final IAttachmentService<NewsAttachment> service = newsContext.getAttachmentService();
-			try {
-				final AttachmentFile af = service.createAttachmentFile(attachment);
-				js.append(JS.loc(DownloadUtils.getDownloadHref(af, AttachmentDownloadHandler.class),
-						true));
-			} catch (final IOException e) {
-				throw ContentException.of(e);
-			}
+			final AttachmentFile af = service.createAttachmentFile(attachment);
+			js.append(JS.loc(DownloadUtils.getDownloadHref(af, AttachmentDownloadHandler.class), true));
 		} else {
 			js.append("alert('").append($m("NewsViewTPage.5")).append("');");
 		}

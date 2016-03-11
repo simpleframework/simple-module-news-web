@@ -1,6 +1,5 @@
 package net.simpleframework.module.news.web;
 
-import java.io.File;
 import java.io.IOException;
 
 import net.simpleframework.common.Convert;
@@ -33,8 +32,9 @@ import net.simpleframework.mvc.component.ui.swfupload.SwfUploadBean;
 public class NewsLogRef extends LogRef implements INewsContextAware {
 
 	@Override
-	public void logDownload(final Object beanId, final String topic, final File oFile) {
-		super.logDownload(beanId, topic, oFile);
+	public void logDownload(final Object beanId, final long length, final String filetype,
+			final String topic) {
+		super.logDownload(beanId, length, filetype, topic);
 
 		// 更新计数
 		final IAttachmentService<NewsAttachment> service = newsContext.getAttachmentService();
