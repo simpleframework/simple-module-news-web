@@ -14,6 +14,8 @@ import net.simpleframework.mvc.common.IDownloadHandler;
  */
 public interface INewsWebContext extends INewsContext, IContentRefAware {
 
+	String getAttachmentMaxSize();
+
 	/**
 	 * 获取小页面的创建类
 	 * 
@@ -31,8 +33,6 @@ public interface INewsWebContext extends INewsContext, IContentRefAware {
 	IModuleRef getTagRef();
 
 	IModuleRef getVoteRef();
-
-	String getAttachmentMaxSize();
 
 	public static class AttachmentDownloadHandler implements IDownloadHandler, INewsContextAware {
 

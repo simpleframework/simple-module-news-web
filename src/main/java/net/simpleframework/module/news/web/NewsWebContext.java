@@ -1,7 +1,6 @@
 package net.simpleframework.module.news.web;
 
 import static net.simpleframework.common.I18n.$m;
-import net.simpleframework.ctx.IApplicationContext;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.ctx.Module;
 import net.simpleframework.ctx.ModuleFunctions;
@@ -17,10 +16,9 @@ import net.simpleframework.mvc.ctx.WebModuleFunction;
  *         http://www.simpleframework.net
  */
 public class NewsWebContext extends NewsContext implements INewsWebContext {
-
 	@Override
-	public void onInit(final IApplicationContext application) throws Exception {
-		super.onInit(application);
+	public String getAttachmentMaxSize() {
+		return null;
 	}
 
 	@Override
@@ -31,11 +29,6 @@ public class NewsWebContext extends NewsContext implements INewsWebContext {
 	@Override
 	public NewsUrlsFactory getUrlsFactory() {
 		return singleton(NewsUrlsFactory.class);
-	}
-
-	@Override
-	public String getAttachmentMaxSize() {
-		return null;
 	}
 
 	@Override

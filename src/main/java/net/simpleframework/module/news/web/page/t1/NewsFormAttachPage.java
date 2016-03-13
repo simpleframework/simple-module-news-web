@@ -2,20 +2,16 @@ package net.simpleframework.module.news.web.page.t1;
 
 import static net.simpleframework.common.I18n.$m;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.FileUtils;
-import net.simpleframework.common.MimeTypes;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.ArrayUtils;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
 import net.simpleframework.ctx.trans.Transaction;
-import net.simpleframework.lib.it.sauronsoftware.jave.Encoder;
-import net.simpleframework.lib.it.sauronsoftware.jave.MultimediaInfo;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.News;
@@ -357,29 +353,6 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 			sb.append("<div id='idAttachmentUploadPage_swf'></div>");
 			return sb.toString();
 		}
-
-		protected int getAttachmentType(final String ext) {
-			return 0;
-		}
-
-		protected void upload(final PageParameter pp, final File aFile,
-				final Map<String, Object> variables) throws Exception {
-			final KVMap props = new KVMap();
-			final String ext = FileUtils.getFilenameExtension(aFile.getName());
-			if (StringUtils.hasText(ext)) {
-				if (MimeTypes.getMimeType(ext).startsWith("video/")) {
-					final Encoder encoder = new Encoder();
-					final MultimediaInfo info = encoder.getInfo(aFile);
-					final int duration = (int) (info.getDuration() / 1000);
-					props.add("videoTime", duration);
-				}
-				props.put("attachtype", getAttachmentType(ext));
-			}
-
-			final News news = NewsUtils.getNews(pp);
-			newsContext.getAttachmentService().insert(news.getId(), pp.getLoginId(),
-					ArrayUtils.asList(new AttachmentFile(aFile)), props);
-		}
 	}
 
 	public static class _SwfUploadHandler extends AbstractSwfUploadHandler {
@@ -393,7 +366,9 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		@Override
 		public void upload(final ComponentParameter cp, final IMultipartFile multipartFile,
 				final Map<String, Object> variables) throws Exception {
-			((AttachmentUploadPage) get(cp)).upload(cp, multipartFile.getFile(), variables);
+			final News news = NewsUtils.getNews(cp);
+			newsContext.getAttachmentService().insert(news.getId(), cp.getLoginId(),
+					ArrayUtils.asList(new AttachmentFile(multipartFile.getFile())));
 		}
 	}
 }
