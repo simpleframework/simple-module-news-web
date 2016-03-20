@@ -11,7 +11,6 @@ import net.simpleframework.module.common.content.AbstractComment;
 import net.simpleframework.module.news.INewsCommentService;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
-import net.simpleframework.module.news.News;
 import net.simpleframework.module.news.NewsComment;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.component.ComponentParameter;
@@ -28,17 +27,13 @@ public class NewsCommentHandler extends CommentCtxHandler<NewsComment> implement
 
 	@Override
 	public ID getOwnerId(final ComponentParameter cp) {
-		final News news = getNews(cp);
-		return news != null ? news.getId() : null;
+		return NewsUtils.getNews(cp).getId();
 	}
 
 	@Override
 	public Map<String, Object> getFormParameters(final ComponentParameter cp) {
 		final KVMap kv = (KVMap) super.getFormParameters(cp);
-		final ID newsId = getOwnerId(cp);
-		if (newsId != null) {
-			kv.add("newsId", newsId);
-		}
+		kv.add("newsId", getOwnerId(cp));
 		return kv;
 	}
 
@@ -63,10 +58,7 @@ public class NewsCommentHandler extends CommentCtxHandler<NewsComment> implement
 	public JavascriptForward addComment(final ComponentParameter cp) {
 		final INewsCommentService service = getBeanService();
 		final NewsComment comment = service.createBean();
-		final ID newsId = getOwnerId(cp);
-		if (newsId != null) {
-			comment.setContentId(newsId);
-		}
+		comment.setContentId(getOwnerId(cp));
 		comment.setCreateDate(new Date());
 		comment.setUserId(cp.getLoginId());
 		comment.setCcomment(cp.getParameter(PARAM_COMMENT));
@@ -76,9 +68,5 @@ public class NewsCommentHandler extends CommentCtxHandler<NewsComment> implement
 		}
 		service.insert(comment);
 		return super.addComment(cp);
-	}
-
-	protected News getNews(final ComponentParameter cp) {
-		return _newsService.getBean(cp.getParameter("newsId"));
 	}
 }
