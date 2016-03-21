@@ -5,7 +5,7 @@ import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.ctx.IContextBase;
 import net.simpleframework.module.common.plugin.ModulePluginFactory;
-import net.simpleframework.module.news.News;
+import net.simpleframework.module.news.bean.News;
 import net.simpleframework.module.vote.VoteRef;
 import net.simpleframework.module.vote.web.VoteListHandler;
 import net.simpleframework.module.vote.web.page.VotePostPage;

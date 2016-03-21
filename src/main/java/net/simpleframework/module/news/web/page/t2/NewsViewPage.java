@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import net.simpleframework.module.news.INewsContextAware;
-import net.simpleframework.module.news.News;
+import net.simpleframework.module.news.bean.News;
 import net.simpleframework.module.news.web.page.NewsUtils;
 import net.simpleframework.module.news.web.page.NewsViewTPage;
 import net.simpleframework.mvc.PageMapping;

@@ -1,8 +1,8 @@
 package net.simpleframework.module.news.web;
 
 import net.simpleframework.common.StringUtils;
-import net.simpleframework.module.news.News;
-import net.simpleframework.module.news.NewsCategory;
+import net.simpleframework.module.news.bean.News;
+import net.simpleframework.module.news.bean.NewsCategory;
 import net.simpleframework.module.news.web.page.NewsListTPage;
 import net.simpleframework.module.news.web.page.NewsViewTPage;
 import net.simpleframework.module.news.web.page.t1.NewsFormAttachPage;

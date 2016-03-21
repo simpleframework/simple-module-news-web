@@ -9,7 +9,7 @@ import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.module.news.INewsContextAware;
-import net.simpleframework.module.news.News;
+import net.simpleframework.module.news.bean.News;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsVoteRef;
 import net.simpleframework.module.news.web.NewsVoteRef._VoteListHandler;

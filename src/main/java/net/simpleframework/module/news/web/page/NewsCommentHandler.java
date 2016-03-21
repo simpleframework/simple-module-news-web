@@ -11,7 +11,7 @@ import net.simpleframework.module.common.content.AbstractComment;
 import net.simpleframework.module.news.INewsCommentService;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
-import net.simpleframework.module.news.NewsComment;
+import net.simpleframework.module.news.bean.NewsComment;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ext.comments.ctx.CommentCtxHandler;

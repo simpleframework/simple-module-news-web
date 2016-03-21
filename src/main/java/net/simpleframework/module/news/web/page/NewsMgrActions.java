@@ -16,7 +16,7 @@ import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.common.web.page.AbstractDescPage;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
-import net.simpleframework.module.news.News;
+import net.simpleframework.module.news.bean.News;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsUpdateLogPage;
 import net.simpleframework.module.news.web.NewsUrlsFactory;

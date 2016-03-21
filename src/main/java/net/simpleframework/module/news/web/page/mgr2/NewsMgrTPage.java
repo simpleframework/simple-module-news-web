@@ -8,7 +8,7 @@ import java.util.Map;
 import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.common.web.page.AbstractMgrTPage;
 import net.simpleframework.module.news.INewsContextAware;
-import net.simpleframework.module.news.NewsCategory;
+import net.simpleframework.module.news.bean.NewsCategory;
 import net.simpleframework.module.news.web.page.NewsCategoryHandle;
 import net.simpleframework.module.news.web.page.NewsFormTPage;
 import net.simpleframework.module.news.web.page.NewsListTbl;

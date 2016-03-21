@@ -9,7 +9,7 @@ import net.simpleframework.ctx.service.ado.IADOBeanService;
 import net.simpleframework.module.common.web.content.ListRowHandler;
 import net.simpleframework.module.common.web.content.PageletCreator;
 import net.simpleframework.module.news.INewsContextAware;
-import net.simpleframework.module.news.News;
+import net.simpleframework.module.news.bean.News;
 import net.simpleframework.module.news.web.page.NewsViewTPage;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.SpanElement;
