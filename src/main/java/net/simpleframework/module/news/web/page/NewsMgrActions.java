@@ -98,7 +98,7 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 		final JavascriptForward js = new JavascriptForward();
 		final News news = NewsUtils.getNews(cp);
 		final EContentStatus status = news.getStatus();
-		if (status == EContentStatus.edit) {
+		if (cp.isLmanager() || status == EContentStatus.edit) {
 			final NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
 			js.append(JS.loc(uFactory.getUrl(cp, NewsFormBasePage.class, news)));
 		} else {
