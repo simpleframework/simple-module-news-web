@@ -11,7 +11,7 @@ import net.simpleframework.common.Convert;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.trans.Transaction;
-import net.simpleframework.module.common.bean.AbstractRecommend.ERecommendStatus;
+import net.simpleframework.module.common.content.AbstractRecommend.ERecommendStatus;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.bean.News;
