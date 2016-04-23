@@ -188,7 +188,7 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 			return super.createTextarea(pp).setText(
 					$m("StatusDescLogPage.1",
 							op == EContentStatus.edit ? $m("NewsMgrPage.7") : Convert.toString(op),
-							Convert.toDateString(new Date()), pp.getLogin()));
+							Convert.toDateTimeString(new Date()), pp.getLogin()));
 		}
 	}
 

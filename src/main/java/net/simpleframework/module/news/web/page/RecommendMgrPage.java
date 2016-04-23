@@ -145,13 +145,13 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 			final Date dstartDate = r.getDstartDate();
 			final Date dendDate = r.getDendDate();
 			if (dstartDate != null) {
-				sb.append(Convert.toDateString(dstartDate));
+				sb.append(Convert.toDateTimeString(dstartDate));
 			} else {
 				sb.append("-");
 			}
 			sb.append("<br>");
 			if (dendDate != null) {
-				sb.append(Convert.toDateString(dendDate));
+				sb.append(Convert.toDateTimeString(dendDate));
 			} else {
 				sb.append("-");
 			}
