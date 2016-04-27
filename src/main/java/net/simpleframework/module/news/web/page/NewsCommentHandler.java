@@ -1,6 +1,5 @@
 package net.simpleframework.module.news.web.page;
 
-import java.util.Date;
 import java.util.Map;
 
 import net.simpleframework.ado.query.IDataQuery;
@@ -59,7 +58,6 @@ public class NewsCommentHandler extends CommentCtxHandler<NewsComment> implement
 		final INewsCommentService service = getBeanService();
 		final NewsComment comment = service.createBean();
 		comment.setContentId(getOwnerId(cp));
-		comment.setCreateDate(new Date());
 		comment.setUserId(cp.getLoginId());
 		comment.setCcomment(cp.getParameter(PARAM_COMMENT));
 		final AbstractComment parent = service.getBean(cp.getParameter(PARAM_PARENTID));
