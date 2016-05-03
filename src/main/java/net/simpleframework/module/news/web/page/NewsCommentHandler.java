@@ -2,18 +2,16 @@ package net.simpleframework.module.news.web.page;
 
 import java.util.Map;
 
-import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.ctx.trans.Transaction;
-import net.simpleframework.module.common.content.AbstractComment;
+import net.simpleframework.module.common.web.content.hdl.AbstractCommentCtxHandler;
 import net.simpleframework.module.news.INewsCommentService;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.bean.NewsComment;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.component.ComponentParameter;
-import net.simpleframework.mvc.component.ext.comments.ctx.CommentCtxHandler;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -22,7 +20,8 @@ import net.simpleframework.mvc.component.ext.comments.ctx.CommentCtxHandler;
  *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class NewsCommentHandler extends CommentCtxHandler<NewsComment> implements INewsContextAware {
+public class NewsCommentHandler extends AbstractCommentCtxHandler<NewsComment> implements
+		INewsContextAware {
 
 	@Override
 	public ID getOwnerId(final ComponentParameter cp) {
@@ -41,11 +40,6 @@ public class NewsCommentHandler extends CommentCtxHandler<NewsComment> implement
 		return _newsCommentService;
 	}
 
-	@Override
-	public IDataQuery<?> comments(final ComponentParameter cp) {
-		return getBeanService().queryComments(getOwnerId(cp));
-	}
-
 	@Transaction(context = INewsContext.class)
 	@Override
 	public JavascriptForward deleteComment(final ComponentParameter cp, final Object id) {
@@ -55,16 +49,7 @@ public class NewsCommentHandler extends CommentCtxHandler<NewsComment> implement
 	@Transaction(context = INewsContext.class)
 	@Override
 	public JavascriptForward addComment(final ComponentParameter cp) {
-		final INewsCommentService service = getBeanService();
-		final NewsComment comment = service.createBean();
-		comment.setContentId(getOwnerId(cp));
-		comment.setUserId(cp.getLoginId());
-		comment.setCcomment(cp.getParameter(PARAM_COMMENT));
-		final AbstractComment parent = service.getBean(cp.getParameter(PARAM_PARENTID));
-		if (parent != null) {
-			comment.setParentId(parent.getId());
-		}
-		service.insert(comment);
+		getBeanService().insert(createComment(cp));
 		return super.addComment(cp);
 	}
 }
