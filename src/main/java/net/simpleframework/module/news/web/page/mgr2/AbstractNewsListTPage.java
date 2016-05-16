@@ -35,7 +35,8 @@ import net.simpleframework.mvc.template.struct.CategoryItems;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public abstract class AbstractNewsListTPage extends Category_ListPage implements INewsContextAware {
@@ -52,7 +53,9 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 		}
 	}
 
-	protected abstract Collection<NewsCategory> getNewsCategoryList(PageParameter pp);
+	protected Collection<NewsCategory> getNewsCategoryList(final PageParameter pp) {
+		return null;
+	}
 
 	@Override
 	protected CategoryItems getCategoryList(final PageParameter pp) {
