@@ -190,15 +190,16 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 	}
 
 	public static final TablePagerColumn TC_VIEWS() {
-		return new TablePagerColumn("views", $m("NewsMgrPage.2"), 70).setPropertyClass(Float.class);
+		return new TablePagerColumn("views", $m("NewsMgrPage.2"), 70).setPropertyClass(Float.class)
+				.setFilter(false);
 	}
 
 	public static final TablePagerColumn TC_COMMENTS() {
-		return new TablePagerColumn("comments", $m("NewsMgrPage.3"), 50)
+		return new TablePagerColumn("comments", $m("NewsMgrPage.3"), 50).setFilter(false)
 				.setTextAlign(ETextAlign.center);
 	}
 
 	public static final TablePagerColumn TC_CREATEDATE() {
-		return TablePagerColumn.DATE("createDate", $m("NewsMgrPage.4"));
+		return TablePagerColumn.DATE("createDate", $m("NewsMgrPage.4")).setFilter(false);
 	}
 }
