@@ -3,10 +3,8 @@ package net.simpleframework.module.news.web.page.t1;
 import static net.simpleframework.common.I18n.$m;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.Map;
 
-import net.simpleframework.common.Convert;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.ctx.IModuleRef;
 import net.simpleframework.module.news.INewsContextAware;
@@ -16,6 +14,7 @@ import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsUrlsFactory;
 import net.simpleframework.module.news.web.NewsVoteRef;
 import net.simpleframework.module.news.web.page.NewsFormTPage;
+import net.simpleframework.module.news.web.page.NewsUtils;
 import net.simpleframework.mvc.PageMapping;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.SessionCache;
@@ -86,18 +85,18 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 				}
 			}
 		}
+
 		final ElementList el = ElementList.of(backBtn);
-		if ("save".equals(pp.getParameter("op"))) {
-			el.append(titleElement($m("NewsFormBasePage.3",
-					Convert.toDateString(new Date(), "MM-dd HH:mm"))));
+		final News news = NewsUtils.getNews(pp);
+		if (news != null) {
+			el.add(titleElement($m("NewsFormBasePage.3") + " : " + news.getStatus()));
 		}
 		return el;
 	}
 
 	@Override
 	public TabButtons getTabButtons(final PageParameter pp) {
-		final NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
-		final News news = _newsService.getBean(pp.getParameter("newsId"));
+		final News news = NewsUtils.getNews(pp);
 		final TabButtons tabs = TabButtons.of(new TabButton($m("NewsFormBasePage.0"), uFactory
 				.getUrl(pp, NewsFormBasePage.class, news)));
 		if (news != null) {
@@ -119,4 +118,6 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 		}
 		return tabs;
 	}
+
+	static NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
 }

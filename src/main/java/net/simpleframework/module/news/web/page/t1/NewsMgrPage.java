@@ -45,7 +45,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 		addCategoryBean(pp, NewsCategoryHandle.class).setDynamicTree(true);
 
 		addTablePagerBean(pp, NewsListTbl.class).addColumn(TablePagerColumn.ICON())
-				.addColumn(NewsListTbl.TC_TOPIC()).addColumn(NewsListTbl.TC_VIEWS())
+				.addColumn(NewsListTbl.TC_TOPIC()).addColumn(NewsListTbl.TC_STATUS())
 				.addColumn(NewsListTbl.TC_COMMENTS()).addColumn(NewsListTbl.TC_CREATEDATE())
 				.addColumn(TablePagerColumn.OPE(70));
 

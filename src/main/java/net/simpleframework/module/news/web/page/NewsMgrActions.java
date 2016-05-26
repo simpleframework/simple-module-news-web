@@ -39,7 +39,8 @@ import net.simpleframework.mvc.template.t1.ext.CategoryTableLCTemplatePage;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsContextAware {
@@ -97,16 +98,15 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 	public IForward doEdit(final ComponentParameter cp) {
 		final JavascriptForward js = new JavascriptForward();
 		final News news = NewsUtils.getNews(cp);
-		final EContentStatus status = news.getStatus();
-		if (cp.isLmanager() || status == EContentStatus.edit) {
-			final NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
-			js.append(JS.loc(uFactory.getUrl(cp, NewsFormBasePage.class, news)));
-		} else {
-			js.append("if (confirm('").append($m("NewsMgrPage.8", status))
-					.append("')) { $Actions['NewsMgrPage_statusWindow']('op=")
-					.append(EContentStatus.edit.name()).append("&newsId=").append(news.getId())
-					.append("'); }");
-		}
+		js.append(JS.loc(uFactory.getUrl(cp, NewsFormBasePage.class, news)));
+		// final EContentStatus status = news.getStatus();
+		// if (cp.isLmanager() || status == EContentStatus.edit) {
+		// } else {
+		// js.append("if (confirm('").append($m("NewsMgrPage.8", status))
+		// .append("')) { $Actions['NewsMgrPage_statusWindow']('op=")
+		// .append(EContentStatus.edit.name()).append("&newsId=").append(news.getId())
+		// .append("'); }");
+		// }
 		return js;
 	}
 
@@ -164,7 +164,6 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 
 			final JavascriptForward js = super.onSave(cp);
 			if (op == EContentStatus.edit && arr.length == 1) {
-				final NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
 				return js.append(JS.loc(uFactory.getUrl(cp, NewsFormBasePage.class, news)));
 			} else {
 				return js.append(createTableRefresh().toString());
@@ -228,4 +227,6 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 			return sb.toString();
 		}
 	}
+
+	static final NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
 }

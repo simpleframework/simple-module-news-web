@@ -18,6 +18,7 @@ import net.simpleframework.ctx.common.bean.AttachmentFile;
 import net.simpleframework.ctx.trans.Transaction;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.module.common.content.ContentException;
+import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.module.common.web.content.ContentUtils;
 import net.simpleframework.module.news.INewsContext;
@@ -27,6 +28,7 @@ import net.simpleframework.module.news.bean.NewsAttachment;
 import net.simpleframework.module.news.bean.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsAttachmentAction;
+import net.simpleframework.module.news.web.NewsUrlsFactory;
 import net.simpleframework.module.news.web.page.mgr2.NewsMgrTPage;
 import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
 import net.simpleframework.module.news.web.page.t1.NewsMgrPage;
@@ -184,9 +186,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 
 	protected JavascriptForward doSaveForward(final ComponentParameter cp, final News news) {
 		final StringBuilder js = new StringBuilder();
-		js.append(
-				((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp, NewsFormBasePage.class,
-						news)).append("&op=save");
+		js.append(uFactory.getUrl(cp, NewsFormBasePage.class, news));
 		final String url = cp.getParameter("url");
 		if (StringUtils.hasText(url)) {
 			js.append("&url=").append(HttpUtils.encodeUrl(url));
@@ -249,6 +249,8 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 
 		NewsCategory category = null;
 		final News news = NewsUtils.getNews(pp);
+		final EContentStatus status = news != null ? news.getStatus() : null;
+		final boolean readonly = (status != null && status != EContentStatus.edit);
 		if (news != null) {
 			ne_id.setText(news.getId());
 			ne_cname.setText(news.getCname());
@@ -287,8 +289,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		final TableRow r3 = new TableRow(
 				new RowField($m("NewsFormTPage.5"), ne_content).setStarMark(true));
 		final TableRow r4 = new TableRow(new RowField($m("NewsFormTPage.6"), ne_description));
-		final TableRows rows = TableRows.of(r1, r2, r3, r4);
-		return rows;
+		return TableRows.of(r1, r2, r3, r4).setReadonly(readonly);
 	}
 
 	public static final String OPT_ALLOWCOMMENTS = "opt_allowComments";
@@ -362,8 +363,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		final ElementList el = ElementList.of();
 		if (news != null) {
 			el.append(new ButtonElement($m("Button.Preview")).setOnclick(JS.loc(
-					((INewsWebContext) newsContext).getUrlsFactory().getUrl(pp, NewsViewTPage.class,
-							news, "preview=true"), true)));
+					uFactory.getUrl(pp, NewsViewTPage.class, news, "preview=true"), true)));
 			el.append(SpanElement.SPACE);
 		}
 		el.append(SAVE_BTN());
@@ -418,4 +418,6 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 			return ((NewsFormTPage) get(cp)).getCategoryDictTreenodes(cp, parent);
 		}
 	}
+
+	static NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
 }

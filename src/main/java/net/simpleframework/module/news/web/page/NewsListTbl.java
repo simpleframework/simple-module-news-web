@@ -13,12 +13,12 @@ import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.bean.News;
 import net.simpleframework.module.news.bean.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
-import net.simpleframework.mvc.common.element.AbstractElement;
 import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.EVerticalAlign;
 import net.simpleframework.mvc.common.element.ImageElement;
 import net.simpleframework.mvc.common.element.LinkElement;
+import net.simpleframework.mvc.common.element.Option;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.ui.menu.MenuBean;
 import net.simpleframework.mvc.component.ui.menu.MenuItem;
@@ -62,9 +62,9 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 		if (img != null) {
 			kv.add(TablePagerColumn.ICON, img);
 		}
-		kv.add("topic", toTopicHTML(cp, news)).add("views", news.getViews())
-				.add("comments", toCommentsHTML(cp, news)).add("createDate", news.getCreateDate())
-				.add(TablePagerColumn.OPE, toOpeHTML(cp, news));
+		kv.add("topic", toTopicHTML(cp, news)).add("status", news.getStatus())
+				.add("views", news.getViews()).add("comments", toCommentsHTML(cp, news))
+				.add("createDate", news.getCreateDate()).add(TablePagerColumn.OPE, toOpeHTML(cp, news));
 		return kv;
 	}
 
@@ -118,11 +118,7 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 
 	protected LinkElement createTopicLink(final ComponentParameter cp, final News news) {
 		final LinkElement le = new LinkElement(news.getTopic());
-		if (news.getStatus() == EContentStatus.publish) {
-			return le.setHref(getTopicHref(cp, news)).setTarget("_blank");
-		} else {
-			return le.setOnclick("$Actions['NewsMgrPage_edit']('newsId=" + news.getId() + "');");
-		}
+		return le.setOnclick("$Actions['NewsMgrPage_edit']('newsId=" + news.getId() + "');");
 	}
 
 	protected LinkElement createCategoryElement(final NewsCategory category) {
@@ -145,20 +141,12 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 		}
 	}
 
-	protected AbstractElement<?> createPublishBtn(final ComponentParameter cp, final News news) {
-		if (news.getStatus() == EContentStatus.edit) {
-			return NewsUtils.createStatusAct(cp, EContentStatus.publish, news);
-		} else {
-			return new ButtonElement($m("Edit")).setOnclick("$Actions['NewsMgrPage_edit']('newsId="
-					+ news.getId() + "');");
-		}
-	}
-
 	protected String toOpeHTML(final ComponentParameter cp, final News news) {
 		final StringBuilder sb = new StringBuilder();
 		final EContentStatus status = cp.getEnumParameter(EContentStatus.class, "status");
 		if (status != EContentStatus.delete) {
-			sb.append(createPublishBtn(cp, news));
+			sb.append(ButtonElement.editBtn().setOnclick(
+					"$Actions['NewsMgrPage_edit']('newsId=" + news.getId() + "');"));
 			sb.append(AbstractTablePagerSchema.IMG_DOWNMENU);
 		} else {
 			sb.append(NewsUtils.createStatusAct(cp, EContentStatus.edit, news).setText(
@@ -175,7 +163,6 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 					.of(MenuItem.of($m("AbstractContentBean.2")).setOnclick_act(
 							"NewsMgrPage_recommendation", "newsId"))
 					.append(MenuItem.sep())
-					.append(MenuItem.itemEdit().setOnclick_act("NewsMgrPage_edit", "newsId"))
 					.append(
 							MenuItem.itemDelete().setOnclick_act("NewsMgrPage_status", "newsId",
 									"op=" + EContentStatus.delete.name())).append(MenuItem.sep())
@@ -192,6 +179,15 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 	public static final TablePagerColumn TC_VIEWS() {
 		return new TablePagerColumn("views", $m("NewsMgrPage.2"), 70).setPropertyClass(Float.class)
 				.setFilter(false);
+	}
+
+	public static final TablePagerColumn TC_STATUS() {
+		return new TablePagerColumn("status", $m("NewsMgrPage.5"), 70) {
+			@Override
+			protected Option[] getFilterOptions() {
+				return Option.from(EContentStatus.edit, EContentStatus.publish);
+			}
+		}.setPropertyClass(EContentStatus.class).setSort(false);
 	}
 
 	public static final TablePagerColumn TC_COMMENTS() {

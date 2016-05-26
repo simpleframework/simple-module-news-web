@@ -116,7 +116,7 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 			TC_CREATEDATE.setWidth(125);
 		}
 		tablePager.addColumn(TablePagerColumn.ICON()).addColumn(NewsListTbl.TC_TOPIC())
-				.addColumn(NewsListTbl.TC_VIEWS()).addColumn(NewsListTbl.TC_COMMENTS())
+				.addColumn(NewsListTbl.TC_STATUS()).addColumn(NewsListTbl.TC_COMMENTS())
 				.addColumn(TC_CREATEDATE);
 		if (mgr) {
 			tablePager.addColumn(TablePagerColumn.OPE(70));

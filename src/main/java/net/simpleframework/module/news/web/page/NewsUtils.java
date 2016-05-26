@@ -24,7 +24,8 @@ import net.simpleframework.mvc.template.AbstractTemplatePage;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public abstract class NewsUtils implements INewsContextAware {
@@ -80,8 +81,6 @@ public abstract class NewsUtils implements INewsContextAware {
 		};
 	}
 
-	static NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
-
 	public static LinkButton createAddNew(final PageParameter pp) {
 		return new LinkButton($m("NewsMgrPage.6")).setOnclick("$Actions.loc('"
 				+ uFactory.getUrl(pp, NewsFormBasePage.class, (News) null, "categoryId=")
@@ -100,4 +99,6 @@ public abstract class NewsUtils implements INewsContextAware {
 		return category == null ? null : new LinkButton($m("Button.Preview")).setOnclick(JS.loc(
 				uFactory.getUrl(pp, NewsListTPage.class, category), true));
 	}
+
+	static NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
 }

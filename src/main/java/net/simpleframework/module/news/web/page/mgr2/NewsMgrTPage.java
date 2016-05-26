@@ -34,7 +34,8 @@ import net.simpleframework.mvc.component.ui.tree.TreeNode;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware {
@@ -59,7 +60,7 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 						"$('idNewsMgrTPage_tbl').previous().innerHTML = $('idNewsMgrTPage_nav').innerHTML;")
 				.setContainerId("idNewsMgrTPage_tbl").setHandlerClass(NewsListMgr2Tbl.class);
 		tablePager.addColumn(TablePagerColumn.ICON()).addColumn(NewsListTbl.TC_TOPIC())
-				.addColumn(NewsListTbl.TC_VIEWS()).addColumn(NewsListTbl.TC_COMMENTS())
+				.addColumn(NewsListTbl.TC_STATUS()).addColumn(NewsListTbl.TC_COMMENTS())
 				.addColumn(NewsListTbl.TC_CREATEDATE()).addColumn(TablePagerColumn.OPE(70));
 
 		// edit/delete/status
