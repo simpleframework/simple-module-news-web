@@ -55,19 +55,13 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 		pp.addComponentBean("NewsMgrPage_delete", AjaxRequestBean.class)
 				.setConfirmMessage($m("NewsMgrPage.11")).setHandlerMethod("doDelete")
 				.setHandlerClass(mgrActionsClass);
-		// status
-		pp.addComponentBean("NewsMgrPage_status", AjaxRequestBean.class).setHandlerMethod("doStatus")
-				.setHandlerClass(mgrActionsClass);
 
-		// status window
-		AjaxRequestBean ajaxRequest = pp.addComponentBean("NewsMgrPage_statusPage",
-				AjaxRequestBean.class).setUrlForward(AbstractMVCPage.url(statusDescClass));
-		pp.addComponentBean("NewsMgrPage_statusWindow", WindowBean.class)
-				.setContentRef(ajaxRequest.getName()).setWidth(420).setHeight(240);
+		// status && window
+		addStatusWindow(pp, mgrActionsClass, statusDescClass);
 
 		// comment window
-		ajaxRequest = pp.addComponentBean("NewsMgrPage_commentPage", AjaxRequestBean.class)
-				.setUrlForward(AbstractMVCPage.url(NewsCommentPage.class));
+		AjaxRequestBean ajaxRequest = pp.addComponentBean("NewsMgrPage_commentPage",
+				AjaxRequestBean.class).setUrlForward(AbstractMVCPage.url(NewsCommentPage.class));
 		pp.addComponentBean("NewsMgrPage_commentWindow", WindowBean.class)
 				.setContentRef(ajaxRequest.getName()).setHeight(540).setWidth(864);
 
@@ -93,6 +87,18 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 			pp.addComponentBean("NewsMgrPage_update_log", WindowBean.class)
 					.setContentRef(ajaxRequest.getName()).setHeight(540).setWidth(864);
 		}
+	}
+
+	public static void addStatusWindow(final PageParameter pp,
+			final Class<? extends NewsMgrActions> mgrActionsClass,
+			final Class<? extends StatusDescPage> statusDescClass) {
+		pp.addComponentBean("NewsMgrPage_status", AjaxRequestBean.class).setHandlerMethod("doStatus")
+				.setHandlerClass(mgrActionsClass);
+
+		final AjaxRequestBean ajaxRequest = pp.addComponentBean("NewsMgrPage_statusPage",
+				AjaxRequestBean.class).setUrlForward(AbstractMVCPage.url(statusDescClass));
+		pp.addComponentBean("NewsMgrPage_statusWindow", WindowBean.class)
+				.setContentRef(ajaxRequest.getName()).setWidth(420).setHeight(240);
 	}
 
 	public IForward doEdit(final ComponentParameter cp) {
@@ -162,16 +168,12 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 				_newsService.update(new String[] { "status" }, news);
 			}
 
-			final JavascriptForward js = super.onSave(cp);
-			if (op == EContentStatus.edit && arr.length == 1) {
-				return js.append(JS.loc(uFactory.getUrl(cp, NewsFormBasePage.class, news)));
-			} else {
-				return js.append(createTableRefresh().toString());
-			}
+			final JavascriptForward js = super.onSave(cp).append(toSaveJavascript(cp));
+			return js;
 		}
 
-		protected JavascriptForward createTableRefresh() {
-			return CategoryTableLCTemplatePage.createTableRefresh();
+		protected String toSaveJavascript(final PageParameter pp) {
+			return CategoryTableLCTemplatePage.createTableRefresh().toString();
 		}
 
 		@Override

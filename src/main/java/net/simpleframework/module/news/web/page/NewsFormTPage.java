@@ -29,6 +29,7 @@ import net.simpleframework.module.news.bean.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsAttachmentAction;
 import net.simpleframework.module.news.web.NewsUrlsFactory;
+import net.simpleframework.module.news.web.page.NewsMgrActions.StatusDescPage;
 import net.simpleframework.module.news.web.page.mgr2.NewsMgrTPage;
 import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
 import net.simpleframework.module.news.web.page.t1.NewsMgrPage;
@@ -95,6 +96,9 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		addComponentBean(pp, "NewsForm_upload", WindowBean.class)
 				.setContentRef("NewsForm_upload_page").setTitle($m("NewsFormTPage.10")).setPopup(true)
 				.setHeight(480).setWidth(400);
+
+		// 状态
+		NewsMgrActions.addStatusWindow(pp, _NewsMgrActions.class, _StatusDescPage.class);
 	}
 
 	protected HtmlEditorBean addHtmlEditorBean(final PageParameter pp) {
@@ -361,12 +365,24 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 	public ElementList getRightElements(final PageParameter pp) {
 		final News news = NewsUtils.getNews(pp);
 		final ElementList el = ElementList.of();
+		final EContentStatus status = news != null ? news.getStatus() : null;
+		if (status == EContentStatus.edit) {
+			el.add(NewsUtils.createStatusAct(pp, EContentStatus.publish, news));
+		} else if (status == EContentStatus.publish) {
+			el.add(NewsUtils.createStatusAct(pp, EContentStatus.edit, news)
+					.setText($m("NewsMgrPage.7")).setHighlight(true));
+		}
+
 		if (news != null) {
+			el.append(SpanElement.SPACE15);
 			el.append(new ButtonElement($m("Button.Preview")).setOnclick(JS.loc(
 					uFactory.getUrl(pp, NewsViewTPage.class, news, "preview=true"), true)));
-			el.append(SpanElement.SPACE);
 		}
-		el.append(SAVE_BTN());
+
+		if (status == null || status == EContentStatus.edit) {
+			el.append(SpanElement.SPACE);
+			el.append(SAVE_BTN().setHighlight(false));
+		}
 		return el;
 	}
 
@@ -416,6 +432,16 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		@Override
 		public TreeNodes getTreenodes(final ComponentParameter cp, final TreeNode parent) {
 			return ((NewsFormTPage) get(cp)).getCategoryDictTreenodes(cp, parent);
+		}
+	}
+
+	public static class _NewsMgrActions extends NewsMgrActions {
+	}
+
+	public static class _StatusDescPage extends StatusDescPage {
+		@Override
+		protected String toSaveJavascript(final PageParameter pp) {
+			return JS.loc(uFactory.getUrl(pp, NewsFormBasePage.class, NewsUtils.getNews(pp)));
 		}
 	}
 

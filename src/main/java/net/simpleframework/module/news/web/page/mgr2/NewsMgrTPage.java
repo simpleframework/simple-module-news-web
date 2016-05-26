@@ -158,8 +158,8 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 	public static class _StatusDescPage extends StatusDescPage {
 
 		@Override
-		protected JavascriptForward createTableRefresh() {
-			return new JavascriptForward("$Actions['NewsMgrTPage_tbl']();");
+		protected String toSaveJavascript(final PageParameter pp) {
+			return "$Actions['NewsMgrTPage_tbl']();";
 		}
 	}
 }
