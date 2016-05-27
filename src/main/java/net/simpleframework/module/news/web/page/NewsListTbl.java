@@ -8,15 +8,19 @@ import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.KVMap;
+import net.simpleframework.common.web.HttpUtils;
 import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.bean.News;
 import net.simpleframework.module.news.bean.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
+import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
+import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.EVerticalAlign;
 import net.simpleframework.mvc.common.element.ImageElement;
+import net.simpleframework.mvc.common.element.JS;
 import net.simpleframework.mvc.common.element.LinkElement;
 import net.simpleframework.mvc.common.element.Option;
 import net.simpleframework.mvc.component.ComponentParameter;
@@ -66,6 +70,10 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 				.add("views", news.getViews()).add("comments", toCommentsHTML(cp, news))
 				.add("createDate", news.getCreateDate()).add(TablePagerColumn.OPE, toOpeHTML(cp, news));
 		return kv;
+	}
+
+	protected Class<? extends NewsFormBasePage> getFormBasePageClass() {
+		return NewsFormBasePage.class;
 	}
 
 	@Override
@@ -118,7 +126,8 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 
 	protected LinkElement createTopicLink(final ComponentParameter cp, final News news) {
 		final LinkElement le = new LinkElement(news.getTopic());
-		return le.setOnclick("$Actions['NewsMgrPage_edit']('newsId=" + news.getId() + "');");
+		return le.setHref(HttpUtils.addParameters(AbstractMVCPage.url(getFormBasePageClass()),
+				"newsId=" + news.getId()));
 	}
 
 	protected LinkElement createCategoryElement(final NewsCategory category) {
@@ -146,7 +155,8 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 		final EContentStatus status = cp.getEnumParameter(EContentStatus.class, "status");
 		if (status != EContentStatus.delete) {
 			sb.append(ButtonElement.editBtn().setOnclick(
-					"$Actions['NewsMgrPage_edit']('newsId=" + news.getId() + "');"));
+					JS.loc(HttpUtils.addParameters(AbstractMVCPage.url(getFormBasePageClass()),
+							"newsId=" + news.getId()))));
 			sb.append(AbstractTablePagerSchema.IMG_DOWNMENU);
 		} else {
 			sb.append(NewsUtils.createStatusAct(cp, EContentStatus.edit, news).setText(

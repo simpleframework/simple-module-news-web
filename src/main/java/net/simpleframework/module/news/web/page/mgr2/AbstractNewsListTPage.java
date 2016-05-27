@@ -94,7 +94,7 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 	public ElementList getRightElements(final PageParameter pp) {
 		if (isPageManagerRole(pp)) {
 			return ElementList
-					.of(NewsUtils.createAddNew(pp))
+					.of(NewsUtils.createAddNew(pp, null))
 					.append(SpanElement.SPACE)
 					.append(NewsMgrTPage.createStatusButton(EContentStatus.publish))
 					.append(SpanElement.SPACE)

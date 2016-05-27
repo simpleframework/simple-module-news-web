@@ -19,15 +19,12 @@ import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.bean.News;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsUpdateLogPage;
-import net.simpleframework.module.news.web.NewsUrlsFactory;
 import net.simpleframework.module.news.web.page.t1.NewsCommentPage;
-import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
 import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.IForward;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.InputElement;
-import net.simpleframework.mvc.common.element.JS;
 import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.base.ajaxrequest.AjaxRequestBean;
@@ -48,9 +45,6 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 	public static void addMgrComponentBean(final PageParameter pp,
 			final Class<? extends NewsMgrActions> mgrActionsClass,
 			final Class<? extends StatusDescPage> statusDescClass) {
-		// edit
-		pp.addComponentBean("NewsMgrPage_edit", AjaxRequestBean.class).setHandlerMethod("doEdit")
-				.setHandlerClass(mgrActionsClass);
 		// delete
 		pp.addComponentBean("NewsMgrPage_delete", AjaxRequestBean.class)
 				.setConfirmMessage($m("NewsMgrPage.11")).setHandlerMethod("doDelete")
@@ -99,21 +93,6 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 				AjaxRequestBean.class).setUrlForward(AbstractMVCPage.url(statusDescClass));
 		pp.addComponentBean("NewsMgrPage_statusWindow", WindowBean.class)
 				.setContentRef(ajaxRequest.getName()).setWidth(420).setHeight(240);
-	}
-
-	public IForward doEdit(final ComponentParameter cp) {
-		final JavascriptForward js = new JavascriptForward();
-		final News news = NewsUtils.getNews(cp);
-		js.append(JS.loc(uFactory.getUrl(cp, NewsFormBasePage.class, news)));
-		// final EContentStatus status = news.getStatus();
-		// if (cp.isLmanager() || status == EContentStatus.edit) {
-		// } else {
-		// js.append("if (confirm('").append($m("NewsMgrPage.8", status))
-		// .append("')) { $Actions['NewsMgrPage_statusWindow']('op=")
-		// .append(EContentStatus.edit.name()).append("&newsId=").append(news.getId())
-		// .append("'); }");
-		// }
-		return js;
 	}
 
 	@Transaction(context = INewsContext.class)
@@ -229,6 +208,4 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 			return sb.toString();
 		}
 	}
-
-	static final NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
 }

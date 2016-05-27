@@ -11,7 +11,6 @@ import java.util.Set;
 
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.object.ObjectUtils;
-import net.simpleframework.common.web.HttpUtils;
 import net.simpleframework.common.web.html.HtmlUtils;
 import net.simpleframework.common.web.html.HtmlUtils.IElementVisitor;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
@@ -31,7 +30,6 @@ import net.simpleframework.module.news.web.NewsLogRef.NewsAttachmentAction;
 import net.simpleframework.module.news.web.NewsUrlsFactory;
 import net.simpleframework.module.news.web.page.NewsMgrActions.StatusDescPage;
 import net.simpleframework.module.news.web.page.mgr2.NewsMgrTPage;
-import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
 import net.simpleframework.module.news.web.page.t1.NewsMgrPage;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
@@ -189,13 +187,11 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 	}
 
 	protected JavascriptForward doSaveForward(final ComponentParameter cp, final News news) {
-		final StringBuilder js = new StringBuilder();
-		js.append(uFactory.getUrl(cp, NewsFormBasePage.class, news));
-		final String url = cp.getParameter("url");
-		if (StringUtils.hasText(url)) {
-			js.append("&url=").append(HttpUtils.encodeUrl(url));
+		final JavascriptForward js = new JavascriptForward("$Actions.reloc(");
+		if (news != null) {
+			js.append("'categoryId=__del&newsId=").append(news.getId()).append("'");
 		}
-		return new JavascriptForward(JS.loc(js.toString()));
+		return js.append(");");
 	}
 
 	public String doNewsContent(final PageParameter pp, final News news, final Document doc) {
@@ -293,7 +289,12 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		final TableRow r3 = new TableRow(
 				new RowField($m("NewsFormTPage.5"), ne_content).setStarMark(true));
 		final TableRow r4 = new TableRow(new RowField($m("NewsFormTPage.6"), ne_description));
-		return TableRows.of(r1, r2, r3, r4).setReadonly(readonly);
+
+		final TableRows rows = TableRows.of(r1, r2, r3, r4);
+		if (readonly) {
+			rows.setReadonly(true);
+		}
+		return rows;
 	}
 
 	public static final String OPT_ALLOWCOMMENTS = "opt_allowComments";
@@ -314,21 +315,28 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 
 	public static final String OPT_REMOVE_TAG_FONT = "opt_removeTagFont";
 
+	protected Checkbox opt_allowComments() {
+		return new Checkbox(OPT_ALLOWCOMMENTS, $m("NewsFormTPage.8"));
+	}
+
+	protected Checkbox opt_indexed() {
+		return new Checkbox(OPT_INDEXED, $m("NewsFormTPage.14"));
+	}
+
+	protected Checkbox opt_imageMark() {
+		return new Checkbox(OPT_IMAGEMARK, $m("NewsFormTPage.11"));
+	}
+
+	protected Checkbox opt_videoMark() {
+		return new Checkbox(OPT_VIDEOMARK, $m("NewsFormTPage.20"));
+	}
+
 	@Override
 	public ElementList getLeftElements(final PageParameter pp) {
-		final Checkbox opt_allowComments = new Checkbox(OPT_ALLOWCOMMENTS, $m("NewsFormTPage.8"));
-		final Checkbox opt_indexed = new Checkbox(OPT_INDEXED, $m("NewsFormTPage.14"));
-		final Checkbox opt_imageMark = new Checkbox(OPT_IMAGEMARK, $m("NewsFormTPage.11"));
-		final Checkbox opt_videoMark = new Checkbox(OPT_VIDEOMARK, $m("NewsFormTPage.20"));
-
-		final Checkbox opt_viewer = new Checkbox(OPT_VIEWER, $m("NewsFormTPage.12")).setChecked(true);
-
-		final Checkbox opt_targetBlank = new Checkbox(OPT_TARGET_BLANK, $m("NewsFormTPage.16"))
-				.setChecked(true);
-		final Checkbox opt_removeClass = new Checkbox(OPT_REMOVE_CLASS, $m("NewsFormTPage.17"))
-				.setChecked(true);
-		final Checkbox opt_removeStyle = new Checkbox(OPT_REMOVE_STYLE, $m("NewsFormTPage.18"));
-		final Checkbox opt_removeTagFont = new Checkbox(OPT_REMOVE_TAG_FONT, $m("NewsFormTPage.19"));
+		final Checkbox opt_allowComments = opt_allowComments();
+		final Checkbox opt_indexed = opt_indexed();
+		final Checkbox opt_imageMark = opt_imageMark();
+		final Checkbox opt_videoMark = opt_videoMark();
 
 		News news = NewsUtils.getNews(pp);
 		if (news == null) {
@@ -350,15 +358,45 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 				.append(SpanElement.SPACE)
 				.append(
 						new LinkButton($m("NewsFormTPage.15"))
-								.setOnclick("$('idNewsForm_opts').toggle();"))
-				.append(
-						new BlockElement()
-								.setId("idNewsForm_opts")
-								.addStyle("display: none;")
-								.addElements(opt_viewer, SpanElement.SPACE, opt_targetBlank,
-										SpanElement.SPACE, opt_removeClass, SpanElement.SPACE,
-										opt_removeStyle, SpanElement.SPACE, opt_removeTagFont));
+								.setOnclick("$('idNewsForm_opts').toggle();")).append(createOptsBlock());
 		return el;
+	}
+
+	protected Checkbox opt_viewer() {
+		return new Checkbox(OPT_VIEWER, $m("NewsFormTPage.12")).setChecked(true);
+	}
+
+	protected Checkbox opt_targetBlank() {
+		return new Checkbox(OPT_TARGET_BLANK, $m("NewsFormTPage.16")).setChecked(true);
+	}
+
+	protected Checkbox opt_removeClass() {
+		return new Checkbox(OPT_REMOVE_CLASS, $m("NewsFormTPage.17")).setChecked(true);
+
+	}
+
+	protected Checkbox opt_removeStyle() {
+		return new Checkbox(OPT_REMOVE_STYLE, $m("NewsFormTPage.18"));
+	}
+
+	protected Checkbox opt_removeTagFont() {
+		return new Checkbox(OPT_REMOVE_TAG_FONT, $m("NewsFormTPage.19"));
+	}
+
+	protected BlockElement createOptsBlock() {
+		final Checkbox opt_viewer = opt_viewer();
+
+		final Checkbox opt_targetBlank = opt_targetBlank();
+		final Checkbox opt_removeClass = opt_removeClass();
+		final Checkbox opt_removeStyle = opt_removeStyle();
+		final Checkbox opt_removeTagFont = opt_removeTagFont();
+
+		return new BlockElement()
+				.setId("idNewsForm_opts")
+				.addStyle("display: none;")
+				.addElements(opt_viewer, SpanElement.SPACE, opt_targetBlank, SpanElement.SPACE,
+						opt_removeClass, SpanElement.SPACE, opt_removeStyle, SpanElement.SPACE,
+						opt_removeTagFont);
 	}
 
 	@Override
@@ -441,7 +479,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 	public static class _StatusDescPage extends StatusDescPage {
 		@Override
 		protected String toSaveJavascript(final PageParameter pp) {
-			return JS.loc(uFactory.getUrl(pp, NewsFormBasePage.class, NewsUtils.getNews(pp)));
+			return "$Actions.reloc();";
 		}
 	}
 

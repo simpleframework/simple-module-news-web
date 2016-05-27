@@ -4,6 +4,7 @@ import static net.simpleframework.common.I18n.$m;
 import net.simpleframework.common.ID;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.object.ObjectEx.CacheV;
+import net.simpleframework.common.web.HttpUtils;
 import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.bean.News;
@@ -81,10 +82,12 @@ public abstract class NewsUtils implements INewsContextAware {
 		};
 	}
 
-	public static LinkButton createAddNew(final PageParameter pp) {
+	public static LinkButton createAddNew(final PageParameter pp,
+			final Class<? extends AbstractMVCPage> formPageClass) {
 		return new LinkButton($m("NewsMgrPage.6")).setOnclick("$Actions.loc('"
-				+ uFactory.getUrl(pp, NewsFormBasePage.class, (News) null, "categoryId=")
-				+ "' + $F('.parameters #categoryId'));");
+				+ HttpUtils.addParameters(AbstractMVCPage
+						.url(formPageClass == null ? NewsFormBasePage.class : formPageClass),
+						"categoryId=") + "' + $F('.parameters #categoryId'));");
 	}
 
 	public static ButtonElement createStatusAct(final PageParameter pp, final EContentStatus status,

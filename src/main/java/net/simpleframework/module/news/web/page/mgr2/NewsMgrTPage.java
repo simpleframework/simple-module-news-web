@@ -75,7 +75,7 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
 		final ElementList btns = ElementList
-				.of(NewsUtils.createAddNew(pp))
+				.of(NewsUtils.createAddNew(pp, null))
 				.append(SpanElement.SPACE)
 				.append(createStatusButton(EContentStatus.publish))
 				.append(SpanElement.SPACE)
@@ -91,7 +91,7 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 		return btns;
 	}
 
-	static LinkButton createStatusButton(final EContentStatus status) {
+	public static LinkButton createStatusButton(final EContentStatus status) {
 		return TablePagerUtils.act_btn("NewsMgrTPage_tbl", "NewsMgrPage_status", status.toString(),
 				"newsId", "op=" + status.name());
 	}
