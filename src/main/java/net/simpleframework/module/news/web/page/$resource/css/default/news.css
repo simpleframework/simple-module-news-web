@@ -22,9 +22,9 @@
 .NewsFormAttachPage,
 .NewsFormVotePage {
   width: 80%;
-  -webkit-box-shadow: 0 4px 8px #ccc;
-	-moz-box-shadow: 0 4px 8px #ccc;
-  box-shadow: 0 4px 8px #ccc;
+  -webkit-box-shadow: 0 4px 8px #ddd;
+	-moz-box-shadow: 0 4px 8px #ddd;
+  box-shadow: 0 4px 8px #ddd;
 }
 
 .NewsFormVotePage .OneTableTemplatePage {
