@@ -312,13 +312,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		}
 
 		protected String getTopicEditUrl(final ComponentParameter cp, final News news) {
-			String url = ((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp,
-					NewsFormBasePage.class, news);
-			final String referer = cp.getRefererParam();
-			if (StringUtils.hasText(referer)) {
-				url = HttpUtils.addParameters(url, "url=" + HttpUtils.encodeUrl(referer));
-			}
-			return url;
+			return HttpUtils.addParameters(url(NewsFormBasePage.class), "newsId=" + news.getId());
 		}
 
 		@Override
