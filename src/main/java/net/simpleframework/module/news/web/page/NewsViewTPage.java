@@ -157,6 +157,32 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		return sb.toString();
 	}
 
+	@Override
+	protected Object getDataProperty(final PageParameter pp, final String key) {
+		final News news = NewsUtils.getNews(pp);
+		if (OP_DATE.equals(key)) {
+			return news.getCreateDate();
+		} else if (OP_CONTENT.equals(key)) {
+			final StringBuilder sb = new StringBuilder();
+			sb.append(ContentUtils.getContent(pp, newsContext.getAttachmentService(), news));
+			// vote
+			final IModuleRef ref = ((INewsWebContext) newsContext).getVoteRef();
+			if (ref != null) {
+				final IDataQuery<?> dq = ((NewsVoteRef) ref).queryVotes(news);
+				if (dq.getCount() > 0) {
+					sb.append("<div class='news_vote'>");
+					IIdBeanAware bean;
+					while ((bean = (IIdBeanAware) dq.next()) != null) {
+						sb.append(pp.includeUrl(NewsVoteRef._VotePostPage.class, "voteId=" + bean.getId()));
+					}
+					sb.append("</div>");
+				}
+			}
+			return sb.toString();
+		}
+		return BeanUtils.getProperty(news, key);
+	}
+
 	public IForward doPageletTab(final ComponentParameter cp) {
 		final NewsPageletCreator creator = ((INewsWebContext) newsContext).getPageletCreator();
 
@@ -223,31 +249,5 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 					.getUrlsFactory().getUrl(pp, NewsListTPage.class, category)));
 		}
 		return btns;
-	}
-
-	@Override
-	protected Object getDataProperty(final PageParameter pp, final String key) {
-		final News news = NewsUtils.getNews(pp);
-		if (OP_DATE.equals(key)) {
-			return news.getCreateDate();
-		} else if (OP_CONTENT.equals(key)) {
-			final StringBuilder sb = new StringBuilder();
-			sb.append(ContentUtils.getContent(pp, newsContext.getAttachmentService(), news));
-			// vote
-			final IModuleRef ref = ((INewsWebContext) newsContext).getVoteRef();
-			if (ref != null) {
-				final IDataQuery<?> dq = ((NewsVoteRef) ref).queryVotes(news);
-				if (dq.getCount() > 0) {
-					sb.append("<div class='news_vote'>");
-					IIdBeanAware bean;
-					while ((bean = (IIdBeanAware) dq.next()) != null) {
-						sb.append(pp.includeUrl(NewsVoteRef._VotePostPage.class, "voteId=" + bean.getId()));
-					}
-					sb.append("</div>");
-				}
-			}
-			return sb.toString();
-		}
-		return BeanUtils.getProperty(news, key);
 	}
 }
