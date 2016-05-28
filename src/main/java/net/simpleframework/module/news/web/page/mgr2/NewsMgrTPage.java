@@ -145,8 +145,12 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 
 		@Override
 		protected LinkElement createTopicLink(final ComponentParameter cp, final News news) {
-			return new LinkElement(news.getTopic()).setHref(HttpUtils.addParameters(
-					AbstractMVCPage.url(getFormBasePageClass()), "newsId=" + news.getId()));
+			if (news.getStatus() == EContentStatus.edit) {
+				return new LinkElement(news.getTopic()).setHref(HttpUtils.addParameters(
+						AbstractMVCPage.url(getFormBasePageClass()), "newsId=" + news.getId()));
+			} else {
+				return super.createTopicLink(cp, news);
+			}
 		}
 
 		@Override
