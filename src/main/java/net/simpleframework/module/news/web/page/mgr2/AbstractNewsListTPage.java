@@ -112,12 +112,14 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 				.setShowLineNo(false).setShowHead(true).setShowCheckbox(mgr).setResize(false)
 				.setPageItems(30).setPagerBarLayout(EPagerBarLayout.bottom);
 		final TablePagerColumn TC_CREATEDATE = NewsListTbl.TC_CREATEDATE();
-		if (!mgr) {
+		tablePager.addColumn(TablePagerColumn.ICON()).addColumn(NewsListTbl.TC_TOPIC());
+		if (mgr) {
+			tablePager.addColumn(NewsListTbl.TC_STATUS());
+		} else {
+			tablePager.addColumn(NewsListTbl.TC_VIEWS());
 			TC_CREATEDATE.setWidth(125);
 		}
-		tablePager.addColumn(TablePagerColumn.ICON()).addColumn(NewsListTbl.TC_TOPIC())
-				.addColumn(NewsListTbl.TC_STATUS()).addColumn(NewsListTbl.TC_COMMENTS())
-				.addColumn(TC_CREATEDATE);
+		tablePager.addColumn(NewsListTbl.TC_COMMENTS()).addColumn(TC_CREATEDATE);
 		if (mgr) {
 			tablePager.addColumn(TablePagerColumn.OPE(70));
 		}

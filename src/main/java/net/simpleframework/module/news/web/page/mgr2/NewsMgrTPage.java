@@ -5,9 +5,11 @@ import static net.simpleframework.common.I18n.$m;
 import java.io.IOException;
 import java.util.Map;
 
+import net.simpleframework.common.web.HttpUtils;
 import net.simpleframework.module.common.content.EContentStatus;
 import net.simpleframework.module.common.web.page.AbstractMgrTPage;
 import net.simpleframework.module.news.INewsContextAware;
+import net.simpleframework.module.news.bean.News;
 import net.simpleframework.module.news.bean.NewsCategory;
 import net.simpleframework.module.news.web.page.NewsCategoryHandle;
 import net.simpleframework.module.news.web.page.NewsFormTPage;
@@ -15,6 +17,7 @@ import net.simpleframework.module.news.web.page.NewsListTbl;
 import net.simpleframework.module.news.web.page.NewsMgrActions;
 import net.simpleframework.module.news.web.page.NewsMgrActions.StatusDescPage;
 import net.simpleframework.module.news.web.page.NewsUtils;
+import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ElementList;
@@ -138,6 +141,12 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 			sb.append("</div>");
 			sb.append(super.toTableHTML(cp));
 			return sb.toString();
+		}
+
+		@Override
+		protected LinkElement createTopicLink(final ComponentParameter cp, final News news) {
+			return new LinkElement(news.getTopic()).setHref(HttpUtils.addParameters(
+					AbstractMVCPage.url(getFormBasePageClass()), "newsId=" + news.getId()));
 		}
 
 		@Override

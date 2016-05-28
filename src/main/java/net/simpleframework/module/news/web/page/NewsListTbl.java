@@ -125,18 +125,13 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 	}
 
 	protected LinkElement createTopicLink(final ComponentParameter cp, final News news) {
-		final LinkElement le = new LinkElement(news.getTopic());
-		return le.setHref(HttpUtils.addParameters(AbstractMVCPage.url(getFormBasePageClass()),
-				"newsId=" + news.getId()));
+		return LinkElement.BLANK(news.getTopic()).setHref(
+				((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp, NewsViewTPage.class, news));
 	}
 
 	protected LinkElement createCategoryElement(final NewsCategory category) {
 		return new LinkElement(category.getText()).setOnclick(CategoryTableLCTemplatePage
 				.createTableRefresh("categoryId=" + category.getId()).toString());
-	}
-
-	protected String getTopicHref(final ComponentParameter cp, final News news) {
-		return ((INewsWebContext) newsContext).getUrlsFactory().getUrl(cp, NewsViewTPage.class, news);
 	}
 
 	protected String toCommentsHTML(final ComponentParameter cp, final News news) {
