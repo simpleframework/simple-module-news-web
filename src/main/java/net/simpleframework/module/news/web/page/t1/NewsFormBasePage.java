@@ -44,7 +44,7 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 
 	@Override
 	public String getPageRole(final PageParameter pp) {
-		return newsContext.getModule().getManagerRole();
+		return getPageManagerRole(pp);
 	}
 
 	@Override

@@ -21,6 +21,7 @@ import net.simpleframework.mvc.SessionCache;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.Icon;
 import net.simpleframework.mvc.common.element.ImageElement;
+import net.simpleframework.mvc.common.element.LinkButton;
 import net.simpleframework.mvc.common.element.LinkElement;
 import net.simpleframework.mvc.common.element.SpanElement;
 import net.simpleframework.mvc.common.element.SupElement;
@@ -90,11 +91,15 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 		return items;
 	}
 
+	protected LinkButton createAddNew(final PageParameter pp) {
+		return NewsUtils.createAddNew(pp, null);
+	}
+
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
 		if (isPageManagerRole(pp)) {
 			return ElementList
-					.of(NewsUtils.createAddNew(pp, null))
+					.of(createAddNew(pp))
 					.append(SpanElement.SPACE)
 					.append(NewsMgrTPage.createStatusButton(EContentStatus.publish))
 					.append(SpanElement.SPACE)

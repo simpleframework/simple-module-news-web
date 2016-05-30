@@ -76,8 +76,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 
 		final News news = NewsUtils.getNews(pp);
 		if (news.isAllowComments()) {
-			addCommentBean(pp, NewsCommentHandler.class).setRole(
-					newsContext.getModule().getManagerRole());
+			addCommentBean(pp, NewsCommentHandler.class).setRole(getPageManagerRole(pp));
 		}
 
 		// 更新views

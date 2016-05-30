@@ -55,7 +55,7 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 	@Override
 	public String getPageRole(final PageParameter pp) {
-		return newsContext.getModule().getManagerRole();
+		return getPageManagerRole(pp);
 	}
 
 	@Override

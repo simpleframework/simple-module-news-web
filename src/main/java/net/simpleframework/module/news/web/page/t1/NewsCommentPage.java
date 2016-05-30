@@ -96,7 +96,7 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 
 	@Override
 	public String getPageRole(final PageParameter pp) {
-		return newsContext.getModule().getManagerRole();
+		return getPageManagerRole(pp);
 	}
 
 	public static class NewsCommentTbl extends AbstractDbTablePagerHandler {
