@@ -187,7 +187,8 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 	}
 
 	protected JavascriptForward doSaveForward(final ComponentParameter cp, final News news) {
-		final JavascriptForward js = new JavascriptForward("$Actions.reloc(");
+		final JavascriptForward js = new JavascriptForward(
+				"$Actions.disable($('.FormTemplatePage')); $Actions.reloc(");
 		if (news != null) {
 			js.append("'categoryId=__del&newsId=").append(news.getId()).append("'");
 		}
