@@ -305,8 +305,11 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 
 		final TableRows rows = TableRows.of(r1, r2, r3);
 		if (!isInsertAttachmentMode(pp)) {
-			rows.append(new TableRow(new RowField($m("NewsFormBasePage.1"), new BlockElement()
-					.setId("idNewsForm_upload_page"))));
+			final int attachs = _newsAttachService.queryByContent(news).getCount();
+			if (!readonly || attachs > 0) {
+				rows.append(new TableRow(new RowField($m("NewsFormBasePage.1"), new BlockElement()
+						.setId("idNewsForm_upload_page"))));
+			}
 		}
 		rows.append(new TableRow(new RowField($m("NewsFormTPage.6"), ne_description)));
 		if (readonly) {
@@ -442,7 +445,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 
 		if (status == null || status == EContentStatus.edit) {
 			el.append(SpanElement.SPACE);
-			el.append(SAVE_BTN().setHighlight(false));
+			el.append(SAVE_BTN().setId("idNews_saveBtn").setHighlight(false));
 		}
 		return el;
 	}
@@ -502,7 +505,11 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 	public static class _StatusDescPage extends StatusDescPage {
 		@Override
 		protected String toSaveJavascript(final PageParameter pp) {
-			return "$Actions.reloc();";
+			final StringBuilder sb = new StringBuilder();
+			sb.append("var saveBtn = $('idNews_saveBtn');");
+			sb.append("if (saveBtn) { Event.simulate(saveBtn, 'click'); }");
+			sb.append("else { $Actions.reloc(); }");
+			return sb.toString();
 		}
 	}
 

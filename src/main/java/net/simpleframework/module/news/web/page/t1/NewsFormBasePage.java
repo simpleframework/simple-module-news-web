@@ -127,7 +127,7 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 
 	protected TabButton getTabButton_attach(final PageParameter pp, final News news) {
 		String t1 = $m("NewsFormBasePage.1");
-		final int attachs = newsContext.getAttachmentService().queryByContent(news).getCount();
+		final int attachs = _newsAttachService.queryByContent(news).getCount();
 		if (attachs > 0) {
 			t1 += SupElement.num(attachs);
 		}
