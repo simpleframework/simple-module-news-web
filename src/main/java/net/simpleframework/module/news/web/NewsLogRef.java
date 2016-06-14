@@ -66,12 +66,27 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 		}
 	}
 
-	public static class NewsAttachmentAction extends
-			AbstractAttachmentLogHandler<NewsAttachment, News> {
+	public static class NewsInsertAttachmentAction extends NewsAttachmentAction {
 
 		@Override
+		public AbstractElement<?> getDownloadLink(final ComponentParameter cp,
+				final AttachmentFile attachmentFile, final String id) throws IOException {
+			if (Convert.toBool(cp.getParameter(NewsFormTPage.OPT_VIEWER))) {
+				final ImageElement iElement = createImageViewer(cp, attachmentFile, id);
+				if (iElement != null) {
+					return iElement;
+				}
+			}
+			return new LinkElement(attachmentFile.getTopic())
+					.setOnclick("$Actions['NewsViewTPage_download']('id=" + id + "');");
+		}
+	}
+
+	public static class NewsAttachmentAction extends
+			AbstractAttachmentLogHandler<NewsAttachment, News> {
+		@Override
 		protected IAttachmentService<NewsAttachment> getAttachmentService() {
-			return newsContext.getAttachmentService();
+			return _newsAttachService;
 		}
 
 		@Override
@@ -91,19 +106,6 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 			if (StringUtils.hasText(attachmentMaxSize)) {
 				swfUpload.setFileSizeLimit(attachmentMaxSize);
 			}
-		}
-
-		@Override
-		public AbstractElement<?> getDownloadLink(final ComponentParameter cp,
-				final AttachmentFile attachmentFile, final String id) throws IOException {
-			if (Convert.toBool(cp.getParameter(NewsFormTPage.OPT_VIEWER))) {
-				final ImageElement iElement = createImageViewer(cp, attachmentFile, id);
-				if (iElement != null) {
-					return iElement;
-				}
-			}
-			return new LinkElement(attachmentFile.getTopic())
-					.setOnclick("$Actions['NewsViewTPage_download']('id=" + id + "');");
 		}
 	}
 }

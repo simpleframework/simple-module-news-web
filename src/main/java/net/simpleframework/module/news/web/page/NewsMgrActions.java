@@ -151,7 +151,7 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 			return js;
 		}
 
-		protected String toSaveJavascript(final PageParameter pp) {
+		protected String toSaveJavascript(final PageParameter pp) throws Exception {
 			return CategoryTableLCTemplatePage.createTableRefresh().toString();
 		}
 

@@ -27,6 +27,7 @@ import net.simpleframework.module.news.bean.NewsAttachment;
 import net.simpleframework.module.news.bean.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsAttachmentAction;
+import net.simpleframework.module.news.web.NewsLogRef.NewsInsertAttachmentAction;
 import net.simpleframework.module.news.web.NewsUrlsFactory;
 import net.simpleframework.module.news.web.page.NewsMgrActions.StatusDescPage;
 import net.simpleframework.module.news.web.page.mgr2.NewsMgrTPage;
@@ -88,27 +89,28 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 				.setBindingText("ne_categoryText").addTreeRef(pp, "NewsForm_dict_tree")
 				.setTitle($m("NewsFormTPage.1")).setHeight(320);
 
-		// 上传
-		addAttachmentBean(pp);
+		// 可插入附件
+		addInsertAttachmentBean(pp);
+
 		// 状态
 		NewsMgrActions.addStatusWindow(pp, _NewsMgrActions.class, _StatusDescPage.class);
 	}
 
-	protected void addAttachmentBean(final PageParameter pp) {
+	protected AttachmentBean addInsertAttachmentBean(final PageParameter pp) {
 		final AttachmentBean attachment = (AttachmentBean) addComponentBean(pp,
-				"NewsForm_upload_page", AttachmentBean.class).setHandlerClass(
-				NewsAttachmentAction.class);
-		if (isInsertAttachmentMode(pp)) {
-			attachment.setInsertTextarea("ne_content");
-			addComponentBean(pp, "NewsForm_upload", WindowBean.class)
-					.setContentRef(attachment.getName()).setTitle($m("NewsFormTPage.10")).setPopup(true)
-					.setHeight(480).setWidth(400);
-		} else {
-			attachment.setContainerId("idNewsForm_upload_page");
-		}
+				"NewsForm_insertAttach", AttachmentBean.class).setInsertTextarea("ne_content")
+				.setHandlerClass(NewsInsertAttachmentAction.class);
+		addComponentBean(pp, "NewsForm_upload", WindowBean.class).setContentRef(attachment.getName())
+				.setTitle($m("NewsFormTPage.10")).setPopup(true).setHeight(480).setWidth(400);
+		return attachment;
 	}
 
-	protected boolean isInsertAttachmentMode(final PageParameter pp) {
+	protected AttachmentBean addAttachmentBean(final PageParameter pp) {
+		return (AttachmentBean) addComponentBean(pp, "NewsForm_attach", AttachmentBean.class)
+				.setContainerId("idNewsForm_attach").setHandlerClass(NewsAttachmentAction.class);
+	}
+
+	protected boolean isShowAttachmentList(final PageParameter pp) {
 		return false;
 	}
 
@@ -177,26 +179,35 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		news.setImageMark(cp.getBoolParameter(OPT_IMAGEMARK));
 		news.setVideoMark(cp.getBoolParameter(OPT_VIDEOMARK));
 
-		final News news2 = news;
-		final ComponentParameter nCP = ComponentParameter.get(cp,
-				cp.getComponentBeanByName("NewsForm_upload_page"));
-		AttachmentUtils.doSave(nCP, new IAttachmentSaveCallback() {
+		AttachmentBean attach = (AttachmentBean) cp.getComponentBeanByName("NewsForm_insertAttach");
+		if (attach != null) {
+			doAttachSave(ComponentParameter.get(cp, attach), news, insert);
+		}
+		attach = (AttachmentBean) cp.getComponentBeanByName("NewsForm_attach");
+		if (attach != null) {
+			doAttachSave(ComponentParameter.get(cp, attach), news, insert);
+		}
+		return doSaveForward(cp, news);
+	}
+
+	protected void doAttachSave(final ComponentParameter cp, final News news, final boolean insert)
+			throws Exception {
+		AttachmentUtils.doSave(cp, new IAttachmentSaveCallback() {
 			@Override
 			public void save(final Map<String, AttachmentFile> addQueue, final Set<String> deleteQueue)
 					throws IOException {
 				final IAttachmentService<NewsAttachment> aService = newsContext.getAttachmentService();
 				if (insert) {
-					_newsService.insert(news2);
+					_newsService.insert(news);
 				} else {
-					_newsService.update(news2);
+					_newsService.update(news);
 					if (deleteQueue != null) {
 						aService.delete(deleteQueue.toArray(new Object[] { deleteQueue.size() }));
 					}
 				}
-				aService.insert(news2.getId(), cp.getLoginId(), addQueue.values());
+				aService.insert(news.getId(), cp.getLoginId(), addQueue.values());
 			}
 		});
-		return doSaveForward(cp, news);
 	}
 
 	protected JavascriptForward doSaveForward(final ComponentParameter cp, final News news) {
@@ -304,20 +315,17 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 				new RowField($m("NewsFormTPage.5"), ne_content).setStarMark(true));
 
 		final TableRows rows = TableRows.of(r1, r2, r3);
-		if (!isInsertAttachmentMode(pp)) {
-			final int attachs = _newsAttachService.queryByContent(news).getCount();
-			if (!readonly || attachs > 0) {
+
+		if (isShowAttachmentList(pp)) {
+			addAttachmentBean(pp).setReadonly(readonly);
+			if (!readonly || _newsAttachService.queryByContent(news).getCount() > 0) {
 				rows.append(new TableRow(new RowField($m("NewsFormBasePage.1"), new BlockElement()
-						.setId("idNewsForm_upload_page"))));
+						.setId("idNewsForm_attach"))));
 			}
 		}
+
 		rows.append(new TableRow(new RowField($m("NewsFormTPage.6"), ne_description)));
 		if (readonly) {
-			final AttachmentBean attach = (AttachmentBean) pp
-					.getComponentBeanByName("NewsForm_upload_page");
-			if (attach != null) {
-				attach.setReadonly(true);
-			}
 			rows.setReadonly(true);
 		}
 		return rows;
@@ -503,8 +511,9 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 	}
 
 	public static class _StatusDescPage extends StatusDescPage {
+
 		@Override
-		protected String toSaveJavascript(final PageParameter pp) {
+		protected String toSaveJavascript(final PageParameter pp) throws Exception {
 			final StringBuilder sb = new StringBuilder();
 			sb.append("var saveBtn = $('idNews_saveBtn');");
 			sb.append("if (saveBtn) { Event.simulate(saveBtn, 'click'); }");
