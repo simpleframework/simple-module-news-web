@@ -310,6 +310,11 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		}
 		rows.append(new TableRow(new RowField($m("NewsFormTPage.6"), ne_description)));
 		if (readonly) {
+			final AttachmentBean attach = (AttachmentBean) pp
+					.getComponentBeanByName("NewsForm_upload_page");
+			if (attach != null) {
+				attach.setReadonly(true);
+			}
 			rows.setReadonly(true);
 		}
 		return rows;
