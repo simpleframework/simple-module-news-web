@@ -89,14 +89,27 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 				.setTitle($m("NewsFormTPage.1")).setHeight(320);
 
 		// 上传
-		addComponentBean(pp, "NewsForm_upload_page", AttachmentBean.class).setInsertTextarea(
-				"ne_content").setHandlerClass(NewsAttachmentAction.class);
-		addComponentBean(pp, "NewsForm_upload", WindowBean.class)
-				.setContentRef("NewsForm_upload_page").setTitle($m("NewsFormTPage.10")).setPopup(true)
-				.setHeight(480).setWidth(400);
-
+		addAttachmentBean(pp);
 		// 状态
 		NewsMgrActions.addStatusWindow(pp, _NewsMgrActions.class, _StatusDescPage.class);
+	}
+
+	protected void addAttachmentBean(final PageParameter pp) {
+		final AttachmentBean attachment = (AttachmentBean) addComponentBean(pp,
+				"NewsForm_upload_page", AttachmentBean.class).setHandlerClass(
+				NewsAttachmentAction.class);
+		if (isInsertAttachmentMode(pp)) {
+			attachment.setInsertTextarea("ne_content");
+			addComponentBean(pp, "NewsForm_upload", WindowBean.class)
+					.setContentRef(attachment.getName()).setTitle($m("NewsFormTPage.10")).setPopup(true)
+					.setHeight(480).setWidth(400);
+		} else {
+			attachment.setContainerId("idNewsForm_upload_page");
+		}
+	}
+
+	protected boolean isInsertAttachmentMode(final PageParameter pp) {
+		return false;
 	}
 
 	protected HtmlEditorBean addHtmlEditorBean(final PageParameter pp) {
@@ -289,9 +302,13 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 				new RowField($m("NewsFormTPage.4"), ne_author).setElementsStyle("width:150px;"));
 		final TableRow r3 = new TableRow(
 				new RowField($m("NewsFormTPage.5"), ne_content).setStarMark(true));
-		final TableRow r4 = new TableRow(new RowField($m("NewsFormTPage.6"), ne_description));
 
-		final TableRows rows = TableRows.of(r1, r2, r3, r4);
+		final TableRows rows = TableRows.of(r1, r2, r3);
+		if (!isInsertAttachmentMode(pp)) {
+			rows.append(new TableRow(new RowField($m("NewsFormBasePage.1"), new BlockElement()
+					.setId("idNewsForm_upload_page"))));
+		}
+		rows.append(new TableRow(new RowField($m("NewsFormTPage.6"), ne_description)));
 		if (readonly) {
 			rows.setReadonly(true);
 		}

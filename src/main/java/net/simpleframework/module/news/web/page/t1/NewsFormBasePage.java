@@ -113,22 +113,37 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 		final TabButtons tabs = TabButtons.of(new TabButton($m("NewsFormBasePage.0"), getTabUrl(
 				getFormBasePageClass(), news)));
 		if (news != null) {
-			String t1 = $m("NewsFormBasePage.1");
-			final int attachs = newsContext.getAttachmentService().queryByContent(news).getCount();
-			if (attachs > 0) {
-				t1 += SupElement.num(attachs);
+			final TabButton attach = getTabButton_attach(pp, news);
+			if (attach != null) {
+				tabs.append(attach);
 			}
-			tabs.append(new TabButton(t1, getTabUrl(getFormAttachPageClass(), news)));
-			final IModuleRef ref = ((INewsWebContext) newsContext).getVoteRef();
-			if (ref != null) {
-				String t2 = $m("NewsFormBasePage.2");
-				final int votes = ((NewsVoteRef) ref).queryVotes(news).getCount();
-				if (votes > 0) {
-					t2 += SupElement.num(votes);
-				}
-				tabs.append(new TabButton(t2, getTabUrl(getFormVotePageClass(), news)));
+			final TabButton vote = getTabButton_vote(pp, news);
+			if (vote != null) {
+				tabs.append(vote);
 			}
 		}
 		return tabs;
+	}
+
+	protected TabButton getTabButton_attach(final PageParameter pp, final News news) {
+		String t1 = $m("NewsFormBasePage.1");
+		final int attachs = newsContext.getAttachmentService().queryByContent(news).getCount();
+		if (attachs > 0) {
+			t1 += SupElement.num(attachs);
+		}
+		return new TabButton(t1, getTabUrl(getFormAttachPageClass(), news));
+	}
+
+	protected TabButton getTabButton_vote(final PageParameter pp, final News news) {
+		final IModuleRef ref = ((INewsWebContext) newsContext).getVoteRef();
+		if (ref != null) {
+			String t2 = $m("NewsFormBasePage.2");
+			final int votes = ((NewsVoteRef) ref).queryVotes(news).getCount();
+			if (votes > 0) {
+				t2 += SupElement.num(votes);
+			}
+			return new TabButton(t2, getTabUrl(getFormVotePageClass(), news));
+		}
+		return null;
 	}
 }
