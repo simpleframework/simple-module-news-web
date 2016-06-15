@@ -281,7 +281,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		NewsCategory category = null;
 		final News news = NewsUtils.getNews(pp);
 		final EContentStatus status = news != null ? news.getStatus() : null;
-		final boolean readonly = (status != null && status != EContentStatus.edit);
+		final boolean readonly = !(status == null || status == EContentStatus.edit || status == EContentStatus.audit);
 		if (news != null) {
 			ne_id.setText(news.getId());
 			ne_cname.setText(news.getCname());
@@ -446,6 +446,10 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		final EContentStatus status = news != null ? news.getStatus() : null;
 		if (status == EContentStatus.edit) {
 			el.add(NewsUtils.createStatusAct(pp, EContentStatus.publish, news));
+		} else if (status == EContentStatus.audit) {
+			el.add(new ButtonElement($m("NewsFormTPage.21")).setHighlight(true));
+			el.add(SpanElement.SPACE);
+			el.add(new ButtonElement($m("NewsFormTPage.22")));
 		} else if (status == EContentStatus.publish) {
 			el.add(NewsUtils.createStatusAct(pp, EContentStatus.edit, news)
 					.setText($m("NewsMgrPage.7")).setHighlight(true));
@@ -457,7 +461,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 					uFactory.getUrl(pp, NewsViewTPage.class, news, "preview=true"), true)));
 		}
 
-		if (status == null || status == EContentStatus.edit) {
+		if (status == null || status == EContentStatus.edit || status == EContentStatus.audit) {
 			el.append(SpanElement.SPACE);
 			el.append(SAVE_BTN().setId("idNews_saveBtn").setHighlight(false));
 		}
