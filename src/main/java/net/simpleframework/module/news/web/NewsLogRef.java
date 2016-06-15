@@ -80,6 +80,11 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 			return new LinkElement(attachmentFile.getTopic())
 					.setOnclick("$Actions['NewsViewTPage_download']('id=" + id + "');");
 		}
+
+		@Override
+		protected int getAttachtype(final ComponentParameter cp) {
+			return 1;
+		}
 	}
 
 	public static class NewsAttachmentAction extends
@@ -97,6 +102,11 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 		@Override
 		protected String getOwnerIdParameterKey() {
 			return "newsId";
+		}
+
+		@Override
+		protected int getAttachtype(final ComponentParameter cp) {
+			return 0;
 		}
 
 		@Override

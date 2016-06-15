@@ -99,7 +99,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 	protected AttachmentBean addInsertAttachmentBean(final PageParameter pp) {
 		final AttachmentBean attachment = (AttachmentBean) addComponentBean(pp,
 				"NewsForm_insertAttach", AttachmentBean.class).setInsertTextarea("ne_content")
-				.setHandlerClass(NewsInsertAttachmentAction.class);
+				.setShowMenu(false).setHandlerClass(NewsInsertAttachmentAction.class);
 		addComponentBean(pp, "NewsForm_upload", WindowBean.class).setContentRef(attachment.getName())
 				.setTitle($m("NewsFormTPage.10")).setPopup(true).setHeight(480).setWidth(400);
 		return attachment;
