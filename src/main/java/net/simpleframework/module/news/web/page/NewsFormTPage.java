@@ -115,16 +115,22 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 	}
 
 	protected HtmlEditorBean addHtmlEditorBean(final PageParameter pp) {
-		String attachClick = "$Actions['NewsForm_upload']('" + OPT_VIEWER + "=' + $F('" + OPT_VIEWER
-				+ "')";
+		return (HtmlEditorBean) addHtmlEditorBean(pp, "NewsForm_editor", isHtmlEditorCodeEnabled())
+				.setAttachAction(getAttachAction(pp)).setToolbar(ContentUtils.HTML_TOOLBAR_BASE)
+				.setHeight("340");
+	}
+
+	protected String getAttachAction(final PageParameter pp) {
+		final StringBuilder sb = new StringBuilder();
+		sb.append("var opt_viewer = $('").append(OPT_VIEWER).append("');");
+		sb.append("$Actions['NewsForm_upload']('").append(OPT_VIEWER)
+				.append("=' + (opt_viewer ? $F(opt_viewer) : true)");
 		final News news = NewsUtils.getNews(pp);
 		if (news != null) {
-			attachClick += " + '&newsId=" + news.getId() + "'";
+			sb.append(" + '&newsId=").append(news.getId()).append("'");
 		}
-		attachClick += ");";
-		return (HtmlEditorBean) addHtmlEditorBean(pp, "NewsForm_editor", isHtmlEditorCodeEnabled())
-				.setAttachAction(attachClick).setToolbar(ContentUtils.HTML_TOOLBAR_BASE)
-				.setHeight("340");
+		sb.append(");");
+		return sb.toString();
 	}
 
 	protected boolean isHtmlEditorCodeEnabled() {
