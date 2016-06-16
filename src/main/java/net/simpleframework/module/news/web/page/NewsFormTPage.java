@@ -451,7 +451,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 			final AjaxRequestBean ajaxRequest = addAjaxRequest(pp, "NewsFormTPage_auditPage",
 					AuditEditPage.class);
 			addWindowBean(pp, "NewsFormTPage_auditWin", ajaxRequest).setTitle($m("NewsFormTPage.23"))
-					.setWidth(420).setHeight(240);
+					.setWidth(420).setHeight(450);
 
 			el.add(new ButtonElement($m("NewsFormTPage.21")).setHighlight(true).setOnclick(
 					"$Actions['NewsFormTPage_auditWin']('newsId=" + news.getId() + "&bpass=true');"));
@@ -550,6 +550,11 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		}
 
 		@Override
+		public String getLabelWidth(final PageParameter pp) {
+			return "80px";
+		}
+
+		@Override
 		public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
 			// final News news = NewsUtils.getNews(cp);
 			return new JavascriptForward("$Actions.reloc();");
@@ -559,12 +564,12 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		protected TableRows getTableRows(final PageParameter pp) {
 			final boolean bpass = pp.getBoolParameter("bpass");
 			final InputElement ae_bpass = InputElement.hidden("ae_bpass").setVal(bpass);
-			final InputElement ae_ccomment = InputElement.textarea("ae_ccomment").setRows(4);
+			final InputElement ae_ccomment = InputElement.textarea("ae_ccomment").setRows(3);
 
 			final TableRow r1 = new TableRow(new RowField($m(bpass ? "NewsFormTPage.24"
 					: "NewsFormTPage.25"), ae_bpass, ae_ccomment));
 			final TableRow r2 = new TableRow(new RowField($m("NewsFormTPage.26"), InputElement
-					.textarea().setReadonly(true)));
+					.textarea().setRows(12).setReadonly(true)));
 			return TableRows.of(r1, r2);
 		}
 	}
