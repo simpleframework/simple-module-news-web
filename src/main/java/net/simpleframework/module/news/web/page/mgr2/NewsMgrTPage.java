@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import net.simpleframework.common.web.HttpUtils;
-import net.simpleframework.module.common.content.EContentStatus;
+import net.simpleframework.module.common.content.AbstractContentBean.EContentStatus;
 import net.simpleframework.module.common.web.page.AbstractMgrTPage;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.bean.News;
