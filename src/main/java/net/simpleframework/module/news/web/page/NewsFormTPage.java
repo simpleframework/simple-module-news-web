@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.simpleframework.ado.query.IDataQuery;
+import net.simpleframework.common.Convert;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.object.ObjectUtils;
 import net.simpleframework.common.web.html.HtmlUtils;
@@ -24,6 +26,7 @@ import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.bean.News;
 import net.simpleframework.module.news.bean.NewsAttachment;
+import net.simpleframework.module.news.bean.NewsAudit;
 import net.simpleframework.module.news.bean.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.NewsLogRef.NewsAttachmentAction;
@@ -331,6 +334,12 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 			}
 		}
 
+		final String auditString = toNewsAuditString(pp, news);
+		if (StringUtils.hasText(auditString)) {
+			rows.append(new TableRow(new RowField($m("NewsFormTPage.26"), InputElement.textarea()
+					.setAutoRows(true).setReadonly(true).setVal(auditString))));
+		}
+
 		rows.append(new TableRow(new RowField($m("NewsFormTPage.6"), ne_description)));
 		if (readonly) {
 			rows.setReadonly(true);
@@ -556,7 +565,9 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 
 		@Override
 		public JavascriptForward onSave(final ComponentParameter cp) throws Exception {
-			// final News news = NewsUtils.getNews(cp);
+			final News news = NewsUtils.getNews(cp);
+			_newsAuditService.addNewsAudit(news, cp.getLoginId(), cp.getBoolParameter("ae_bpass"),
+					cp.getParameter("ae_ccomment"));
 			return new JavascriptForward("$Actions.reloc();");
 		}
 
@@ -568,10 +579,36 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 
 			final TableRow r1 = new TableRow(new RowField($m(bpass ? "NewsFormTPage.24"
 					: "NewsFormTPage.25"), ae_bpass, ae_ccomment));
+
+			final News news = NewsUtils.getNews(pp);
+			final String auditString = toNewsAuditString(pp, news);
 			final TableRow r2 = new TableRow(new RowField($m("NewsFormTPage.26"), InputElement
-					.textarea().setRows(12).setReadonly(true)));
+					.textarea().setRows(12).setReadonly(true).setVal(auditString)));
 			return TableRows.of(r1, r2);
 		}
+	}
+
+	public static String toNewsAuditString(final PageParameter pp, final News news) {
+		IDataQuery<NewsAudit> dq;
+		if (news != null && (dq = _newsAuditService.queryAudits(news)).getCount() > 0) {
+			final StringBuilder sb = new StringBuilder();
+			NewsAudit audit;
+			int i = 0;
+			while ((audit = dq.next()) != null) {
+				if (i++ > 0) {
+					sb.append("------------------------------------------");
+				}
+				sb.append(audit.getCcomment());
+				sb.append("\r").append("[").append($m("NewsFormTPage.29")).append("] ")
+						.append(audit.isApass() ? $m("NewsFormTPage.27") : $m("NewsFormTPage.28"))
+						.append("\r[").append($m("NewsFormTPage.30")).append("] ")
+						.append(pp.getUser(audit.getUserId())).append("\r[")
+						.append($m("NewsFormTPage.31")).append("] ")
+						.append(Convert.toDateTimeString(audit.getCreateDate()));
+			}
+			return sb.toString();
+		}
+		return null;
 	}
 
 	static NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();
