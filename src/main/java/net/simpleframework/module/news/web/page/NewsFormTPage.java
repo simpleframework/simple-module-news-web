@@ -596,15 +596,13 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 			int i = 0;
 			while ((audit = dq.next()) != null) {
 				if (i++ > 0) {
-					sb.append("------------------------------------------");
+					sb.append("\r\r----------------------------------------------------------------\r\r");
 				}
-				sb.append(audit.getCcomment());
-				sb.append("\r").append("[").append($m("NewsFormTPage.29")).append("] ")
+				sb.append(pp.getUser(audit.getUserId())).append(", ")
+						.append(Convert.toDateTimeString(audit.getCreateDate())).append("  *")
 						.append(audit.isApass() ? $m("NewsFormTPage.27") : $m("NewsFormTPage.28"))
-						.append("\r[").append($m("NewsFormTPage.30")).append("] ")
-						.append(pp.getUser(audit.getUserId())).append("\r[")
-						.append($m("NewsFormTPage.31")).append("] ")
-						.append(Convert.toDateTimeString(audit.getCreateDate()));
+						.append("*\r").append("\r");
+				sb.append(audit.getCcomment());
 			}
 			return sb.toString();
 		}
