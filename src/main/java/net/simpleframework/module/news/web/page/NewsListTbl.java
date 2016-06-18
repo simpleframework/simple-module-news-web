@@ -9,6 +9,7 @@ import net.simpleframework.common.ID;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.coll.KVMap;
 import net.simpleframework.common.web.HttpUtils;
+import net.simpleframework.module.common.content.AbstractContentBean.EAuditStatus;
 import net.simpleframework.module.common.content.AbstractContentBean.EContentStatus;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.bean.News;
@@ -83,7 +84,9 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 
 	protected ImageElement createImageMark(final ComponentParameter cp, final News news) {
 		String img = null;
-		if (news.isVideoMark()) {
+		if (news.getAstatus() == EAuditStatus.fail) {
+			img = "nopass.png";
+		} else if (news.isVideoMark()) {
 			img = "mark_video.png";
 		} else if (news.isImageMark()) {
 			img = "mark_image.png";
