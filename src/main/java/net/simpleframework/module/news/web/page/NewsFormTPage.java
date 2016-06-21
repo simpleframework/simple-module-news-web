@@ -20,12 +20,10 @@ import net.simpleframework.ctx.trans.Transaction;
 import net.simpleframework.lib.org.jsoup.nodes.Document;
 import net.simpleframework.module.common.content.AbstractContentBean.EContentStatus;
 import net.simpleframework.module.common.content.ContentException;
-import net.simpleframework.module.common.content.IAttachmentService;
 import net.simpleframework.module.common.web.content.ContentUtils;
 import net.simpleframework.module.news.INewsContext;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.bean.News;
-import net.simpleframework.module.news.bean.NewsAttachment;
 import net.simpleframework.module.news.bean.NewsAudit;
 import net.simpleframework.module.news.bean.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
@@ -189,6 +187,12 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		news.setImageMark(cp.getBoolParameter(OPT_IMAGEMARK));
 		news.setVideoMark(cp.getBoolParameter(OPT_VIDEOMARK));
 
+		if (insert) {
+			_newsService.insert(news);
+		} else {
+			_newsService.update(news);
+		}
+
 		AttachmentBean attach = (AttachmentBean) cp.getComponentBeanByName("NewsForm_insertAttach");
 		if (attach != null) {
 			doAttachSave(ComponentParameter.get(cp, attach), news, insert);
@@ -206,16 +210,12 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 			@Override
 			public void save(final Map<String, AttachmentFile> addQueue, final Set<String> deleteQueue)
 					throws IOException {
-				final IAttachmentService<NewsAttachment> aService = newsContext.getAttachmentService();
-				if (insert) {
-					_newsService.insert(news);
-				} else {
-					_newsService.update(news);
-					if (deleteQueue != null) {
-						aService.delete(deleteQueue.toArray(new Object[] { deleteQueue.size() }));
-					}
+				if (deleteQueue != null) {
+					_newsAttachService.delete(deleteQueue.toArray(new Object[] { deleteQueue.size() }));
 				}
-				aService.insert(news.getId(), cp.getLoginId(), addQueue.values());
+				if (addQueue != null) {
+					_newsAttachService.insert(news.getId(), cp.getLoginId(), addQueue.values());
+				}
 			}
 		});
 	}
