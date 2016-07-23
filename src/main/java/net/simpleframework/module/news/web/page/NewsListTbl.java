@@ -17,6 +17,7 @@ import net.simpleframework.module.news.bean.NewsCategory;
 import net.simpleframework.module.news.web.INewsWebContext;
 import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
 import net.simpleframework.mvc.AbstractMVCPage;
+import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.EVerticalAlign;
@@ -148,16 +149,16 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 		}
 	}
 
-	protected String toOpeHTML(final ComponentParameter cp, final News news) {
+	protected String toOpeHTML(final PageParameter pp, final News news) {
 		final StringBuilder sb = new StringBuilder();
-		final EContentStatus status = cp.getEnumParameter(EContentStatus.class, "status");
+		final EContentStatus status = pp.getEnumParameter(EContentStatus.class, "status");
 		if (status != EContentStatus.delete) {
 			sb.append(ButtonElement.editBtn().setOnclick(
 					JS.loc(HttpUtils.addParameters(AbstractMVCPage.url(getFormBasePageClass()),
 							"newsId=" + news.getId()))));
 			sb.append(AbstractTablePagerSchema.IMG_DOWNMENU);
 		} else {
-			sb.append(NewsUtils.createStatusAct(cp, EContentStatus.edit, news).setText(
+			sb.append(NewsUtils.createStatusAct(pp, EContentStatus.edit, news).setText(
 					$m("NewsListTbl.0")));
 		}
 		return sb.toString();
