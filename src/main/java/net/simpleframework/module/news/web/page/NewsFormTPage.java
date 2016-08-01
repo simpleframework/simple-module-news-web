@@ -568,7 +568,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 			final News news = NewsUtils.getNews(cp);
 			_newsAuditService.addNewsAudit(news, cp.getLoginId(), cp.getBoolParameter("ae_bpass"),
 					cp.getParameter("ae_ccomment"));
-			return new JavascriptForward("$Actions.reloc();");
+			return JavascriptForward.RELOC;
 		}
 
 		@Override
