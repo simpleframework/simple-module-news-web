@@ -116,8 +116,10 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 		@Override
 		protected Map<String, Object> getRowData(final ComponentParameter cp, final Object dataObject) {
 			final NewsRecommend r = (NewsRecommend) dataObject;
+			final ERecommendStatus status = r.getStatus();
 			final KVMap row = new KVMap().add("desc", toDescHTML(cp, r)).add("rlevel", r.getRlevel())
-					.add("ddate", toDseDateHTML(cp, r)).add("status", toStatusHTML(cp, r))
+					.add("ddate", toDseDateHTML(cp, r))
+					.add("status", SpanElement.color(status, status.getColor()))
 					.add(TablePagerColumn.OPE, toOpeHTML(cp, r));
 			return row;
 		}
@@ -125,19 +127,6 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 		protected String toDescHTML(final ComponentParameter cp, final NewsRecommend r) {
 			return new LinkElement(r.getDescription()).setOnclick(
 					"$Actions['RecommendPage_edit']('rid=" + r.getId() + "');").toString();
-		}
-
-		protected String toStatusHTML(final ComponentParameter cp, final NewsRecommend r) {
-			final ERecommendStatus status = r.getStatus();
-			String color = null;
-			if (status == ERecommendStatus.running) {
-				color = "green";
-			} else if (status == ERecommendStatus.abort) {
-				color = "red";
-			} else if (status == ERecommendStatus.ready) {
-				color = "#999";
-			}
-			return SpanElement.color(status, color).toString();
 		}
 
 		protected String toDseDateHTML(final ComponentParameter cp, final NewsRecommend r) {
