@@ -189,7 +189,7 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 
 		public IForward doIndex(final ComponentParameter cp) {
 			_newsService.getLuceneService().rebuildIndex();
-			return new JavascriptForward("alert('").append($m("NewsAdvPage.3")).append("');");
+			return JavascriptForward.alert($m("NewsAdvPage.3"));
 		}
 
 		@Override
