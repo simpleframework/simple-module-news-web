@@ -1,13 +1,3 @@
-.NewsFormBasePage {
-	width: 75%;
-}
-
-@media screen and (max-width: 1024px) {
-  .NewsFormBasePage {
-    width: 1010px;
-  }
-}
-
 .NewsFormBasePage .FormTableRowTemplatePage {
 	padding: 0;
 }
