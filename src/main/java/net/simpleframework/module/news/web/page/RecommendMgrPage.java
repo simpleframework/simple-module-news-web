@@ -21,7 +21,6 @@ import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ButtonElement;
 import net.simpleframework.mvc.common.element.CalendarInput;
-import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.ElementList;
 import net.simpleframework.mvc.common.element.InputElement;
 import net.simpleframework.mvc.common.element.LinkButton;
@@ -74,13 +73,11 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 		final TablePagerBean tablePager = super
 				.addTablePagerBean(pp, "RecommendationPage_tbl", RecommendTbl.class).setFilter(false)
 				.setSort(false).setShowCheckbox(false);
-		tablePager
-				.addColumn(new TablePagerColumn("desc", $m("RecommendMgrPage.1")))
+		tablePager.addColumn(new TablePagerColumn("desc", $m("RecommendMgrPage.1")))
 				.addColumn(new TablePagerColumn("rlevel", $m("RecommendMgrPage.2"), 50))
 				.addColumn(TablePagerColumn.DATE("ddate", $m("RecommendMgrPage.3")).setWidth(120))
-				.addColumn(
-						new TablePagerColumn("status", $m("RecommendMgrPage.4"), 55)
-								.setTextAlign(ETextAlign.center)).addColumn(TablePagerColumn.OPE(70));
+				.addColumn(new TablePagerColumn("status", $m("RecommendMgrPage.4"), 55).center())
+				.addColumn(TablePagerColumn.OPE(70));
 		return tablePager;
 	}
 

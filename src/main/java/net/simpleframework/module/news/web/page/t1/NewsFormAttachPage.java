@@ -138,7 +138,7 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 								ETextAlign.center).setFilter(false))
 				.addColumn(
 						new TablePagerColumn("userId", $m("NewsFormAttachPage.3"), 100).setFilterSort(
-								false).setTextAlign(ETextAlign.center))
+								false).center())
 				.addColumn(
 						TablePagerColumn.DATE("createDate", $m("NewsFormAttachPage.4")).setFilter(false))
 				.addColumn(TablePagerColumn.OPE(120));

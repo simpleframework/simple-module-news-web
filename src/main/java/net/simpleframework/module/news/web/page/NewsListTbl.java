@@ -19,7 +19,6 @@ import net.simpleframework.module.news.web.page.t1.NewsFormBasePage;
 import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.element.ButtonElement;
-import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.EVerticalAlign;
 import net.simpleframework.mvc.common.element.ImageElement;
 import net.simpleframework.mvc.common.element.JS;
@@ -200,8 +199,7 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 	}
 
 	public static final TablePagerColumn TC_COMMENTS() {
-		return new TablePagerColumn("comments", $m("NewsMgrPage.3"), 50).setFilter(false)
-				.setTextAlign(ETextAlign.center);
+		return new TablePagerColumn("comments", $m("NewsMgrPage.3"), 50).setFilter(false).center();
 	}
 
 	public static final TablePagerColumn TC_CREATEDATE() {
