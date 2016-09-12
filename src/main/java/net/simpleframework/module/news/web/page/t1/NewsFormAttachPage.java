@@ -27,7 +27,6 @@ import net.simpleframework.mvc.PageMapping;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.common.DownloadUtils;
 import net.simpleframework.mvc.common.element.ButtonElement;
-import net.simpleframework.mvc.common.element.ETextAlign;
 import net.simpleframework.mvc.common.element.InputElement;
 import net.simpleframework.mvc.common.element.JS;
 import net.simpleframework.mvc.common.element.LinkButton;
@@ -134,8 +133,8 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 						new TablePagerColumn("attachtype", $m("NewsFormAttachPage.8"), 80)
 								.setFilter(false))
 				.addColumn(
-						new TablePagerColumn("downloads", $m("NewsFormAttachPage.2"), 80).setTextAlign(
-								ETextAlign.center).setFilter(false))
+						new TablePagerColumn("downloads", $m("NewsFormAttachPage.2"), 80).center()
+								.setFilter(false))
 				.addColumn(
 						new TablePagerColumn("userId", $m("NewsFormAttachPage.3"), 100).setFilterSort(
 								false).center())
