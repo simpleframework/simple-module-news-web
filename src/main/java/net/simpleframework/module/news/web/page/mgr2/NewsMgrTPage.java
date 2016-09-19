@@ -54,6 +54,13 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 				.setHandlerClass(_NewsCategoryHandle.class);
 
 		// 表格
+		addTablePagerBean(pp);
+
+		// edit/delete/status
+		NewsMgrActions.addMgrComponentBean(pp, _NewsMgrActions.class, _StatusDescPage.class);
+	}
+
+	protected TablePagerBean addTablePagerBean(final PageParameter pp) {
 		final TablePagerBean tablePager = (TablePagerBean) addComponentBean(pp, "NewsMgrTPage_tbl",
 				TablePagerBean.class)
 				.setResize(false)
@@ -65,9 +72,7 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 		tablePager.addColumn(TablePagerColumn.ICON()).addColumn(NewsListTbl.TC_TOPIC())
 				.addColumn(NewsListTbl.TC_STATUS()).addColumn(NewsListTbl.TC_COMMENTS())
 				.addColumn(NewsListTbl.TC_CREATEDATE()).addColumn(TablePagerColumn.OPE(70));
-
-		// edit/delete/status
-		NewsMgrActions.addMgrComponentBean(pp, _NewsMgrActions.class, _StatusDescPage.class);
+		return tablePager;
 	}
 
 	@Override
