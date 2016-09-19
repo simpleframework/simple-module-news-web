@@ -62,13 +62,11 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 
 	protected TablePagerBean addTablePagerBean(final PageParameter pp) {
 		final TablePagerBean tablePager = (TablePagerBean) addComponentBean(pp, "NewsMgrTPage_tbl",
-				TablePagerBean.class)
-				.setResize(false)
-				.setPageItems(30)
-				.setPagerBarLayout(EPagerBarLayout.bottom)
-				.setJsLoadedCallback(
-						"$('idNewsMgrTPage_tbl').previous().innerHTML = $('idNewsMgrTPage_nav').innerHTML;")
-				.setContainerId("idNewsMgrTPage_tbl").setHandlerClass(NewsListMgr2Tbl.class);
+				TablePagerBean.class).setResize(false).setPageItems(30)
+						.setPagerBarLayout(EPagerBarLayout.bottom)
+						.setJsLoadedCallback(
+								"$('idNewsMgrTPage_tbl').previous().innerHTML = $('idNewsMgrTPage_nav').innerHTML;")
+						.setContainerId("idNewsMgrTPage_tbl").setHandlerClass(NewsListMgr2Tbl.class);
 		tablePager.addColumn(TablePagerColumn.ICON()).addColumn(NewsListTbl.TC_TOPIC())
 				.addColumn(NewsListTbl.TC_STATUS()).addColumn(NewsListTbl.TC_COMMENTS())
 				.addColumn(NewsListTbl.TC_CREATEDATE()).addColumn(TablePagerColumn.OPE(70));
@@ -82,16 +80,12 @@ public class NewsMgrTPage extends AbstractMgrTPage implements INewsContextAware 
 
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
-		final ElementList btns = ElementList
-				.of(NewsUtils.createAddNew(pp, null))
-				.append(SpanElement.SPACE)
-				.append(createStatusButton(EContentStatus.publish))
+		final ElementList btns = ElementList.of(NewsUtils.createAddNew(pp, null))
+				.append(SpanElement.SPACE).append(createStatusButton(EContentStatus.publish))
 				.append(SpanElement.SPACE)
 				.append(createStatusButton(EContentStatus.delete).setIconClass(Icon.trash))
-				.append(SpanElement.SPACE)
-				.append(
-						new LinkButton($m("NewsMgrPage.13"))
-								.setOnclick("$Actions['NewsMgrPage_advWindow']();"));
+				.append(SpanElement.SPACE).append(new LinkButton($m("NewsMgrPage.13"))
+						.setOnclick("$Actions['NewsMgrPage_advWindow']();"));
 		final LinkButton preview = NewsUtils.createNewsPreview(pp);
 		if (preview != null) {
 			btns.append(SpanElement.SPACE).append(preview);

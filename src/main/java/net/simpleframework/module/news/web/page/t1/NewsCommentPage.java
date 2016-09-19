@@ -42,12 +42,10 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 		final TablePagerBean tablePager = (TablePagerBean) addTablePagerBean(pp,
 				"NewsCommentPage_tbl", NewsCommentTbl.class).setResize(false).setPageItems(30);
 		tablePager
-				.addColumn(
-						new TablePagerColumn("content", $m("NewsCommentPage.0")).setSort(false)
-								.setNowrap(false))
-				.addColumn(
-						new TablePagerColumn("userId", $m("NewsCommentPage.1"), 100).setFilterSort(false)
-								.center())
+				.addColumn(new TablePagerColumn("content", $m("NewsCommentPage.0")).setSort(false)
+						.setNowrap(false))
+				.addColumn(new TablePagerColumn("userId", $m("NewsCommentPage.1"), 100)
+						.setFilterSort(false).center())
 				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsCommentPage.2")))
 				.addColumn(TablePagerColumn.OPE(80));
 
@@ -81,15 +79,13 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 	@Override
 	public ElementList getLeftElements(final PageParameter pp) {
 		final News news = NewsUtils.getNews(pp);
-		return ElementList.of(
-				LinkButton.closeBtn(),
+		return ElementList.of(LinkButton.closeBtn(), SpanElement.SPACE,
+				LinkButton.deleteBtn()
+						.setOnclick("$Actions['NewsCommentPage_tbl'].doAct('NewsCommentPage_delete');"),
 				SpanElement.SPACE,
-				LinkButton.deleteBtn().setOnclick(
-						"$Actions['NewsCommentPage_tbl'].doAct('NewsCommentPage_delete');"),
-				SpanElement.SPACE,
-				new Checkbox("nc_allowComments", $m("NewsFormTPage.8")).setChecked(
-						news.isAllowComments()).setOnchange(
-						"$Actions['NewsCommentPage_allowComments']('newsId=" + news.getId()
+				new Checkbox("nc_allowComments", $m("NewsFormTPage.8"))
+						.setChecked(news.isAllowComments())
+						.setOnchange("$Actions['NewsCommentPage_allowComments']('newsId=" + news.getId()
 								+ "&val=' + this.checked);"));
 	}
 
@@ -107,9 +103,8 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 		}
 
 		protected ButtonElement createDelBtn(final NewsComment comment) {
-			return ButtonElement.deleteBtn().setOnclick(
-					"$Actions['NewsCommentPage_delete']('newsId=" + comment.getContentId() + "&id="
-							+ comment.getId() + "');");
+			return ButtonElement.deleteBtn().setOnclick("$Actions['NewsCommentPage_delete']('newsId="
+					+ comment.getContentId() + "&id=" + comment.getId() + "');");
 		}
 
 		protected String getContent(final PageParameter pp, final NewsComment comment) {
@@ -117,7 +112,8 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 		}
 
 		@Override
-		protected Map<String, Object> getRowData(final ComponentParameter cp, final Object dataObject) {
+		protected Map<String, Object> getRowData(final ComponentParameter cp,
+				final Object dataObject) {
 			final NewsComment comment = (NewsComment) dataObject;
 			final KVMap kv = new KVMap();
 			kv.add("content", getContent(cp, comment));

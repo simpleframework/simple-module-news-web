@@ -90,8 +90,8 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 	}
 
 	protected AjaxRequestBean addTooltipPage(final PageParameter pp) {
-		return addAjaxRequest(pp, "NewsViewTPage_tipPage", NewsAttachmentTooltipPage.class).setRole(
-				PermissionConst.ROLE_ANONYMOUS);
+		return addAjaxRequest(pp, "NewsViewTPage_tipPage", NewsAttachmentTooltipPage.class)
+				.setRole(PermissionConst.ROLE_ANONYMOUS);
 	}
 
 	protected TooltipBean addTooltip(final PageParameter pp) {
@@ -119,7 +119,8 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		final JavascriptForward js = new JavascriptForward();
 		if (attachment != null) {
 			final AttachmentFile af = service.createAttachmentFile(attachment);
-			js.append(JS.loc(DownloadUtils.getDownloadHref(af, AttachmentDownloadHandler.class), true));
+			js.append(
+					JS.loc(DownloadUtils.getDownloadHref(af, AttachmentDownloadHandler.class), true));
 		} else {
 			js.append("alert('").append($m("NewsViewTPage.5")).append("');");
 		}
@@ -172,7 +173,8 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 					sb.append("<div class='news_vote'>");
 					IIdBeanAware bean;
 					while ((bean = (IIdBeanAware) dq.next()) != null) {
-						sb.append(pp.includeUrl(NewsVoteRef._VotePostPage.class, "voteId=" + bean.getId()));
+						sb.append(
+								pp.includeUrl(NewsVoteRef._VotePostPage.class, "voteId=" + bean.getId()));
 					}
 					sb.append("</div>");
 				}
@@ -192,8 +194,8 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		// _newsService.queryRecommendationBeans(
 		// _newsCategoryService.getBean(cp.getParameter("categoryId")), new
 		// TimePeriod(tp));
-		return new TextForward(cp.wrapHTMLContextPath(creator.create(cp, dq)
-				.setDotIcon(EImageDot.numDot).toString()));
+		return new TextForward(
+				cp.wrapHTMLContextPath(creator.create(cp, dq).setDotIcon(EImageDot.numDot).toString()));
 	}
 
 	@Override
@@ -223,9 +225,9 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 		final IDataQuery<?> dq = DataQueryUtils.nullQuery();
 		// _newsService.queryRecommendationBeans(
 		// _newsCategoryService.getBean(categoryId), TimePeriod.week);
-		lets.add(new Pagelet(new CategoryItem($m("NewsViewTPage.6")), creator.create(pp, dq)
-				.setDotIcon(EImageDot.numDot)).setTabs(creator.createTimePeriodTabs("categoryId="
-				+ categoryId)));
+		lets.add(new Pagelet(new CategoryItem($m("NewsViewTPage.6")),
+				creator.create(pp, dq).setDotIcon(EImageDot.numDot))
+						.setTabs(creator.createTimePeriodTabs("categoryId=" + categoryId)));
 
 		// 历史记录
 		lets.add(creator.getHistoryPagelet(pp));

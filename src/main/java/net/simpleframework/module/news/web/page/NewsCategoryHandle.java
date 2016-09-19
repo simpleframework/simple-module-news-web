@@ -38,8 +38,8 @@ import net.simpleframework.mvc.template.t1.ext.CategoryTableLCTemplatePage;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> implements
-		INewsContextAware {
+public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory>
+		implements INewsContextAware {
 
 	@Override
 	protected INewsCategoryService getBeanService() {
@@ -181,8 +181,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory> i
 					.setBindingId("domain_id").setBindingText("domain_text");
 
 			final InputComp domain_id = InputComp.hidden("domain_id");
-			final InputComp domain_text = InputComp.textButton("domain_text")
-					.setAttributes("readonly")
+			final InputComp domain_text = InputComp.textButton("domain_text").setAttributes("readonly")
 					.addEvent(EElementEvent.click, "$Actions['NewsCategoryHandle_deptSelect']();");
 			PermissionDept org = null;
 			if (category != null) {

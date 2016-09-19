@@ -1,6 +1,7 @@
 package net.simpleframework.module.news.web.page;
 
 import static net.simpleframework.common.I18n.$m;
+
 import net.simpleframework.common.ID;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.common.object.ObjectEx.CacheV;
@@ -67,9 +68,8 @@ public abstract class NewsUtils implements INewsContextAware {
 	public static NavigationTitleCallback<NewsCategory> createNavigationTitleCallback(
 			final PageParameter pp, final String tblname) {
 		final EContentStatus status = pp.getEnumParameter(EContentStatus.class, "status");
-		return new NavigationTitleCallback<NewsCategory>(
-				status == EContentStatus.delete ? $m("NewsCategoryHandle.1")
-						: $m("NewsCategoryHandle.0"), tblname) {
+		return new NavigationTitleCallback<NewsCategory>(status == EContentStatus.delete
+				? $m("NewsCategoryHandle.1") : $m("NewsCategoryHandle.0"), tblname) {
 			@Override
 			protected NewsCategory get(final Object id) {
 				return _newsCategoryService.getBean(id);
@@ -84,23 +84,25 @@ public abstract class NewsUtils implements INewsContextAware {
 
 	public static LinkButton createAddNew(final PageParameter pp,
 			final Class<? extends AbstractMVCPage> formPageClass) {
-		return new LinkButton($m("NewsMgrPage.6")).setOnclick("$Actions.loc('"
-				+ HttpUtils.addParameters(AbstractMVCPage
-						.url(formPageClass == null ? NewsFormBasePage.class : formPageClass),
+		return new LinkButton($m("NewsMgrPage.6"))
+				.setOnclick("$Actions.loc('" + HttpUtils.addParameters(
+						AbstractMVCPage
+								.url(formPageClass == null ? NewsFormBasePage.class : formPageClass),
 						"categoryId=") + "' + $F('.parameters #categoryId'));");
 	}
 
 	public static ButtonElement createStatusAct(final PageParameter pp, final EContentStatus status,
 			final News news) {
-		return new ButtonElement(status).setHighlight(status == EContentStatus.publish).setOnclick(
-				"$Actions['NewsMgrPage_status']('op=" + status.name() + "&newsId=" + news.getId()
-						+ "');");
+		return new ButtonElement(status).setHighlight(status == EContentStatus.publish)
+				.setOnclick("$Actions['NewsMgrPage_status']('op=" + status.name() + "&newsId="
+						+ news.getId() + "');");
 	}
 
 	public static LinkButton createNewsPreview(final PageParameter pp) {
 		final NewsCategory category = getNewsCategory(pp);
-		return category == null ? null : new LinkButton($m("Button.Preview")).setOnclick(JS.loc(
-				uFactory.getUrl(pp, NewsListTPage.class, category), true));
+		return category == null ? null
+				: new LinkButton($m("Button.Preview"))
+						.setOnclick(JS.loc(uFactory.getUrl(pp, NewsListTPage.class, category), true));
 	}
 
 	static NewsUrlsFactory uFactory = ((INewsWebContext) newsContext).getUrlsFactory();

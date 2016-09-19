@@ -87,8 +87,8 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 		}
 	}
 
-	public static class NewsAttachmentAction extends
-			AbstractAttachmentLogHandler<NewsAttachment, News> {
+	public static class NewsAttachmentAction
+			extends AbstractAttachmentLogHandler<NewsAttachment, News> {
 		@Override
 		protected IAttachmentService<NewsAttachment> getAttachmentService() {
 			return _newsAttachService;

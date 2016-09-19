@@ -21,8 +21,8 @@ import net.simpleframework.mvc.component.base.ajaxrequest.AjaxRequestBean;
  * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class NewsAttachmentTooltipPage extends AbstractAttachmentTooltipPage implements
-		INewsContextAware {
+public class NewsAttachmentTooltipPage extends AbstractAttachmentTooltipPage
+		implements INewsContextAware {
 
 	@Override
 	protected void onForward(final PageParameter pp) throws Exception {
@@ -31,8 +31,8 @@ public class NewsAttachmentTooltipPage extends AbstractAttachmentTooltipPage imp
 		if (((INewsWebContext) newsContext).getLogRef() != null) {
 			final AjaxRequestBean ajaxRequest = addAjaxRequest(pp, "AttachmentTooltipPage_logPage",
 					NewsDownloadLogPage.class);
-			addWindowBean(pp, "AttachmentTooltipPage_logWin", ajaxRequest).setHeight(480)
-					.setWidth(800).setTitle($m("NewsFormAttachPage.5"));
+			addWindowBean(pp, "AttachmentTooltipPage_logWin", ajaxRequest).setHeight(480).setWidth(800)
+					.setTitle($m("NewsFormAttachPage.5"));
 		}
 	}
 

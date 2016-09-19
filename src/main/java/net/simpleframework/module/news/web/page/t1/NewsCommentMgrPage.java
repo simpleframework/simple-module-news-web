@@ -47,12 +47,11 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 		pp.addImportCSS(NewsFormTPage.class, "/news.css");
 
 		final TablePagerBean tablePager = (TablePagerBean) addTablePagerBean(pp,
-				"NewsCommentMgrPage_tbl", NewsCommentMgrTbl.class).setPagerBarLayout(
-				EPagerBarLayout.bottom).setContainerId("tbl_" + hashId);
+				"NewsCommentMgrPage_tbl", NewsCommentMgrTbl.class)
+						.setPagerBarLayout(EPagerBarLayout.bottom).setContainerId("tbl_" + hashId);
 		tablePager
-				.addColumn(
-						new TablePagerColumn("content", $m("NewsCommentPage.0")).setNowrap(false)
-								.setSort(false))
+				.addColumn(new TablePagerColumn("content", $m("NewsCommentPage.0")).setNowrap(false)
+						.setSort(false))
 				.addColumn(
 						new TablePagerColumn("userId", $m("NewsCommentPage.1"), 100).setFilter(false))
 				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsCommentPage.2")))
@@ -76,8 +75,8 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 
 	@Override
 	public ElementList getLeftElements(final PageParameter pp) {
-		return ElementList.of(LinkButton.deleteBtn().setOnclick(
-				"$Actions['NewsCommentMgrPage_tbl'].doAct('NewsCommentMgrPage_delete');"));
+		return ElementList.of(LinkButton.deleteBtn()
+				.setOnclick("$Actions['NewsCommentMgrPage_tbl'].doAct('NewsCommentMgrPage_delete');"));
 	}
 
 	@Override
@@ -103,20 +102,17 @@ public class NewsCommentMgrPage extends T1ResizedTemplatePage implements INewsCo
 
 		@Override
 		protected ButtonElement createDelBtn(final NewsComment comment) {
-			return ButtonElement.deleteBtn().setOnclick(
-					"$Actions['NewsCommentMgrPage_delete']('newsId=" + comment.getContentId() + "&id="
-							+ comment.getId() + "');");
+			return ButtonElement.deleteBtn()
+					.setOnclick("$Actions['NewsCommentMgrPage_delete']('newsId=" + comment.getContentId()
+							+ "&id=" + comment.getId() + "');");
 		}
 
 		@Override
 		protected String getContent(final PageParameter pp, final NewsComment comment) {
 			final News news = _newsService.getBean(comment.getContentId());
 			final String txt = super.getContent(pp, comment);
-			return news != null ? LinkElement
-					.BLANK(txt)
-					.setHref(
-							((NewsWebContext) newsContext).getUrlsFactory().getUrl(pp,
-									NewsViewTPage.class, news)).toString() : txt;
+			return news != null ? LinkElement.BLANK(txt).setHref(((NewsWebContext) newsContext)
+					.getUrlsFactory().getUrl(pp, NewsViewTPage.class, news)).toString() : txt;
 		}
 	}
 }

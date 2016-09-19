@@ -65,14 +65,13 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 		addDeleteAjaxRequest(pp, "RecommendMgrPage_del");
 
 		// 放弃
-		addAjaxRequest(pp, "RecommendMgrPage_abort").setHandlerMethod("doAbort").setConfirmMessage(
-				$m("RecommendMgrPage.8"));
+		addAjaxRequest(pp, "RecommendMgrPage_abort").setHandlerMethod("doAbort")
+				.setConfirmMessage($m("RecommendMgrPage.8"));
 	}
 
 	protected TablePagerBean addTablePagerBean(final PageParameter pp) {
-		final TablePagerBean tablePager = super
-				.addTablePagerBean(pp, "RecommendationPage_tbl", RecommendTbl.class).setFilter(false)
-				.setSort(false).setShowCheckbox(false);
+		final TablePagerBean tablePager = super.addTablePagerBean(pp, "RecommendationPage_tbl",
+				RecommendTbl.class).setFilter(false).setSort(false).setShowCheckbox(false);
 		tablePager.addColumn(new TablePagerColumn("desc", $m("RecommendMgrPage.1")))
 				.addColumn(new TablePagerColumn("rlevel", $m("RecommendMgrPage.2"), 50))
 				.addColumn(TablePagerColumn.DATE("ddate", $m("RecommendMgrPage.3")).setWidth(120))
@@ -98,8 +97,8 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
 		final News news = NewsUtils.getNews(pp);
-		return ElementList.of(LinkButton.addBtn().setOnclick(
-				"$Actions['RecommendPage_edit']('newsId=" + news.getId() + "');"));
+		return ElementList.of(LinkButton.addBtn()
+				.setOnclick("$Actions['RecommendPage_edit']('newsId=" + news.getId() + "');"));
 	}
 
 	public static class RecommendTbl extends AbstractDbTablePagerHandler {
@@ -111,7 +110,8 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 		}
 
 		@Override
-		protected Map<String, Object> getRowData(final ComponentParameter cp, final Object dataObject) {
+		protected Map<String, Object> getRowData(final ComponentParameter cp,
+				final Object dataObject) {
 			final NewsRecommend r = (NewsRecommend) dataObject;
 			final ERecommendStatus status = r.getStatus();
 			final KVMap row = new KVMap().add("desc", toDescHTML(cp, r)).add("rlevel", r.getRlevel())
@@ -122,8 +122,8 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 		}
 
 		protected String toDescHTML(final ComponentParameter cp, final NewsRecommend r) {
-			return new LinkElement(r.getDescription()).setOnclick(
-					"$Actions['RecommendPage_edit']('rid=" + r.getId() + "');").toString();
+			return new LinkElement(r.getDescription())
+					.setOnclick("$Actions['RecommendPage_edit']('rid=" + r.getId() + "');").toString();
 		}
 
 		protected String toDseDateHTML(final ComponentParameter cp, final NewsRecommend r) {
@@ -151,8 +151,8 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 				sb.append(new ButtonElement(ERecommendStatus.abort)
 						.setOnclick("$Actions['RecommendMgrPage_abort']('rid=" + r.getId() + "');"));
 			} else {
-				sb.append(ButtonElement.deleteBtn().setOnclick(
-						"$Actions['RecommendMgrPage_del']('rid=" + r.getId() + "');"));
+				sb.append(ButtonElement.deleteBtn()
+						.setOnclick("$Actions['RecommendMgrPage_del']('rid=" + r.getId() + "');"));
 			}
 			return sb.toString();
 		}
@@ -163,11 +163,11 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 		protected void onForward(final PageParameter pp) throws Exception {
 			super.onForward(pp);
 
-			addCalendarBean(pp, "RecommendEditPage_cal").setShowTime(true).setDateFormat(
-					"yyyy-MM-dd HH:mm");
+			addCalendarBean(pp, "RecommendEditPage_cal").setShowTime(true)
+					.setDateFormat("yyyy-MM-dd HH:mm");
 
-			addFormValidationBean(pp).addValidators(
-					new Validator(EValidatorMethod.required, "#r_description"));
+			addFormValidationBean(pp)
+					.addValidators(new Validator(EValidatorMethod.required, "#r_description"));
 		}
 
 		@Transaction(context = INewsContext.class)
@@ -218,8 +218,8 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 				}
 				al.add(opt);
 			}
-			final InputElement r_rlevel = InputElement.select("r_rlevel").addElements(
-					al.toArray(new Option[al.size()]));
+			final InputElement r_rlevel = InputElement.select("r_rlevel")
+					.addElements(al.toArray(new Option[al.size()]));
 			final CalendarInput r_dstartdate = new CalendarInput("r_dstartdate")
 					.setCalendarComponent("RecommendEditPage_cal");
 			final CalendarInput r_denddate = new CalendarInput("r_denddate")
@@ -240,8 +240,8 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 				newsId.setValue(pp);
 			}
 
-			final TableRow r1 = new TableRow(new RowField($m("RecommendMgrPage.2"), newsId, r_id,
-					r_rlevel));
+			final TableRow r1 = new TableRow(
+					new RowField($m("RecommendMgrPage.2"), newsId, r_id, r_rlevel));
 			final TableRow r2 = new TableRow(new RowField($m("RecommendMgrPage.5"), r_dstartdate),
 					new RowField($m("RecommendMgrPage.6"), r_denddate));
 			final TableRow r3 = new TableRow(new RowField($m("RecommendMgrPage.1"), r_description));

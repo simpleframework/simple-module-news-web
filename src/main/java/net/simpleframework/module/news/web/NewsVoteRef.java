@@ -1,6 +1,7 @@
 package net.simpleframework.module.news.web;
 
 import static net.simpleframework.common.I18n.$m;
+
 import net.simpleframework.ado.query.DataQueryUtils;
 import net.simpleframework.ado.query.IDataQuery;
 import net.simpleframework.ctx.IContextBase;

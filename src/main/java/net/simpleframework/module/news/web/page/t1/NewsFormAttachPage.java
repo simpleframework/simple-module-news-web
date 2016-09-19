@@ -121,23 +121,19 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 	}
 
 	protected TablePagerBean addTablePagerBean(final PageParameter pp) {
-		final TablePagerBean tablePager = (TablePagerBean) super
-				.addTablePagerBean(pp, "NewsTabAttachPage_tbl", NewsAttachmentTbl.class)
-				.setPagerBarLayout(EPagerBarLayout.bottom).setContainerId("idNewsTabAttachPage_tbl");
-		tablePager
-				.addColumn(new TablePagerColumn("topic", $m("NewsFormAttachPage.0")).setSort(false))
-				.addColumn(
-						new TablePagerColumn("attachsize", $m("NewsFormAttachPage.1"), 80)
-								.setFilter(false))
-				.addColumn(
-						new TablePagerColumn("attachtype", $m("NewsFormAttachPage.8"), 80)
-								.setFilter(false))
-				.addColumn(
-						new TablePagerColumn("downloads", $m("NewsFormAttachPage.2"), 80).center()
-								.setFilter(false))
-				.addColumn(
-						new TablePagerColumn("userId", $m("NewsFormAttachPage.3"), 100).setFilterSort(
-								false).center())
+		final TablePagerBean tablePager = (TablePagerBean) super.addTablePagerBean(pp,
+				"NewsTabAttachPage_tbl", NewsAttachmentTbl.class)
+						.setPagerBarLayout(EPagerBarLayout.bottom)
+						.setContainerId("idNewsTabAttachPage_tbl");
+		tablePager.addColumn(new TablePagerColumn("topic", $m("NewsFormAttachPage.0")).setSort(false))
+				.addColumn(new TablePagerColumn("attachsize", $m("NewsFormAttachPage.1"), 80)
+						.setFilter(false))
+				.addColumn(new TablePagerColumn("attachtype", $m("NewsFormAttachPage.8"), 80)
+						.setFilter(false))
+				.addColumn(new TablePagerColumn("downloads", $m("NewsFormAttachPage.2"), 80).center()
+						.setFilter(false))
+				.addColumn(new TablePagerColumn("userId", $m("NewsFormAttachPage.3"), 100)
+						.setFilterSort(false).center())
 				.addColumn(
 						TablePagerColumn.DATE("createDate", $m("NewsFormAttachPage.4")).setFilter(false))
 				.addColumn(TablePagerColumn.OPE(120));
@@ -165,11 +161,11 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		sb.append("<div class='NewsFormAttachPage'>");
 		sb.append(" <div class='tbar'>");
 		final News news = NewsUtils.getNews(pp);
-		sb.append(LinkButton.corner($m("NewsFormAttachPage.6")).setOnclick(
-				"$Actions['NewsFormAttachPage_upload']('newsId=" + news.getId() + "');"));
+		sb.append(LinkButton.corner($m("NewsFormAttachPage.6"))
+				.setOnclick("$Actions['NewsFormAttachPage_upload']('newsId=" + news.getId() + "');"));
 		sb.append(SpanElement.SPACE);
-		sb.append(LinkButton.corner($m("Button.Refresh")).setOnclick(
-				"$Actions['NewsTabAttachPage_tbl']();"));
+		sb.append(LinkButton.corner($m("Button.Refresh"))
+				.setOnclick("$Actions['NewsTabAttachPage_tbl']();"));
 		sb.append(" </div>");
 		sb.append(" <div id='idNewsTabAttachPage_tbl'></div>");
 		sb.append("</div>");
@@ -189,17 +185,17 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		}
 
 		@Override
-		protected Map<String, Object> getRowData(final ComponentParameter cp, final Object dataObject) {
+		protected Map<String, Object> getRowData(final ComponentParameter cp,
+				final Object dataObject) {
 			final NewsAttachment attachment = (NewsAttachment) dataObject;
 			final KVMap kv = new KVMap();
 			try {
-				final AttachmentFile af = newsContext.getAttachmentService().createAttachmentFile(
-						attachment);
-				kv.put(
-						"topic",
-						new LinkElement(attachment.getTopic()).setOnclick(
-								JS.loc(DownloadUtils.getDownloadHref(af), true)).setTitle(
-								attachment.getDescription()));
+				final AttachmentFile af = newsContext.getAttachmentService()
+						.createAttachmentFile(attachment);
+				kv.put("topic",
+						new LinkElement(attachment.getTopic())
+								.setOnclick(JS.loc(DownloadUtils.getDownloadHref(af), true))
+								.setTitle(attachment.getDescription()));
 			} catch (final IOException e) {
 				kv.put("topic", attachment.getTopic());
 			}
@@ -212,11 +208,8 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 			}
 
 			if (((INewsWebContext) newsContext).getLogRef() != null) {
-				kv.put(
-						"downloads",
-						LinkElement.style2(attachment.getDownloads()).setOnclick(
-								"$Actions['NewsTabAttachPage_logWin']('beanId=" + attachment.getId()
-										+ "');"));
+				kv.put("downloads", LinkElement.style2(attachment.getDownloads()).setOnclick(
+						"$Actions['NewsTabAttachPage_logWin']('beanId=" + attachment.getId() + "');"));
 			} else {
 				kv.put("downloads", attachment.getDownloads());
 			}
@@ -230,11 +223,11 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		protected String toOpeHTML(final ComponentParameter cp, final NewsAttachment attachment) {
 			final Object id = attachment.getId();
 			final StringBuilder sb = new StringBuilder();
-			sb.append(ButtonElement.editBtn().setOnclick(
-					"$Actions['NewsFormAttachPage_edit']('beanId=" + id + "');"));
+			sb.append(ButtonElement.editBtn()
+					.setOnclick("$Actions['NewsFormAttachPage_edit']('beanId=" + id + "');"));
 			sb.append(SpanElement.SPACE);
-			sb.append(ButtonElement.deleteBtn().setOnclick(
-					"$Actions['NewsFormAttachPage_delete']('id=" + id + "');"));
+			sb.append(ButtonElement.deleteBtn()
+					.setOnclick("$Actions['NewsFormAttachPage_delete']('id=" + id + "');"));
 			sb.append(AbstractTablePagerSchema.IMG_DOWNMENU);
 			return sb.toString();
 		}
@@ -259,8 +252,8 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 		protected void onForward(final PageParameter pp) throws Exception {
 			super.onForward(pp);
 
-			addFormValidationBean(pp).addValidators(
-					new Validator(EValidatorMethod.digits, "#ae_videotime"));
+			addFormValidationBean(pp)
+					.addValidators(new Validator(EValidatorMethod.digits, "#ae_videotime"));
 		}
 
 		protected Class<? extends Enum<?>> getAttachmentTypeClass() {
@@ -316,11 +309,11 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 				}
 			}
 
-			final TableRows rows = TableRows.of(new TableRow(new RowField($m("AttachmentEditPage.1"),
-					beanId, ae_topic)));
+			final TableRows rows = TableRows
+					.of(new TableRow(new RowField($m("AttachmentEditPage.1"), beanId, ae_topic)));
 			if (opts != null) {
-				rows.append(new TableRow(new RowField($m("AttachmentEditPage.2"), InputElement.select(
-						"ae_attachtype").addElements(opts))));
+				rows.append(new TableRow(new RowField($m("AttachmentEditPage.2"),
+						InputElement.select("ae_attachtype").addElements(opts))));
 			}
 
 			return rows.append(new TableRow(new RowField($m("NewsFormAttachPage.7"), ae_videotime)),
@@ -336,9 +329,9 @@ public class NewsFormAttachPage extends NewsFormBasePage {
 			// 上传
 			final SwfUploadBean swfUpload = (SwfUploadBean) addComponentBean(pp,
 					"AttachmentUploadPage_swf", SwfUploadBean.class).setMultiFileSelected(true)
-					.setJsCompleteCallback("$Actions['NewsTabAttachPage_tbl']();")
-					.setContainerId("idAttachmentUploadPage_swf")
-					.setHandlerClass(_SwfUploadHandler.class);
+							.setJsCompleteCallback("$Actions['NewsTabAttachPage_tbl']();")
+							.setContainerId("idAttachmentUploadPage_swf")
+							.setHandlerClass(_SwfUploadHandler.class);
 			final String attachmentMaxSize = ((INewsWebContext) newsContext).getAttachmentMaxSize();
 			if (StringUtils.hasText(attachmentMaxSize)) {
 				swfUpload.setFileSizeLimit(attachmentMaxSize);

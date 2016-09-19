@@ -20,8 +20,8 @@ import net.simpleframework.mvc.component.ComponentParameter;
  *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class NewsCommentHandler extends AbstractCommentCtxHandler<NewsComment> implements
-		INewsContextAware {
+public class NewsCommentHandler extends AbstractCommentCtxHandler<NewsComment>
+		implements INewsContextAware {
 
 	@Override
 	public ID getOwnerId(final ComponentParameter cp) {

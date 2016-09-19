@@ -54,8 +54,9 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 		addStatusWindow(pp, mgrActionsClass, statusDescClass);
 
 		// comment window
-		AjaxRequestBean ajaxRequest = pp.addComponentBean("NewsMgrPage_commentPage",
-				AjaxRequestBean.class).setUrlForward(AbstractMVCPage.url(NewsCommentPage.class));
+		AjaxRequestBean ajaxRequest = pp
+				.addComponentBean("NewsMgrPage_commentPage", AjaxRequestBean.class)
+				.setUrlForward(AbstractMVCPage.url(NewsCommentPage.class));
 		pp.addComponentBean("NewsMgrPage_commentWindow", WindowBean.class)
 				.setContentRef(ajaxRequest.getName()).setHeight(540).setWidth(864);
 
@@ -89,8 +90,9 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 		pp.addComponentBean("NewsMgrPage_status", AjaxRequestBean.class).setHandlerMethod("doStatus")
 				.setHandlerClass(mgrActionsClass);
 
-		final AjaxRequestBean ajaxRequest = pp.addComponentBean("NewsMgrPage_statusPage",
-				AjaxRequestBean.class).setUrlForward(AbstractMVCPage.url(statusDescClass));
+		final AjaxRequestBean ajaxRequest = pp
+				.addComponentBean("NewsMgrPage_statusPage", AjaxRequestBean.class)
+				.setUrlForward(AbstractMVCPage.url(statusDescClass));
 		pp.addComponentBean("NewsMgrPage_statusWindow", WindowBean.class)
 				.setContentRef(ajaxRequest.getName()).setWidth(420).setHeight(240);
 	}
@@ -119,11 +121,11 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 			}
 		}
 		if (op == EContentStatus.delete && deletes.size() > 0) {
-			js.append("$Actions['NewsMgrPage_delete']('newsId=")
-					.append(StringUtils.join(deletes, ";")).append("')");
+			js.append("$Actions['NewsMgrPage_delete']('newsId=").append(StringUtils.join(deletes, ";"))
+					.append("')");
 		} else {
-			js.append("$Actions['NewsMgrPage_statusWindow']('op=").append(op.name())
-					.append("&newsId=").append(newsId).append("');");
+			js.append("$Actions['NewsMgrPage_statusWindow']('op=").append(op.name()).append("&newsId=")
+					.append(newsId).append("');");
 		}
 		return js;
 	}
@@ -165,10 +167,9 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 		@Override
 		protected InputElement createTextarea(final PageParameter pp) {
 			final EContentStatus op = pp.getEnumParameter(EContentStatus.class, "op");
-			return super.createTextarea(pp).setText(
-					$m("StatusDescLogPage.1",
-							op == EContentStatus.edit ? $m("NewsMgrPage.7") : Convert.toString(op),
-							Convert.toDateTimeString(new Date()), pp.getLogin()));
+			return super.createTextarea(pp).setText($m("StatusDescLogPage.1",
+					op == EContentStatus.edit ? $m("NewsMgrPage.7") : Convert.toString(op),
+					Convert.toDateTimeString(new Date()), pp.getLogin()));
 		}
 	}
 
@@ -198,9 +199,8 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 			final StringBuilder sb = new StringBuilder();
 			sb.append("<div class='NewsAdvPage'>");
 			sb.append(" <div class='cc1'><p>#(NewsAdvPage.1)</p>");
-			sb.append("  <div>").append(
-					LinkButton.corner($m("NewsAdvPage.0")).setOnclick(
-							"$Actions['NewsAdvPage_reIndex']();"));
+			sb.append("  <div>").append(LinkButton.corner($m("NewsAdvPage.0"))
+					.setOnclick("$Actions['NewsAdvPage_reIndex']();"));
 			sb.append("  </div>");
 			sb.append(" </div>");
 			sb.append(" <div class='bc'>").append(LinkButton.closeBtn().corner()).append("</div>");

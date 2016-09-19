@@ -110,8 +110,8 @@ public class NewsFormBasePage extends T1FormTemplatePage implements INewsContext
 	@Override
 	public TabButtons getTabButtons(final PageParameter pp) {
 		final News news = NewsUtils.getNews(pp);
-		final TabButtons tabs = TabButtons.of(new TabButton($m("NewsFormBasePage.0"), getTabUrl(
-				getFormBasePageClass(), news)));
+		final TabButtons tabs = TabButtons
+				.of(new TabButton($m("NewsFormBasePage.0"), getTabUrl(getFormBasePageClass(), news)));
 		if (news != null) {
 			final TabButton attach = getTabButton_attach(pp, news);
 			if (attach != null) {

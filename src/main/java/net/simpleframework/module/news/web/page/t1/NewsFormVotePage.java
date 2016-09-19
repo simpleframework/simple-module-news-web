@@ -58,8 +58,8 @@ public class NewsFormVotePage extends NewsFormBasePage {
 			final IModuleRef ref = ((INewsWebContext) newsContext).getVoteRef();
 			if (ref != null) {
 				final News news = NewsUtils.getNews(pp);
-				return ElementList.of(((NewsVoteRef) ref).toAddVoteElement(pp,
-						news != null ? news.getId() : null));
+				return ElementList
+						.of(((NewsVoteRef) ref).toAddVoteElement(pp, news != null ? news.getId() : null));
 			}
 			return null;
 		}

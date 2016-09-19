@@ -96,9 +96,9 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 		else {
 		}
 		if (img != null) {
-			final ImageElement ele = ImageElement.img16(
-					cp.getCssResourceHomePath(NewsListTbl.class) + "/images/" + img).setVerticalAlign(
-					EVerticalAlign.middle);
+			final ImageElement ele = ImageElement
+					.img16(cp.getCssResourceHomePath(NewsListTbl.class) + "/images/" + img)
+					.setVerticalAlign(EVerticalAlign.middle);
 			final String desc = $m("NewsListTbl." + img.substring(0, img.length() - 4));
 			if (StringUtils.hasText(desc)) {
 				ele.setTitle(desc);
@@ -152,13 +152,12 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 		final StringBuilder sb = new StringBuilder();
 		final EContentStatus status = pp.getEnumParameter(EContentStatus.class, "status");
 		if (status != EContentStatus.delete) {
-			sb.append(ButtonElement.editBtn().setOnclick(
-					JS.loc(HttpUtils.addParameters(AbstractMVCPage.url(getFormBasePageClass()),
-							"newsId=" + news.getId()))));
+			sb.append(ButtonElement.editBtn().setOnclick(JS.loc(HttpUtils.addParameters(
+					AbstractMVCPage.url(getFormBasePageClass()), "newsId=" + news.getId()))));
 			sb.append(AbstractTablePagerSchema.IMG_DOWNMENU);
 		} else {
-			sb.append(NewsUtils.createStatusAct(pp, EContentStatus.edit, news).setText(
-					$m("NewsListTbl.0")));
+			sb.append(NewsUtils.createStatusAct(pp, EContentStatus.edit, news)
+					.setText($m("NewsListTbl.0")));
 		}
 		return sb.toString();
 	}
@@ -168,12 +167,12 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 			final MenuItem menuItem) {
 		if (menuItem == null) {
 			final MenuItems items = MenuItems
-					.of(MenuItem.of($m("AbstractContentBean.2")).setOnclick_act(
-							"NewsMgrPage_recommendation", "newsId"))
+					.of(MenuItem.of($m("AbstractContentBean.2"))
+							.setOnclick_act("NewsMgrPage_recommendation", "newsId"))
 					.append(MenuItem.sep())
-					.append(
-							MenuItem.itemDelete().setOnclick_act("NewsMgrPage_status", "newsId",
-									"op=" + EContentStatus.delete.name())).append(MenuItem.sep())
+					.append(MenuItem.itemDelete().setOnclick_act("NewsMgrPage_status", "newsId",
+							"op=" + EContentStatus.delete.name()))
+					.append(MenuItem.sep())
 					.append(MenuItem.itemLog().setOnclick_act("NewsMgrPage_update_log", "newsId"));
 			return items;
 		}

@@ -77,8 +77,8 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 				if (nums > 0) {
 					item.setNum(new SupElement(nums));
 				}
-				item.setHref(HttpUtils.addParameters(pp.getParameter("_referer"), "category="
-						+ category.getName()));
+				item.setHref(HttpUtils.addParameters(pp.getParameter("_referer"),
+						"category=" + category.getName()));
 				if (_category != null && _category.getId().equals(category.getId())) {
 					item.setSelected(true);
 				}
@@ -98,14 +98,10 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
 		if (isPageManagerRole(pp)) {
-			return ElementList
-					.of(createAddNew(pp))
-					.append(SpanElement.SPACE)
+			return ElementList.of(createAddNew(pp)).append(SpanElement.SPACE)
 					.append(NewsMgrTPage.createStatusButton(EContentStatus.publish))
-					.append(SpanElement.SPACE)
-					.append(
-							NewsMgrTPage.createStatusButton(EContentStatus.delete)
-									.setIconClass(Icon.trash));
+					.append(SpanElement.SPACE).append(NewsMgrTPage
+							.createStatusButton(EContentStatus.delete).setIconClass(Icon.trash));
 		}
 		return super.getRightElements(pp);
 	}
@@ -114,8 +110,8 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 		final boolean mgr = isPageManagerRole(pp);
 		final TablePagerBean tablePager = (TablePagerBean) addTablePagerBean(pp, "NewsMgrTPage_tbl",
 				mgr ? NewsListMgr2Tbl2.class : NewsListTbl2.class, false).setFilter(true)
-				.setShowLineNo(false).setShowHead(true).setShowCheckbox(mgr).setResize(false)
-				.setPageItems(30).setPagerBarLayout(EPagerBarLayout.bottom);
+						.setShowLineNo(false).setShowHead(true).setShowCheckbox(mgr).setResize(false)
+						.setPageItems(30).setPagerBarLayout(EPagerBarLayout.bottom);
 		final TablePagerColumn TC_CREATEDATE = NewsListTbl.TC_CREATEDATE();
 		tablePager.addColumn(TablePagerColumn.ICON()).addColumn(NewsListTbl.TC_TOPIC());
 		if (mgr) {

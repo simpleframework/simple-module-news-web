@@ -85,8 +85,8 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		addHtmlEditorBean(pp).setTextarea("ne_content");
 
 		// 类目字典
-		addComponentBean(pp, "NewsForm_dict_tree", TreeBean.class).setHandlerClass(
-				CategorySelectedTree.class);
+		addComponentBean(pp, "NewsForm_dict_tree", TreeBean.class)
+				.setHandlerClass(CategorySelectedTree.class);
 		addComponentBean(pp, "NewsForm_dict", DictionaryBean.class).setBindingId("ne_categoryId")
 				.setBindingText("ne_categoryText").addTreeRef(pp, "NewsForm_dict_tree")
 				.setTitle($m("NewsFormTPage.1")).setHeight(320);
@@ -101,7 +101,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 	protected AttachmentBean addInsertAttachmentBean(final PageParameter pp) {
 		final AttachmentBean attachment = (AttachmentBean) addComponentBean(pp,
 				"NewsForm_insertAttach", AttachmentBean.class).setInsertTextarea("ne_content")
-				.setShowMenu(false).setHandlerClass(NewsInsertAttachmentAction.class);
+						.setShowMenu(false).setHandlerClass(NewsInsertAttachmentAction.class);
 		addComponentBean(pp, "NewsForm_upload", WindowBean.class).setContentRef(attachment.getName())
 				.setTitle($m("NewsFormTPage.10")).setPopup(true).setHeight(480).setWidth(400);
 		return attachment;
@@ -269,8 +269,8 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		final InputElement ne_id = InputElement.hidden("ne_id");
 		final InputElement ne_topic = new InputElement("ne_topic");
 		final InputElement ne_categoryId = InputElement.hidden("ne_categoryId");
-		final TextButton ne_categoryText = new TextButton("ne_categoryText").setReadonly(
-				isCategoryReadonly(pp)).setOnclick("$Actions['NewsForm_dict']()");
+		final TextButton ne_categoryText = new TextButton("ne_categoryText")
+				.setReadonly(isCategoryReadonly(pp)).setOnclick("$Actions['NewsForm_dict']()");
 
 		final InputElement ne_keyWords = new InputElement("ne_keyWords");
 		final InputElement ne_source = new InputElement("ne_source");
@@ -285,7 +285,8 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		NewsCategory category = null;
 		final News news = NewsUtils.getNews(pp);
 		final EContentStatus status = news != null ? news.getStatus() : null;
-		final boolean readonly = !(status == null || status == EContentStatus.edit || status == EContentStatus.audit);
+		final boolean readonly = !(status == null || status == EContentStatus.edit
+				|| status == EContentStatus.audit);
 		if (news != null) {
 			ne_id.setText(news.getId());
 			ne_cname.setText(news.getCname());
@@ -311,9 +312,9 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		}
 
 		final TableRow r1 = new TableRow(
-				new RowField($m("NewsFormTPage.0"), ne_id, ne_topic).setStarMark(true), new RowField(
-						$m("NewsFormTPage.1"), ne_categoryId, ne_categoryText).setElementsStyle(
-						"width:150px;").setStarMark(true));
+				new RowField($m("NewsFormTPage.0"), ne_id, ne_topic).setStarMark(true),
+				new RowField($m("NewsFormTPage.1"), ne_categoryId, ne_categoryText)
+						.setElementsStyle("width:150px;").setStarMark(true));
 		if (pp.isLmanager()) {
 			// 唯一名称，保留给系统管理员
 			r1.append(new RowField($m("NewsFormTPage.13"), ne_cname).setElementsStyle("width:150px;"));
@@ -329,15 +330,15 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		if (isShowAttachmentList(pp)) {
 			addAttachmentBean(pp).setReadonly(readonly);
 			if (!readonly || _newsAttachService.queryByContent(news).getCount() > 0) {
-				rows.append(new TableRow(new RowField($m("NewsFormBasePage.1"), new BlockElement()
-						.setId("idNewsForm_attach"))));
+				rows.append(new TableRow(new RowField($m("NewsFormBasePage.1"),
+						new BlockElement().setId("idNewsForm_attach"))));
 			}
 		}
 
 		final String auditString = toNewsAuditString(pp, news);
 		if (StringUtils.hasText(auditString)) {
-			rows.append(new TableRow(new RowField($m("NewsFormTPage.26"), InputElement.textarea()
-					.setAutoRows(true).setReadonly(true).setVal(auditString))));
+			rows.append(new TableRow(new RowField($m("NewsFormTPage.26"),
+					InputElement.textarea().setAutoRows(true).setReadonly(true).setVal(auditString))));
 		}
 
 		rows.append(new TableRow(new RowField($m("NewsFormTPage.6"), ne_description)));
@@ -398,17 +399,12 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		opt_videoMark.setChecked(news.isVideoMark());
 
 		final ElementList el = ElementList.of();
-		el.append(opt_allowComments)
-				.append(SpanElement.SPACE)
-				.append(opt_imageMark)
-				.append(SpanElement.SPACE)
-				.append(opt_videoMark)
-				.append(SpanElement.SPACE)
-				.append(opt_indexed)
-				.append(SpanElement.SPACE)
-				.append(
-						new LinkButton($m("NewsFormTPage.15"))
-								.setOnclick("$('idNewsForm_opts').toggle();")).append(createOptsBlock());
+		el.append(opt_allowComments).append(SpanElement.SPACE).append(opt_imageMark)
+				.append(SpanElement.SPACE).append(opt_videoMark).append(SpanElement.SPACE)
+				.append(opt_indexed).append(SpanElement.SPACE)
+				.append(new LinkButton($m("NewsFormTPage.15"))
+						.setOnclick("$('idNewsForm_opts').toggle();"))
+				.append(createOptsBlock());
 		return el;
 	}
 
@@ -441,12 +437,9 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		final Checkbox opt_removeStyle = opt_removeStyle();
 		final Checkbox opt_removeTagFont = opt_removeTagFont();
 
-		return new BlockElement()
-				.setId("idNewsForm_opts")
-				.addStyle("display: none;")
-				.addElements(opt_viewer, SpanElement.SPACE, opt_targetBlank, SpanElement.SPACE,
-						opt_removeClass, SpanElement.SPACE, opt_removeStyle, SpanElement.SPACE,
-						opt_removeTagFont);
+		return new BlockElement().setId("idNewsForm_opts").addStyle("display: none;").addElements(
+				opt_viewer, SpanElement.SPACE, opt_targetBlank, SpanElement.SPACE, opt_removeClass,
+				SpanElement.SPACE, opt_removeStyle, SpanElement.SPACE, opt_removeTagFont);
 	}
 
 	@Override
@@ -474,8 +467,8 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 
 		if (news != null) {
 			el.append(SpanElement.SPACE15);
-			el.append(new ButtonElement($m("Button.Preview")).setOnclick(JS.loc(
-					uFactory.getUrl(pp, NewsViewTPage.class, news, "preview=true"), true)));
+			el.append(new ButtonElement($m("Button.Preview")).setOnclick(
+					JS.loc(uFactory.getUrl(pp, NewsViewTPage.class, news, "preview=true"), true)));
 		}
 
 		if (status == null || status == EContentStatus.edit || status == EContentStatus.audit) {
@@ -498,7 +491,8 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 	private AbstractComponentBean categoryBean;
 
 	@SuppressWarnings("unchecked")
-	protected TreeNodes getCategoryDictTreenodes(final ComponentParameter cp, final TreeNode parent) {
+	protected TreeNodes getCategoryDictTreenodes(final ComponentParameter cp,
+			final TreeNode parent) {
 		final List<NewsCategory> list = (List<NewsCategory>) SessionCache.lget("_CATEGORY_LIST");
 		// 自定义
 		if (list != null) {
@@ -554,8 +548,8 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		protected void onForward(final PageParameter pp) throws Exception {
 			super.onForward(pp);
 
-			addFormValidationBean(pp).addValidators(
-					new Validator(EValidatorMethod.required, "#ae_ccomment"));
+			addFormValidationBean(pp)
+					.addValidators(new Validator(EValidatorMethod.required, "#ae_ccomment"));
 		}
 
 		@Override
@@ -577,13 +571,13 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 			final InputElement ae_bpass = InputElement.hidden("ae_bpass").setVal(bpass);
 			final InputElement ae_ccomment = InputElement.textarea("ae_ccomment").setRows(3);
 
-			final TableRow r1 = new TableRow(new RowField($m(bpass ? "NewsFormTPage.24"
-					: "NewsFormTPage.25"), ae_bpass, ae_ccomment));
+			final TableRow r1 = new TableRow(new RowField(
+					$m(bpass ? "NewsFormTPage.24" : "NewsFormTPage.25"), ae_bpass, ae_ccomment));
 
 			final News news = NewsUtils.getNews(pp);
 			final String auditString = toNewsAuditString(pp, news);
-			final TableRow r2 = new TableRow(new RowField($m("NewsFormTPage.26"), InputElement
-					.textarea().setRows(12).setReadonly(true).setVal(auditString)));
+			final TableRow r2 = new TableRow(new RowField($m("NewsFormTPage.26"),
+					InputElement.textarea().setRows(12).setReadonly(true).setVal(auditString)));
 			return TableRows.of(r1, r2);
 		}
 	}
@@ -596,7 +590,8 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 			int i = 0;
 			while ((audit = dq.next()) != null) {
 				if (i++ > 0) {
-					sb.append("\r\r----------------------------------------------------------------\r\r");
+					sb.append(
+							"\r\r----------------------------------------------------------------\r\r");
 				}
 				sb.append(pp.getUser(audit.getUserId())).append(", ")
 						.append(Convert.toDateTimeString(audit.getCreateDate())).append("  *")

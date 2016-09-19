@@ -1,6 +1,7 @@
 package net.simpleframework.module.news.web.page.t1;
 
 import static net.simpleframework.common.I18n.$m;
+
 import net.simpleframework.ado.FilterItem;
 import net.simpleframework.ado.FilterItems;
 import net.simpleframework.common.TimePeriod;
@@ -60,16 +61,12 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
-		final ElementList btns = ElementList
-				.of(NewsUtils.createAddNew(pp, null))
-				.append(SpanElement.SPACE)
-				.append(createStatusButton(EContentStatus.publish))
+		final ElementList btns = ElementList.of(NewsUtils.createAddNew(pp, null))
+				.append(SpanElement.SPACE).append(createStatusButton(EContentStatus.publish))
 				.append(SpanElement.SPACE)
 				.append(createStatusButton(EContentStatus.delete).setIconClass(Icon.trash))
-				.append(SpanElement.SPACE)
-				.append(
-						new LinkButton($m("NewsMgrPage.13"))
-								.setOnclick("$Actions['NewsMgrPage_advWindow']();"));
+				.append(SpanElement.SPACE).append(new LinkButton($m("NewsMgrPage.13"))
+						.setOnclick("$Actions['NewsMgrPage_advWindow']();"));
 		final LinkButton preview = NewsUtils.createNewsPreview(pp);
 		if (preview != null) {
 			btns.append(SpanElement.SPACE).append(preview);
@@ -96,13 +93,13 @@ public class NewsMgrPage extends CategoryTableLCTemplatePage implements INewsCon
 	public TabButtons getTabButtons(final PageParameter pp) {
 		final TabButton cTab = new TabButton($m("NewsCommentMgrPage.0"),
 				url(NewsCommentMgrPage.class));
-		final int c = _newsCommentService.queryByParams(
-				FilterItems.of(new FilterItem("createdate", TimePeriod.day))).getCount();
+		final int c = _newsCommentService
+				.queryByParams(FilterItems.of(new FilterItem("createdate", TimePeriod.day))).getCount();
 		if (c > 0) {
 			cTab.setStat(c);
 		}
-		final TabButtons tabs = TabButtons.of(new TabButton($m("NewsMgrPage.0"),
-				url(NewsMgrPage.class)), cTab);
+		final TabButtons tabs = TabButtons
+				.of(new TabButton($m("NewsMgrPage.0"), url(NewsMgrPage.class)), cTab);
 		return tabs;
 	}
 }

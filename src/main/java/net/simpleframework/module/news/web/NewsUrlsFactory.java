@@ -41,11 +41,9 @@ public class NewsUrlsFactory extends UrlsCache {
 
 	public String getUrl(final PageParameter pp, final Class<? extends AbstractMVCPage> mClass,
 			final NewsCategory category, final String params) {
-		return getUrl(
-				pp,
-				mClass,
-				StringUtils.join(new String[] {
-						category != null ? "categoryId=" + category.getId() : null, params }, "&"));
+		return getUrl(pp, mClass, StringUtils.join(
+				new String[] { category != null ? "categoryId=" + category.getId() : null, params },
+				"&"));
 	}
 
 	public String getUrl(final PageParameter pp, final Class<? extends AbstractMVCPage> mClass,
@@ -55,7 +53,7 @@ public class NewsUrlsFactory extends UrlsCache {
 
 	public String getUrl(final PageParameter pp, final Class<? extends AbstractMVCPage> mClass,
 			final News news, final String params) {
-		return getUrl(pp, mClass, StringUtils.join(
-				new String[] { news != null ? "newsId=" + news.getId() : null, params }, "&"));
+		return getUrl(pp, mClass, StringUtils
+				.join(new String[] { news != null ? "newsId=" + news.getId() : null, params }, "&"));
 	}
 }

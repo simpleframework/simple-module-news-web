@@ -1,6 +1,7 @@
 package net.simpleframework.module.news.web;
 
 import static net.simpleframework.common.I18n.$m;
+
 import net.simpleframework.common.ID;
 import net.simpleframework.ctx.IContextBase;
 import net.simpleframework.module.common.plugin.ModulePluginFactory;
