@@ -33,6 +33,7 @@ import net.simpleframework.module.news.web.NewsUrlsFactory;
 import net.simpleframework.module.news.web.page.NewsMgrActions.StatusDescPage;
 import net.simpleframework.module.news.web.page.mgr2.NewsMgrTPage;
 import net.simpleframework.module.news.web.page.t1.NewsMgrPage;
+import net.simpleframework.mvc.AbstractMVCPage;
 import net.simpleframework.mvc.JavascriptForward;
 import net.simpleframework.mvc.PageParameter;
 import net.simpleframework.mvc.SessionCache;
@@ -442,6 +443,10 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 				SpanElement.SPACE, opt_removeStyle, SpanElement.SPACE, opt_removeTagFont);
 	}
 
+	protected Class<? extends AbstractMVCPage> getAuditEditPage(final PageParameter pp) {
+		return AuditEditPage.class;
+	}
+
 	@Override
 	public ElementList getRightElements(final PageParameter pp) {
 		final News news = NewsUtils.getNews(pp);
@@ -451,7 +456,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 			el.add(NewsUtils.createStatusAct(pp, EContentStatus.publish, news));
 		} else if (status == EContentStatus.audit) {
 			final AjaxRequestBean ajaxRequest = addAjaxRequest(pp, "NewsFormTPage_auditPage",
-					AuditEditPage.class);
+					getAuditEditPage(pp));
 			addWindowBean(pp, "NewsFormTPage_auditWin", ajaxRequest).setTitle($m("NewsFormTPage.23"))
 					.setWidth(420).setHeight(450);
 
