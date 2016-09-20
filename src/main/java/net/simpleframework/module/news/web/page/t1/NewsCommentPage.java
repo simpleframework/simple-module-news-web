@@ -30,7 +30,8 @@ import net.simpleframework.mvc.template.lets.OneTableTemplatePage;
 /**
  * Licensed under the Apache License, Version 2.0
  * 
- * @author 陈侃(cknet@126.com, 13910090885) https://github.com/simpleframework
+ * @author 陈侃(cknet@126.com, 13910090885)
+ *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
 public class NewsCommentPage extends OneTableTemplatePage implements INewsContextAware {
@@ -46,8 +47,9 @@ public class NewsCommentPage extends OneTableTemplatePage implements INewsContex
 						.setNowrap(false))
 				.addColumn(new TablePagerColumn("userId", $m("NewsCommentPage.1"), 100)
 						.setFilterSort(false).center())
-				.addColumn(TablePagerColumn.DATE("createDate", $m("NewsCommentPage.2")))
-				.addColumn(TablePagerColumn.OPE(80));
+				.addColumn(
+						TablePagerColumn.DATE("createDate", $m("NewsCommentPage.2")).setFilter(false))
+				.addColumn(TablePagerColumn.OPE(70));
 
 		// allowComments
 		addAjaxRequest(pp, "NewsCommentPage_allowComments").setHandlerMethod("doAllowComments");
