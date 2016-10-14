@@ -191,6 +191,8 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 
 	public static final TablePagerColumn TC_STATUS() {
 		return new TablePagerColumn("status", $m("NewsMgrPage.5"), 70) {
+			private static final long serialVersionUID = -2879683212637032124L;
+
 			@Override
 			protected Option[] getFilterOptions() {
 				return Option.from(EContentStatus.edit, EContentStatus.publish);
