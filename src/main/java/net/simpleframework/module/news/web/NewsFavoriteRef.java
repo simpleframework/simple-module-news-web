@@ -1,9 +1,9 @@
 package net.simpleframework.module.news.web;
 
 import static net.simpleframework.common.I18n.$m;
-
 import net.simpleframework.common.ID;
 import net.simpleframework.ctx.IContextBase;
+import net.simpleframework.module.common.plugin.IModulePlugin;
 import net.simpleframework.module.common.plugin.ModulePluginFactory;
 import net.simpleframework.module.favorite.FavoriteRef;
 import net.simpleframework.module.favorite.IFavoriteContent;
@@ -27,7 +27,11 @@ public class NewsFavoriteRef extends FavoriteRef implements INewsContextAware {
 	public void onInit(final IContextBase context) throws Exception {
 		super.onInit(context);
 
-		getModuleContext().getPluginRegistry().registPlugin(NewsWebFavoritePlugin.class);
+		getModuleContext().getPluginRegistry().registPlugin(getPluginClass());
+	}
+
+	protected Class<? extends IModulePlugin> getPluginClass() {
+		return NewsWebFavoritePlugin.class;
 	}
 
 	public AbstractElement<?> toFavoriteElement(final PageParameter pp, final Object contentId) {
@@ -35,7 +39,7 @@ public class NewsFavoriteRef extends FavoriteRef implements INewsContextAware {
 	}
 
 	public NewsWebFavoritePlugin plugin() {
-		return ModulePluginFactory.get(NewsWebFavoritePlugin.class);
+		return (NewsWebFavoritePlugin) ModulePluginFactory.get(getPluginClass());
 	}
 
 	public static class NewsWebFavoritePlugin extends AbstractWebFavoritePlugin {
