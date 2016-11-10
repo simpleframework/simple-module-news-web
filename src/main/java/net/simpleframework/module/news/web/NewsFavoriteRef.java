@@ -3,17 +3,15 @@ package net.simpleframework.module.news.web;
 import static net.simpleframework.common.I18n.$m;
 
 import net.simpleframework.common.ID;
-import net.simpleframework.module.common.plugin.IModulePlugin;
-import net.simpleframework.module.common.plugin.ModulePluginFactory;
-import net.simpleframework.module.favorite.FavoriteRef;
 import net.simpleframework.module.favorite.IFavoriteContent;
+import net.simpleframework.module.favorite.plugin.IFavoritePlugin;
+import net.simpleframework.module.favorite.web.FavoriteWebRef;
 import net.simpleframework.module.favorite.web.plugin.AbstractWebFavoritePlugin;
 import net.simpleframework.module.news.INewsContextAware;
 import net.simpleframework.module.news.bean.News;
 import net.simpleframework.module.news.bean.NewsCategory;
 import net.simpleframework.module.news.web.page.NewsViewTPage;
 import net.simpleframework.mvc.PageParameter;
-import net.simpleframework.mvc.common.element.AbstractElement;
 
 /**
  * Licensed under the Apache License, Version 2.0
@@ -22,19 +20,11 @@ import net.simpleframework.mvc.common.element.AbstractElement;
  *         https://github.com/simpleframework
  *         http://www.simpleframework.net
  */
-public class NewsFavoriteRef extends FavoriteRef implements INewsContextAware {
+public class NewsFavoriteRef extends FavoriteWebRef implements INewsContextAware {
 
 	@Override
-	protected Class<? extends IModulePlugin> getPluginClass() {
+	protected Class<? extends IFavoritePlugin> getPluginClass() {
 		return NewsWebFavoritePlugin.class;
-	}
-
-	public NewsWebFavoritePlugin plugin() {
-		return (NewsWebFavoritePlugin) ModulePluginFactory.get(getPluginClass());
-	}
-
-	public AbstractElement<?> toFavoriteElement(final PageParameter pp, final Object contentId) {
-		return plugin().toFavoriteOpElement(pp, contentId);
 	}
 
 	public static class NewsWebFavoritePlugin extends AbstractWebFavoritePlugin {
