@@ -165,6 +165,21 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 		}
 
 		@Override
+		public String toTableRowsString(final PageParameter pp) {
+			final StringBuilder sb = new StringBuilder();
+			final EContentStatus op = pp.getEnumParameter(EContentStatus.class, "op");
+			if (op != null) {
+				sb.append(InputElement.hidden("op").setVal(op.name()));
+			}
+			final String newsId = pp.getParameter("newsId");
+			if (StringUtils.hasText(newsId)) {
+				sb.append(InputElement.hidden("newsId").setVal(newsId));
+			}
+			sb.append(super.toTableRowsString(pp));
+			return sb.toString();
+		}
+
+		@Override
 		protected InputElement createTextarea(final PageParameter pp) {
 			final EContentStatus op = pp.getEnumParameter(EContentStatus.class, "op");
 			return super.createTextarea(pp).setText($m("StatusDescLogPage.1",
