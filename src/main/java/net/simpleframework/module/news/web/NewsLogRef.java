@@ -69,7 +69,7 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 	public static class NewsInsertAttachmentAction extends NewsAttachmentAction {
 
 		@Override
-		public AbstractElement<?> getDownloadLink(final ComponentParameter cp,
+		public AbstractElement<?> getDownloadLinkElement(final ComponentParameter cp,
 				final AttachmentFile attachmentFile, final String id) throws IOException {
 			if (Convert.toBool(cp.getParameter(NewsFormTPage.OPT_VIEWER))) {
 				final ImageElement iElement = createImageViewer(cp, attachmentFile, id);
