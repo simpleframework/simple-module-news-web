@@ -53,6 +53,7 @@ import net.simpleframework.mvc.component.AbstractComponentBean;
 import net.simpleframework.mvc.component.ComponentParameter;
 import net.simpleframework.mvc.component.base.ajaxrequest.AjaxRequestBean;
 import net.simpleframework.mvc.component.base.validation.EValidatorMethod;
+import net.simpleframework.mvc.component.base.validation.ValidationBean;
 import net.simpleframework.mvc.component.base.validation.Validator;
 import net.simpleframework.mvc.component.ext.attachments.AttachmentBean;
 import net.simpleframework.mvc.component.ext.attachments.AttachmentUtils;
@@ -80,8 +81,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 	protected void onForward(final PageParameter pp) throws Exception {
 		super.onForward(pp);
 
-		addFormValidationBean(pp).addValidators(
-				new Validator(EValidatorMethod.required, "#ne_topic, #ne_categoryText, #ne_content"));
+		addFormValidation(pp);
 
 		// Html编辑器
 		addHtmlEditorBean(pp).setTextarea("ne_content");
@@ -98,6 +98,11 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 
 		// 状态
 		NewsMgrActions.addStatusWindow(pp, _NewsMgrActions.class, _StatusDescPage.class);
+	}
+
+	protected ValidationBean addFormValidation(final PageParameter pp) {
+		return addFormValidationBean(pp).addValidators(
+				new Validator(EValidatorMethod.required, "#ne_topic, #ne_categoryText, #ne_content"));
 	}
 
 	protected AttachmentBean addInsertAttachmentBean(final PageParameter pp) {
