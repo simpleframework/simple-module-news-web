@@ -56,7 +56,7 @@ public class NewsListTbl extends LCTemplateTablePagerHandler implements INewsCon
 		if (status != null) {
 			cp.addFormParameter("status", status.name());
 		}
-		return _newsService.queryBeans(category, orgId, status, null, null);
+		return _newsService.queryBeans(category, String.valueOf(orgId), status, null, null);
 	}
 
 	@Override

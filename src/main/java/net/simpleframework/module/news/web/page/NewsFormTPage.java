@@ -154,7 +154,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 		final News news = _newsService.createBean();
 		news.setCreateDate(new Date());
 		news.setUserId(pp.getLoginId());
-		news.setDomainId(NewsUtils.getDomainId(pp));
+		news.setDomainId(String.valueOf(NewsUtils.getDomainId(pp)));
 		return news;
 	}
 

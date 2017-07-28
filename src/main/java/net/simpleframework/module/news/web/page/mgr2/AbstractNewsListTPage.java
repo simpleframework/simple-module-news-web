@@ -66,7 +66,8 @@ public abstract class AbstractNewsListTPage extends Category_ListPage implements
 			SessionCache.lput("_CATEGORY_LIST", list);
 			final NewsCategory _category = NewsUtils.getNewsCategory(pp);
 			for (final NewsCategory category : list) {
-				final NewsStat stat = _newsStatService.getNewsStat(category.getId(), pp.getLDomainId());
+				final NewsStat stat = _newsStatService.getNewsStat(category.getId(),
+						String.valueOf(pp.getLDomainId()));
 				final CategoryItem item = new CategoryItem(category.getText());
 				int nums;
 				if (isPageManagerRole(pp)) {

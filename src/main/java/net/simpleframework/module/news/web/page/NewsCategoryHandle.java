@@ -125,7 +125,7 @@ public class NewsCategoryHandle extends CategoryBeanAwareHandler<NewsCategory>
 			if (domainId != null) {
 				NewsStat stat = _newsStatService.getNewsStat(categoryId, null);
 				int count = stat.getNums() - stat.getNums_delete();
-				stat = _newsStatService.getNewsStat(categoryId, domainId);
+				stat = _newsStatService.getNewsStat(categoryId, String.valueOf(domainId));
 				count += (stat.getNums() - stat.getNums_delete());
 				return count;
 			} else {
