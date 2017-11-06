@@ -108,7 +108,7 @@ public class NewsMgrActions extends DefaultAjaxRequestHandler implements INewsCo
 		final JavascriptForward js = new JavascriptForward();
 		final EContentStatus op = cp.getEnumParameter(EContentStatus.class, "op");
 		final String newsId = cp.getParameter("newsId");
-		final ArrayList<String> deletes = new ArrayList<String>();
+		final ArrayList<String> deletes = new ArrayList<>();
 		for (final String id : StringUtils.split(newsId, ";")) {
 			final News news = _newsService.getBean(id);
 			final EContentStatus status = news.getStatus();

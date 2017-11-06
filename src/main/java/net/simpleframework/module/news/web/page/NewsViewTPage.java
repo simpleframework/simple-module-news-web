@@ -238,7 +238,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 	public NavigationButtons getNavigationBar(final PageParameter pp) {
 		final NavigationButtons btns = NavigationButtons.of();
 		final News news = NewsUtils.getNews(pp);
-		final ArrayList<NewsCategory> al = new ArrayList<NewsCategory>();
+		final ArrayList<NewsCategory> al = new ArrayList<>();
 		NewsCategory category = _newsCategoryService.getBean(news.getCategoryId());
 		while (category != null) {
 			al.add(category);

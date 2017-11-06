@@ -237,7 +237,7 @@ public class NewsFormTPage extends FormTableRowTemplatePage implements INewsCont
 	}
 
 	public String doNewsContent(final PageParameter pp, final News news, final Document doc) {
-		final ArrayList<IElementVisitor> al = new ArrayList<IElementVisitor>();
+		final ArrayList<IElementVisitor> al = new ArrayList<>();
 		al.add(HtmlUtils.REMOVE_TAG_VISITOR("script"));
 		al.add(HtmlUtils.STRIP_CONTEXTPATH_VISITOR(pp.request));
 		if (pp.getBoolParameter(OPT_REMOVE_CLASS)) {

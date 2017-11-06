@@ -170,7 +170,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		if (category == null) {
 			btns.add(new SpanElement($m("NewsListTPage.4")));
 		} else {
-			final ArrayList<NewsCategory> al = new ArrayList<NewsCategory>();
+			final ArrayList<NewsCategory> al = new ArrayList<>();
 			while (category != null) {
 				al.add(category);
 				category = _newsCategoryService.getBean(category.getParentId());

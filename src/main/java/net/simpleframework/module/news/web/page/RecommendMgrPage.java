@@ -210,7 +210,7 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 			final InputElement newsId = InputElement.hidden("newsId");
 			final NewsRecommend r = _newsRecommendService.getBean(pp.getParameter("rid"));
 			final InputElement r_id = InputElement.hidden("r_id");
-			final ArrayList<Option> al = new ArrayList<Option>();
+			final ArrayList<Option> al = new ArrayList<>();
 			for (int i = 1; i <= 5; i++) {
 				final Option opt = new Option(i);
 				if (r != null) {
