@@ -75,8 +75,7 @@ public class RecommendMgrPage extends OneTableTemplatePage implements INewsConte
 		tablePager.addColumn(new TablePagerColumn("desc", $m("RecommendMgrPage.1")))
 				.addColumn(new TablePagerColumn("rlevel", $m("RecommendMgrPage.2"), 50))
 				.addColumn(TablePagerColumn.DATE("ddate", $m("RecommendMgrPage.3")).setWidth(120))
-				.addColumn(new TablePagerColumn("status", $m("RecommendMgrPage.4"), 55).center())
-				.addColumn(TablePagerColumn.OPE(70));
+				.addColumn(TablePagerColumn.STATUS(55)).addColumn(TablePagerColumn.OPE(70));
 		return tablePager;
 	}
 
