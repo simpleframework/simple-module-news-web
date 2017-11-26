@@ -2,7 +2,6 @@ package net.simpleframework.module.news.web;
 
 import java.io.IOException;
 
-import net.simpleframework.common.Convert;
 import net.simpleframework.common.StringUtils;
 import net.simpleframework.ctx.common.bean.AttachmentFile;
 import net.simpleframework.ctx.service.ado.db.IDbBeanService;
@@ -71,7 +70,7 @@ public class NewsLogRef extends LogRef implements INewsContextAware {
 		@Override
 		public AbstractElement<?> getDownloadLinkElement(final ComponentParameter cp,
 				final AttachmentFile attachmentFile, final String id) throws IOException {
-			if (Convert.toBool(cp.getParameter(NewsFormTPage.OPT_VIEWER))) {
+			if (cp.getBoolParameter(NewsFormTPage.OPT_VIEWER)) {
 				final ImageElement iElement = createImageViewer(cp, attachmentFile, id);
 				if (iElement != null) {
 					return iElement;
