@@ -68,8 +68,10 @@ public abstract class NewsUtils implements INewsContextAware {
 	public static NavigationTitleCallback<NewsCategory> createNavigationTitleCallback(
 			final PageParameter pp, final String tblname) {
 		final EContentStatus status = pp.getEnumParameter(EContentStatus.class, "status");
-		return new NavigationTitleCallback<NewsCategory>(status == EContentStatus.delete
-				? $m("NewsCategoryHandle.1") : $m("NewsCategoryHandle.0"), tblname) {
+		return new NavigationTitleCallback<NewsCategory>(
+				status == EContentStatus.delete ? $m("NewsCategoryHandle.1")
+						: $m("NewsCategoryHandle.0"),
+				tblname) {
 			@Override
 			protected NewsCategory get(final Object id) {
 				return _newsCategoryService.getBean(id);
