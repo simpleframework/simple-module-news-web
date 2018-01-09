@@ -212,7 +212,7 @@ public class NewsViewTPage extends View_PageletsPage implements INewsContextAwar
 			arr = ArrayUtils.add(arr, lService.getQueryTokens(news.getTopic()));
 		}
 		lets.add(new Pagelet(new CategoryItem($m("NewsViewTPage.3")), creator.create(pp,
-				lService.query(StringUtils.join(arr, " "), News.class), new NewsListRowHandler() {
+				lService.query(null, StringUtils.join(arr, " "), News.class), new NewsListRowHandler() {
 					@Override
 					protected News toBean(final Object o) {
 						final News news2 = super.toBean(o);

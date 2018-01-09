@@ -236,7 +236,7 @@ public class NewsListTPage extends List_PageletsPage implements INewsContextAwar
 		public IDataQuery<?> createDataObjectQuery(final ComponentParameter cp) {
 			final String t = cp.getLocaleParameter("t");
 			if (StringUtils.hasText(t)) {
-				return _newsService.getLuceneService().query(t, News.class);
+				return _newsService.getLuceneService().query(null, t, News.class);
 			}
 
 			final FilterItems params = FilterItems.of();
