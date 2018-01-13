@@ -47,6 +47,11 @@ public class NewsFavoriteRef extends FavoriteWebRef implements INewsContextAware
 					return ((INewsWebContext) newsContext).getUrlsFactory().getUrl(pp,
 							NewsViewTPage.class, news);
 				}
+
+				@Override
+				public ID getUserId() {
+					return news.getUserId();
+				}
 			};
 		}
 
